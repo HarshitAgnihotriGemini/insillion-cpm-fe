@@ -1,0 +1,265 @@
+{
+  "title": "Contractor Plant and Machinery",
+  "breadCrumbs": [
+    { "title": "Dashboard", "link": "/dashboard" },
+    { "title": "Commerce Lines", "link": "#" },
+    { "title": "New Quote", "link": "/cpm", "isActive": true }
+  ],
+  "sections": [
+    {
+      "title": "Proposal",
+      "type": "standard",
+      "id": "proposal-section",
+      "isCollapsible": true,
+      "isExpandedByDefault": true,
+      "subsections": [
+        {
+          "title": "Policy Details",
+          "fields": [
+            {
+              "type": "datepicker",
+              "name": "policyStartDate",
+              "label": "Policy Start Date",
+              "placeholder": "Select policy start date",
+              "validators": { "required": true }
+            },
+            {
+              "type": "datepicker",
+              "name": "policyEndDate",
+              "label": "Policy End Date",
+              "placeholder": "Select policy end date",
+              "validators": { "required": true }
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "businessOfProposer",
+              "label": "Business of Proposer",
+              "placeholder": "Enter business of proposer"
+            }
+          ]
+        },
+        {
+          "title": "Proposal Questionnaire",
+          "fields": [
+            {
+              "type": "select",
+              "name": "proposalQuestionnaire",
+              "label": "Do you want to answer the proposal questionnaire?",
+              "placeholder": "Select Yes/No",
+              "wrapperClass": "col-12",
+              "options": [
+                { "key": "yes", "name": "Yes" },
+                { "key": "no", "name": "No" }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Hypothecation Details",
+          "fields": [
+            {
+              "type": "select",
+              "name": "hypothecation",
+              "label": "Hypothecation",
+              "placeholder": "Select Hypothecation",
+              "wrapperClass": "col-12",
+              "options": [
+                { "key": "yes", "name": "Yes" },
+                { "key": "no", "name": "No" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Policy Information",
+      "type": "standard",
+      "id": "policy-info-section",
+      "isCollapsible": true,
+      "isExpandedByDefault": true,
+      "subsections": [
+        {
+          "title": "Co-Insurance Details",
+          "fields": [
+            {
+              "type": "select",
+              "name": "ksgLeaderMember",
+              "label": "KSG Leader / Member",
+              "placeholder": "Select KSG Leader / Member",
+              "options": [
+                { "key": "leader", "name": "Leader" },
+                { "key": "member", "name": "Member" }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Broker Details",
+          "fields": [
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "agentBrokerCode",
+              "label": "Agent / Broker Code",
+              "placeholder": "Agent / Broker Code",
+              "value": "AZP23777"
+            },
+            {
+              "type": "select",
+              "name": "brokerType",
+              "label": "Broker Type",
+              "placeholder": "Policy",
+              "options": [
+                { "key": "policy", "name": "Policy" },
+                { "key": "other", "name": "Other" }
+              ]
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "agentBrokerName",
+              "label": "Agent / Broker Name",
+              "placeholder": "Agent / Broker Name",
+              "value": "SA921154_Indus"
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "qaCode",
+              "label": "QA Code",
+              "placeholder": "QA Code",
+              "value": "QA231154"
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "sharePercent",
+              "label": "Share %",
+              "placeholder": "Share %",
+              "value": "150"
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "commissionOn",
+              "label": "Commission On",
+              "placeholder": "Overall Turnover",
+              "value": "Overall Turnover"
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "brokerAgentCommission",
+              "label": "Broker Agent Commission",
+              "placeholder": "Broker agent commission",
+              "value": "1R"
+            }
+          ]
+        },
+        {
+          "title": "Proposal Branch Details",
+          "fields": [
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "sezTaxExemptionStatus",
+              "label": "SEZ Tax Exemption Status",
+              "placeholder": "Enter SEZ Tax Exemption Status"
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "branchState",
+              "label": "Branch State",
+              "placeholder": "Enter Branch State"
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "branchCode",
+              "label": "Branch Code",
+              "placeholder": "Enter Branch Code"
+            }
+          ]
+        },
+        {
+          "title": "Channel",
+          "fields": [
+            {
+              "type": "select",
+              "name": "channel",
+              "label": "Channel",
+              "placeholder": "Select channel"
+            },
+            {
+              "type": "select",
+              "name": "subChannel",
+              "label": "Sub Channel",
+              "placeholder": "Select sub channel"
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "salesRepCode",
+              "label": "Sales Rep Code",
+              "placeholder": "Enter sales rep code",
+              "value": "INDGWS145"
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "tuwCode",
+              "label": "TUW Code",
+              "placeholder": "Enter TUW code",
+              "value": "TU037741"
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "juwCode",
+              "label": "JUW Code",
+              "placeholder": "Enter JUW code",
+              "value": "JUWD2741"
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "salesRepName",
+              "label": "Sales Rep Name",
+              "placeholder": "Enter sales rep name",
+              "value": "INDGW_KARANJAI"
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "tradingUiwName",
+              "label": "Trading UIW Name",
+              "placeholder": "Enter trading UIW name",
+              "value": "TU037741_SURAJ"
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "approvingUiwName",
+              "label": "Approving UIW Name",
+              "placeholder": "Enter approving UIW name",
+              "value": "JUWD2741_ARJUN"
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "spLicenseCode",
+              "label": "SP License Code",
+              "placeholder": "Enter SP license code"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "footerActions": [
+    { "label": "Proceed", "type": "primary", "class": "btn-primary" }
+  ]
+}

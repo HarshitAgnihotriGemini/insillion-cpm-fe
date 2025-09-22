@@ -1,0 +1,147 @@
+{
+  "title": "C-KYC Verification",
+  "sections": [
+    {
+      "title": "KYC Details",
+      "fields": [
+        {
+          "type": "select",
+          "name": "ckycDoneBy",
+          "label": "CKYC Done By",
+          "placeholder": "Select CKYC done by",
+          "validators": { "required": true },
+          "wrapperClass": "col-4"
+        },
+        {
+          "type": "select",
+          "name": "customerBusiness",
+          "label": "Customer Business",
+          "placeholder": "Select customer business",
+          "validators": { "required": true },
+          "wrapperClass": "col-4"
+        },
+        {
+          "type": "input",
+          "inputType": "text",
+          "name": "panNo",
+          "label": "PAN No",
+          "placeholder": "Enter PAN No",
+          "validators": { "required": true },
+          "wrapperClass": "col-4"
+        },
+        {
+          "type": "datepicker",
+          "name": "dateOfBirth",
+          "label": "Date of Birth",
+          "placeholder": "Select date of birth",
+          "validators": { "required": true },
+          "wrapperClass": "col-4"
+        }
+      ],
+      "actions": [
+        { "label": "Start KYC", "type": "outline", "wrapperClass": "col-4" },
+        {
+          "label": "Send Link to Customer",
+          "type": "outline",
+          "wrapperClass": "col-4"
+        }
+      ]
+    },
+    {
+      "title": "Proposer Details",
+      "fields": [
+        {
+          "type": "select",
+          "name": "kycReferenceNo",
+          "label": "KYC Reference No",
+          "placeholder": "Select KYC reference no.",
+          "validators": { "required": true },
+          "wrapperClass": "col-4"
+        },
+        {
+          "type": "input",
+          "inputType": "text",
+          "name": "ckycNo",
+          "label": "CKYC No",
+          "placeholder": "Select customer business",
+          "wrapperClass": "col-4"
+        },
+        {
+          "type": "input",
+          "inputType": "text",
+          "name": "proposerFirstName",
+          "label": "Proposer First Name",
+          "placeholder": "Enter proposer first name",
+          "validators": { "required": true },
+          "wrapperClass": "col-4"
+        },
+        {
+          "type": "input",
+          "inputType": "text",
+          "name": "proposerMiddleName",
+          "label": "Proposer Middle Name",
+          "placeholder": "Enter proposer middle name",
+          "wrapperClass": "col-4"
+        },
+        {
+          "type": "input",
+          "inputType": "text",
+          "name": "proposerLastName",
+          "label": "Proposer Last Name",
+          "placeholder": "Enter proposer last name",
+          "wrapperClass": "col-4"
+        },
+        {
+          "type": "datepicker",
+          "name": "proposerDateOfBirth",
+          "label": "Date of Birth",
+          "placeholder": "Select date of birth",
+          "validators": { "required": true },
+          "wrapperClass": "col-4"
+        },
+        {
+          "type": "input",
+          "inputType": "text",
+          "name": "businessOfProposer",
+          "label": "Business of Proposer",
+          "placeholder": "Enter business of proposer",
+          "wrapperClass": "col-4"
+        },
+        {
+          "type": "select",
+          "name": "existingClient",
+          "label": "Existing Client",
+          "placeholder": "Select existing client",
+          "validators": { "required": true },
+          "wrapperClass": "col-4"
+        },
+        {
+          "type": "input",
+          "inputType": "text",
+          "name": "customerContactNumber",
+          "label": "Customer Contact Number",
+          "placeholder": "Enter customer contact number",
+          "wrapperClass": "col-4"
+        },
+        {
+          "type": "input",
+          "inputType": "email",
+          "name": "customerEmail",
+          "label": "Customer Email",
+          "placeholder": "Enter customer email",
+          "validators": { "required": true },
+          "wrapperClass": "col-4"
+        },
+        {
+          "type": "input",
+          "inputType": "text",
+          "name": "aadhaar",
+          "label": "Aadhaar",
+          "placeholder": "Enter Aadhaar",
+          "wrapperClass": "col-4"
+        }
+      ]
+    }
+  ],
+  "footerActions": [{ "label": "Submit", "type": "primary" }]
+}

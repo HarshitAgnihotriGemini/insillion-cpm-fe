@@ -1,0 +1,158 @@
+<div *ngIf="config" class="p-4 mb-5">
+  <app-breadcrumb [items]="config.breadCrumbs"></app-breadcrumb>
+  <div class="page-title">{{ config.title }}</div>
+  <section class="section-card bg-light">
+    <div class="card-header-grey">
+      <div class="text-md font-semibold">
+        Policy Summary | Quotation ID: AEP68203763
+      </div>
+    </div>
+    <div *ngFor="let section of config.sections" class="review-section-wrapper">
+      <ng-container [ngSwitch]="section.componentType">
+        <ng-container *ngSwitchCase="'attachments-review'">
+          <div class="ps-4 py-4">
+            <div class="text-lg font-semibold">{{ section.title }}</div>
+          </div>
+          <div class="px-4 pb-4">
+            <div class="d-flex gap-3">
+              <div *ngFor="let file of section.data">
+                <div class="attachment-card-review">
+                  <img
+                    src="https://harshitagnihotrigemini.github.io/insillion-common-styles-fe-harshit/assets/images/icon-file.svg"
+                    alt="file icon"
+                    class="file-icon"
+                  />
+                  <div>
+                    <div class="file-name text-grey">{{ file.name }}</div>
+                    <div class="file-id text-primary">{{ file.id }}</div>
+                    <div
+                      class="cursor-pointer text-primary d-flex align-items-center gap-1"
+                    >
+                      <img src="https://harshitagnihotrigemini.github.io/insillion-common-styles-fe-harshit/assets/images/icon-eye.svg" alt="icon-eye" /><span>{{
+                        file.actionLabel
+                      }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngSwitchDefault
+          ><ng-container *ngIf="section.title !== 'Proposal'"
+            ><div class="ps-4 py-4">
+              <div class="text-lg font-semibold">{{ section.title }}</div>
+            </div>
+
+            <div class="px-4">
+              <div
+                *ngFor="let subsection of section.subsections"
+                class="subsection-review"
+              >
+                <p
+                  class="text-base font-semibold mb-4"
+                  *ngIf="subsection.title"
+                >
+                  {{ subsection.title }}
+                </p>
+
+                <ng-container
+                  *ngIf="subsection.type === 'form-array'; else standardFields"
+                >
+                </ng-container>
+                <ng-template #standardFields>
+                  <div class="row g-4 mb-4">
+                    <div
+                      *ngFor="let field of subsection.fields"
+                      class="col-3 ps-0 text-sm"
+                    >
+                      <div class="text-grey">{{ field.label }}</div>
+                      <div class="review-field-value">{{ field.value }}</div>
+                    </div>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="section.title === 'Proposal' && isProposal"
+            ><div class="ps-4 py-4">
+              <div class="text-lg font-semibold">{{ section.title }}</div>
+            </div>
+
+            <div class="px-4">
+              <div
+                *ngFor="let subsection of section.subsections"
+                class="subsection-review"
+              >
+                <p
+                  class="text-base font-semibold mb-4"
+                  *ngIf="subsection.title"
+                >
+                  {{ subsection.title }}
+                </p>
+
+                <ng-container
+                  *ngIf="subsection.type === 'form-array'; else standardFields"
+                >
+                </ng-container>
+                <ng-template #standardFields>
+                  <div class="row g-4 mb-4">
+                    <div
+                      *ngFor="let field of subsection.fields"
+                      class="col-3 ps-0 text-sm"
+                    >
+                      <div class="text-grey">{{ field.label }}</div>
+                      <div class="review-field-value">{{ field.value }}</div>
+                    </div>
+                  </div>
+                </ng-template>
+              </div>
+            </div></ng-container
+          ></ng-container
+        >
+      </ng-container>
+    </div>
+  </section>
+  <div *ngIf="config.ckycAction && !isProposal" class="mt-4">
+    <button
+      [ngClass]="'btn-' + config.ckycAction.type"
+      class="btn btn-md"
+      (click)="handleButtonClick(config.ckycAction)"
+    >
+      {{ config.ckycAction.label }}
+    </button>
+  </div>
+</div>
+<footer
+  class="fixed-bottom bg-white shadow-md d-flex justify-content-between"
+  *ngIf="!isProposal"
+>
+  <div class="d-flex align-items-center gap-3 p-3">
+    <button class="btn btn-outline btn-md px-5" (click)="redirect()">
+      Quote versioning
+    </button>
+    <button class="btn btn-primary btn-md px-5" (click)="redirect()">
+      Proceed to Proposal
+    </button>
+  </div>
+</footer>
+<footer
+  class="fixed-bottom bg-white shadow-md d-flex justify-content-between"
+  *ngIf="isProposal"
+>
+  <div class="d-flex align-items-center gap-3 p-3">
+    <button class="btn btn-primary btn-md px-5" (click)="redirect()">
+      Complete Transaction
+    </button>
+  </div>
+
+  <div class="total-premium">
+    <div class="total-premium-details">
+      <div class="total-premium-label">Total Premium</div>
+      <a (click)="viewBreakup()" class="total-premium-link cursor-pointer"
+        >View Breakup</a
+      >
+    </div>
+    <div class="total-premium-amount">₹ 12,54,200.70</div>
+  </div>
+</footer>
