@@ -1,0 +1,33 @@
+<div
+  class="bg-primary d-flex justify-content-between align-items-center text-white p-4 text-md"
+>
+  <p class="pull-left">{{ title }}</p>
+  <img
+    class="cursor-pointer"
+    src="images/icon-close.svg"
+    alt="icon-close"
+    (click)="bsModalRef.hide()"
+  />
+</div>
+<div class="px-3 terms-container">
+  <accordion [isAnimated]="true">
+    <accordion-panel
+      *ngFor="let item of items; let i = index"
+      class="my-3"
+      (isOpenChange)="itemStates[i] = $event"
+    >
+      <div
+        accordion-heading
+        class="d-flex justify-content-between align-items-center"
+      >
+        <span class="font-semibold"
+          >{{ i + 1 }}. {{ item.id }} - {{ item.title }}</span
+        >
+        <span class="accordion-arrow" [class.expanded]="itemStates[i]"></span>
+      </div>
+      <div class="px-2">
+        <p class="text-grey text-sm">{{ item.content }}</p>
+      </div>
+    </accordion-panel>
+  </accordion>
+</div>

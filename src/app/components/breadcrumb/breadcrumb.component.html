@@ -1,0 +1,11 @@
+<nav class="breadcrumbs">
+  <div class="breadcrumbs-item" *ngFor="let item of items">
+    <a
+      [routerLink]="item.link"
+      [ngClass]="{ current: item.isActive }"
+      class="crumb"
+    >
+      {{ item.title }}
+    </a>
+  </div>
+</nav>

@@ -1,0 +1,59 @@
+<div class="canvas-container d-flex flex-column">
+  <div
+    class="bg-primary d-flex justify-content-between align-items-center text-white p-4 text-md"
+  >
+    <p>{{ config.title }}</p>
+    <img
+      class="cursor-pointer"
+      src="images/icon-close.svg"
+      alt="icon-close"
+      (click)="offcanvasService.dismiss()"
+    />
+  </div>
+
+  <div class="offcanvas-body" [formGroup]="form">
+    <div class="input-icon icon-search">
+      <input
+        type="text"
+        class="form-control"
+        [placeholder]="config.searchPlaceholder"
+      />
+    </div>
+    <div class="mt-3 covers-container">
+      <div *ngFor="let item of config.items" class="cover-item mb-3">
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            [id]="item.name"
+            [formControlName]="
+              item.dependentFields ? item.name + '_checked' : item.name
+            "
+          />
+          <label class="text-sm" [for]="item.name">{{ item.label }}</label>
+        </div>
+
+        <div
+          *ngIf="
+            item.dependentFields && form.get(item.name + '_checked')?.value
+          "
+          class="dependent-fields row mt-2"
+          [formGroupName]="item.name"
+        >
+          <div *ngFor="let field of item.dependentFields" class="col-4 ps-0">
+            <app-form-field
+              [field]="field"
+              [form]="getFormGroup(form.get(item.name))"
+            ></app-form-field>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="px-3 py-2 mt-auto">
+    <button class="btn btn-primary btn-sm px-5">
+      {{ config.doneButtonLabel }}
+    </button>
+  </div>
+</div>

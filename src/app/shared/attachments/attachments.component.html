@@ -1,0 +1,24 @@
+<div class="row g-3">
+  <div *ngFor="let file of files" class="col-auto">
+    <div class="attachment-card">
+      <img src="images/icon-file.svg" alt="file icon" class="file-icon" />
+      <div class="file-name text-grey text-truncate">
+        {{ file.name }}
+      </div>
+      <div class="file-id text-primary text-truncate">
+        {{ file.id }}
+      </div>
+      <p class="text-red-200 text-ul cursor-pointer" (click)="removeFile(file)">
+        {{ file.actionLabel }}
+      </p>
+    </div>
+  </div>
+
+  <div class="col-auto">
+    <label class="attachment-card add-more cursor-pointer">
+      <input type="file" class="d-none" (change)="onFileSelected($event)" />
+      <img src="images/icon-plus.svg" alt="icon-plus" />
+      <span class="text-xs">{{ section.addButtonLabel }}</span>
+    </label>
+  </div>
+</div>

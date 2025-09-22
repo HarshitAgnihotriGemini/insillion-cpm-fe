@@ -1,0 +1,213 @@
+{
+  "title": "Contractor Plant and Machinery",
+  "breadCrumbs": [
+    { "title": "Dashboard", "link": "/dashboard" },
+    { "title": "Commercial Lines", "link": "/commercial-lines" },
+    { "title": "Policy Summary", "link": "/policy-summary", "isActive": true }
+  ],
+  "sections": [
+    {
+      "title": "Quotation",
+      "subsections": [
+        {
+          "title": "Contractor Plant and Machinery Insurance",
+          "fields": [
+            { "label": "Intermediary", "value": "AG20227" },
+            { "label": "Proposition Selection", "value": "Product" },
+            { "label": "Transaction Type", "value": "New" },
+            { "label": "Customer First Name", "value": "Nikhil" },
+            { "label": "Proposer Email", "value": "nikhil@gmail.com" },
+            { "label": "Policy Start Date", "value": "11-09-2025" },
+            { "label": "Policy End Date", "value": "10-09-2026" },
+            { "label": "SEZ Previlege", "value": "Apply-GST" },
+            { "label": "Lead Code", "value": "-" },
+            { "label": "Product", "value": "CPM Base Cover" }
+          ]
+        },
+        {
+          "title": "Branch Details",
+          "fields": [
+            { "label": "Branch", "value": "CP Delhi" },
+            { "label": "Branch State", "value": "Delhi" },
+            { "label": "Branch GST No.", "value": "07AABCR7106G1ZL" }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Risk Details",
+      "subsections": [
+        {
+          "title": "Floater Details",
+          "fields": [
+            { "label": "Floater", "value": "Yes" },
+            {
+              "label": "Floater Coverage Within",
+              "value": "Anywhere in India"
+            },
+            {
+              "label": "Project in Which Machinery is Operated",
+              "value": "Anywhere in India"
+            }
+          ]
+        },
+        {
+          "title": "Machinery Details",
+          "type": "form-array",
+          "headers": [
+            "Location",
+            "Machinery",
+            "Description",
+            "Make",
+            "Model",
+            "Serial/Chassis No.",
+            "Year of Manufacturing"
+          ],
+          "rows": [
+            {
+              "location": "PAN India",
+              "machinery": "Chain Blocks & Pulley Blocks",
+              "description": "-",
+              "make": "Tata Heavy Industries",
+              "model": "TX-450 Chain Block",
+              "serialNo": "0964537",
+              "year": "2025"
+            }
+          ]
+        },
+        {
+          "title": "Policy Addons",
+          "fields": [
+            { "label": "Earthquake Required", "value": "Yes" },
+            { "label": "Terrorism Cover", "value": "Yes" }
+          ]
+        },
+        {
+          "title": "Coverage Options",
+          "fields": [
+            { "label": "Third Party Liability", "value": "-" },
+            { "label": "Customize SI", "value": "25,00,000" },
+            { "label": "Max SI Limit", "value": "50,00,000" },
+            { "label": "AOA ADY", "value": "1:2" }
+          ]
+        },
+        {
+          "title": "Referral Details",
+          "fields": [
+            {
+              "label": "Underwriter Referral Needed for This Quote?",
+              "value": "No"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Proposal",
+      "subsections": [
+        {
+          "title": "Policy Details",
+          "fields": [
+            { "label": "Policy Start Date", "value": "08-09-2025" },
+            { "label": "Policy End Date", "value": "07-09-2026" },
+            { "label": "Business of Proposer", "value": "-" }
+          ]
+        },
+        {
+          "title": "Proposal Questionnaire",
+          "fields": [
+            {
+              "label": "Do you want to answer the proposal questionnaire",
+              "value": "-"
+            }
+          ]
+        },
+        {
+          "title": "Hypothecation Details",
+          "fields": [{ "label": "Hypothecation", "value": "No" }]
+        },
+        {
+          "title": "Co-Insurance Details",
+          "fields": [
+            { "label": "RSG Leader / Member", "value": "No Co-Insurance" }
+          ]
+        },
+        {
+          "title": "Broker Details",
+          "fields": [
+            { "label": "Agent / Broker Code", "value": "AG020227" },
+            { "label": "Broker Type", "value": "Entity" },
+            { "label": "Agent / Broker Name", "value": "OA503184_NIKHIL" },
+            { "label": "QA Code", "value": "OA503184" },
+            { "label": "Share%", "value": "100" },
+            { "label": "Commission On", "value": "Overall Premium" },
+            { "label": "Broker/Agent Commission", "value": "15" }
+          ]
+        },
+        {
+          "title": "Proposal Branch Details",
+          "fields": [
+            { "label": "SEZ Tax Exemption Status", "value": "Apply-GST" },
+            { "label": "Branch State", "value": "CP Delhi" },
+            { "label": "Branch Code", "value": "N2" }
+          ]
+        },
+        {
+          "title": "Channel",
+          "fields": [
+            { "label": "Channel", "value": "Commercial" },
+            { "label": "Sub Channel", "value": "Mid-Corporate" },
+            { "label": "Sales Rep Code", "value": "HR005144" },
+            { "label": "TUW Code", "value": "TU002741" },
+            { "label": "UW Code", "value": "UW002741" },
+            { "label": "Sales Rep Name", "value": "HR005144_TANUJ" },
+            { "label": "Trading UIW Name", "value": "TU002741_SURAJ" },
+            { "label": "Approving UW Name", "value": "UW002741_ARYAN" },
+            { "label": "SP License Code", "value": "-" }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Attachments",
+      "componentType": "attachments-review",
+      "data": [
+        {
+          "name": "CKYC Document",
+          "id": "A202500000028022",
+          "actionLabel": "View"
+        },
+        {
+          "name": "CKYC Document",
+          "id": "A2025000000230623",
+          "actionLabel": "View"
+        },
+        {
+          "name": "CKYC Document",
+          "id": "A20250000004562018",
+          "actionLabel": "View"
+        }
+      ]
+    }
+  ],
+  "modals": {
+    "premiumSummary": {
+      "title": "Premium Summary",
+      "items": [
+        { "label": "Premium Excluding Terrorism", "value": "₹ 4,000.00" },
+        { "label": "Terrorism Premium", "value": "₹ 115.50" },
+        { "label": "Gross Premium", "value": "₹ 4,115.50" },
+        { "label": "IGST 18%:", "value": "₹ 740.79" }
+      ],
+      "total": {
+        "label": "Total Premium",
+        "value": "₹ 4,856.00"
+      }
+    }
+  },
+  "ckycAction": {
+    "label": "C-KYC Verification",
+    "type": "outline",
+    "action": "ckycOffCanvas"
+  }
+}

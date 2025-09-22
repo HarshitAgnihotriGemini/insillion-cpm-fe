@@ -1,0 +1,40 @@
+<div *ngIf="config" class="p-4 mb-5">
+  <app-breadcrumb [items]="config.breadCrumbs"></app-breadcrumb>
+  <div class="page-title">{{ config.title }}</div>
+  <div *ngIf="form">
+    <form [formGroup]="form">
+      <app-section
+        *ngFor="let section of config.sections"
+        [section]="section"
+        [form]="form"
+        (buttonClick)="handleButtonClick($event)"
+      >
+      </app-section>
+    </form>
+  </div>
+</div>
+<footer class="fixed-bottom bg-white shadow-md d-flex justify-content-between">
+  <div class="d-flex align-items-center gap-3 p-3">
+    <button class="btn btn-primary btn-md px-5" (click)="redirect()">
+      Submit
+    </button>
+    <div
+      class="text-primary d-flex align-items-center cursor-pointer"
+      (click)="openTermsModal()"
+    >
+      <img src="images/icon-info.svg" alt="info-icon" /><span class="ms-1"
+        >Terms & Conditions</span
+      >
+    </div>
+  </div>
+
+  <div class="total-premium">
+    <div class="total-premium-details">
+      <div class="total-premium-label">Total Premium</div>
+      <a (click)="viewBreakup()" class="total-premium-link cursor-pointer"
+        >View Breakup</a
+      >
+    </div>
+    <div class="total-premium-amount">₹ 12,54,200.70</div>
+  </div>
+</footer>
