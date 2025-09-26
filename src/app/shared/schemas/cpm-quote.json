@@ -9,7 +9,7 @@
     {
       "title": "Quotation",
       "isCollapsible": true,
-      "isExpandedByDefault" : false,
+      "isExpandedByDefault": false,
       "subsections": [
         {
           "title": "Contractor Plant and Machinery Insurance",
@@ -19,7 +19,11 @@
               "name": "intermediary",
               "label": "Intermediary",
               "placeholder": "Enter Intermediary",
-              "validators": { "required": true }
+              "validators": { "required": true },
+              "errors": { "required": "Intermediary is required." },
+              "events": [
+                { "name": "input", "action": "validateIntermediary" }
+              ]
             },
             {
               "type": "select",
@@ -40,7 +44,11 @@
               "name": "customerFirstName",
               "label": "Customer First Name",
               "placeholder": "Enter customer first name",
-              "validators": { "required": true }
+              "validators": { "required": true, "minLength": 2 },
+              "errors": {
+                "required": "Customer first name is required.",
+                "minLength": "Customer first name must be at least 2 characters long."
+              }
             },
             {
               "type": "input",
@@ -108,7 +116,7 @@
     {
       "title": "Risk Details",
       "isCollapsible": true,
-      "isExpandedByDefault" : false,
+      "isExpandedByDefault": false,
       "subsections": [
         {
           "title": "Floater Details",
@@ -299,7 +307,7 @@
     {
       "title": "Attachments",
       "isCollapsible": true,
-      "isExpandedByDefault" : false,
+      "isExpandedByDefault": false,
       "componentType": "attachments",
       "addButtonLabel": "Add More"
     }

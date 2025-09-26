@@ -16,6 +16,8 @@
       [formControlName]="field.name"
       [placeholder]="field.placeholder || ''"
       [class.error]="isInvalid"
+      [appEventHandler]="field"
+      (onEvent)="handleEvent($event)"
     />
 
     <ng-select
@@ -31,6 +33,8 @@
       [formControlName]="field.name"
       [class.error]="isInvalid"
       appendTo="body"
+      [appEventHandler]="field"
+      (onEvent)="handleEvent($event)"
     ></ng-select>
 
     <div
@@ -45,6 +49,8 @@
         [placeholder]="field.placeholder || ''"
         bsDatepicker
         [class.error]="isInvalid"
+        [appEventHandler]="field"
+        (onEvent)="handleEvent($event)"
       />
     </div>
     <button
@@ -63,11 +69,7 @@
     </button>
   </ng-container>
 
-  <div *ngIf="isInvalid" class="invalid-feedback d-block">
-    <div *ngFor="let key of getErrorKeys(form.get(field.name)?.errors)">
-      <div *ngIf="form.get(field.name)?.hasError(key)">
-        {{ field.errors?.[key] }}
-      </div>
-    </div>
+  <div *ngIf="errorMessage" class="invalid-feedback d-block">
+    {{ errorMessage }}
   </div>
 </div>

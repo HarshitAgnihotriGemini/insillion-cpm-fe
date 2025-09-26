@@ -29,6 +29,7 @@ export class SectionComponent implements OnInit {
   @Output() buttonClick = new EventEmitter<any>();
   @Output() addFile = new EventEmitter<void>();
   @Output() removeFile = new EventEmitter<any>();
+  @Output() fieldEvent = new EventEmitter<{ action: string; payload: any }>();
   imgPath: string;
 
   constructor(
@@ -65,5 +66,9 @@ export class SectionComponent implements OnInit {
 
   getFormGroup(control: AbstractControl): FormGroup {
     return this.formService.getFormGroup(control);
+  }
+
+  handleFieldEvent(event: { action: string; payload: any }) {
+    this.fieldEvent.emit(event);
   }
 }

@@ -72,6 +72,7 @@
                         [field]="field"
                         [form]="getFormGroup(group)"
                         (buttonClick)="buttonClick.emit($event)"
+                        (fieldEvent)="handleFieldEvent($event)"
                       ></app-form-field>
                     </div>
                   </div>
@@ -106,6 +107,7 @@
                     [field]="field"
                     [form]="form"
                     (buttonClick)="buttonClick.emit($event)"
+                    (fieldEvent)="handleFieldEvent($event)"
                   >
                   </app-form-field>
                 </div>

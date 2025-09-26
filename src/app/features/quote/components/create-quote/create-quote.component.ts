@@ -1,9 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import {
-  FormGroup,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BreadcrumbComponent } from '@app/shared/common-components/breadcrumb/breadcrumb.component';
 import { SectionComponent } from '@app/shared/common-components/section/section.component';
@@ -38,7 +35,7 @@ export class CreateQuoteComponent implements OnInit {
     private readonly modalService: BsModalService,
     private readonly router: Router,
     private readonly apiService: ApiService,
-    private readonly quoteFormService: QuoteFormService
+    private readonly quoteFormService: QuoteFormService,
   ) {
     this.imgPath = this.imgPath = `${this.apiService.commonPath}/assets/`;
   }
@@ -75,6 +72,13 @@ export class CreateQuoteComponent implements OnInit {
       this.openCoverageOffcanvas();
     }
   }
+
+  handleFieldEvent(event: { action: string; payload: any }) {
+    if (event.action === 'validateIntermediary') {
+      console.log('even handler works');
+    }
+  }
+
   redirect() {
     this.router.navigate(['/quote/review-quote'], {
       state: { isProposal: false },
