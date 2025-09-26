@@ -1,0 +1,95 @@
+<div class="page-layout">
+  <div class="page-content">
+    <div *ngIf="config">
+      <app-breadcrumb [items]="config.breadCrumbs"></app-breadcrumb>
+      <div class="page-title mb-4">{{ config.title }}</div>
+      <section class="section-card bg-light">
+        <div
+          class="card-header-grey d-flex justify-content-between align-items-center"
+        >
+          <div class="text-md font-semibold">
+            Policy Summary | Quotation ID: AEP68203763
+          </div>
+          <div class="d-flex gap-3 align-items-center">
+            <img
+              [src]="imgPath + 'images/icon-policy-cloning.svg'"
+              alt="icon-copy"
+              class="cursor-pointer"
+              *ngIf="!isProposal"
+            />
+            <img
+              [src]="imgPath + 'images/icon-policy-share.svg'"
+              alt="icon-share"
+              class="cursor-pointer"
+            />
+            <img
+              [src]="imgPath + 'images/icon-policy-download.svg'"
+              alt="icon-download"
+              class="cursor-pointer"
+            />
+          </div>
+        </div>
+        <div
+          *ngFor="let section of config.sections"
+          class="review-section-wrapper"
+        >
+          <ng-container [ngSwitch]="section.componentType">
+            <ng-container *ngSwitchCase="'attachments-review'">
+              <app-attachments-review
+                [config]="section"
+              ></app-attachments-review>
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+              <app-policy-summary [config]="section"></app-policy-summary>
+            </ng-container>
+          </ng-container>
+        </div>
+      </section>
+      <div *ngIf="config.ckycAction && !isProposal" class="mt-4">
+        <button
+          [ngClass]="'btn-' + config.ckycAction.type"
+          class="btn btn-md"
+          (click)="handleButtonClick(config.ckycAction)"
+        >
+          {{ config.ckycAction.label }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer
+    class="page-footer bg-white shadow-md d-flex justify-content-between ps-2"
+    *ngIf="!isProposal"
+  >
+    <div class="d-flex align-items-center gap-3 p-3">
+      <button class="btn btn-outline btn-md px-5" (click)="redirect()">
+        Quote versioning
+      </button>
+      <button class="btn btn-primary btn-md px-5" (click)="redirect()">
+        Proceed to Proposal
+      </button>
+    </div>
+    <app-total-premium
+      [totalPremium]="config.totalPremium"
+      (viewBreakup)="viewBreakup()"
+    ></app-total-premium>
+  </footer>
+  <footer
+    class="page-footer bg-white shadow-md d-flex justify-content-between ps-2"
+    *ngIf="isProposal"
+  >
+    <div class="d-flex align-items-center gap-3 p-3">
+      <button
+        class="btn btn-primary btn-md px-5"
+        (click)="handleFinalizeClick()"
+      >
+        {{ isFinalized ? "Complete Transaction" : "Finalize" }}
+      </button>
+    </div>
+
+    <app-total-premium
+      [totalPremium]="config.totalPremium"
+      (viewBreakup)="viewBreakup()"
+    ></app-total-premium>
+  </footer>
+</div>

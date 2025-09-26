@@ -1,0 +1,28 @@
+<div class="ps-4 pt-4">
+  <div class="text-lg font-semibold">{{ config.title }}</div>
+</div>
+<div class="px-4 py-4">
+  <div class="d-flex gap-3">
+    <div *ngFor="let file of config.data">
+      <div class="attachment-card-review">
+        <img
+          [src]="imgPath + 'images/icon-file.svg'"
+          alt="file icon"
+          class="file-icon"
+        />
+        <div>
+          <div class="file-name text-grey">{{ file.name }}</div>
+          <div class="file-id text-primary">{{ file.id }}</div>
+          <div
+            class="cursor-pointer text-primary d-flex align-items-center gap-1"
+          >
+            <img
+              [src]="imgPath + 'images/icon-eye.svg'"
+              alt="icon-eye"
+            /><span>{{ file.actionLabel }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

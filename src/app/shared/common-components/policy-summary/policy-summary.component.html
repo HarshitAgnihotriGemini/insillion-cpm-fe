@@ -1,0 +1,29 @@
+<div class="ps-4 pt-4">
+  <div class="text-lg font-semibold">{{ config.title }}</div>
+</div>
+
+<div class="px-4">
+  <div
+    *ngFor="let subsection of config.subsections"
+    class="subsection-review border-bottom-grey-2 pt-4"
+  >
+    <p class="text-base font-semibold mb-4" *ngIf="subsection.title">
+      {{ subsection.title }}
+    </p>
+
+    <ng-container *ngIf="subsection.type === 'form-array'; else standardFields">
+    </ng-container>
+    <ng-template #standardFields>
+      <div class="row g-4 mb-4">
+        <div *ngFor="let field of subsection.fields" class="col-3 ps-0 text-sm">
+          <div class="text-grey font-bold">
+            {{ field.label }}
+          </div>
+          <div class="review-field-value">
+            {{ field.value }}
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>

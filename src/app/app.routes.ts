@@ -1,11 +1,19 @@
 import { Routes } from '@angular/router';
-import { CpmComponent } from './cpm/cpm.component';
-import { CpmReviewDetailsComponent } from './cpm-review-details/cpm-review-details.component';
-import { CpmProposalComponent } from './cpm-proposal/cpm-proposal.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'cpm', pathMatch: 'full' },
-  { path: 'cpm', component: CpmComponent },
-  { path: 'cpm-review', component: CpmReviewDetailsComponent },
-  { path: 'cpm-proposal', component: CpmProposalComponent },
+  {
+    path: 'quote',
+    loadChildren: () =>
+      import('@app/features/quote').then((m) => m.QUOTE_ROUTES),
+  },
+  {
+    path: 'proposal',
+    loadChildren: () =>
+      import('@app/features/proposal').then((m) => m.PROPOSAL_ROUTES),
+  },
+  {
+    path: '',
+    redirectTo: 'quote',
+    pathMatch: 'full',
+  },
 ];

@@ -1,0 +1,36 @@
+<div class="page-layout" *ngIf="config">
+  <div class="page-content">
+    <app-breadcrumb [items]="config.breadCrumbs"></app-breadcrumb>
+    <div class="page-title">{{ config.title }}</div>
+    <div *ngIf="form">
+      <form [formGroup]="form">
+        <app-section
+          *ngFor="let section of config.sections"
+          [section]="section"
+          [form]="form"
+          (buttonClick)="handleButtonClick($event)"
+        >
+        </app-section>
+      </form>
+    </div>
+  </div>
+
+  <footer
+    class="page-footer bg-white shadow-md d-flex justify-content-between ps-2"
+  >
+    <div class="d-flex align-items-center gap-3 p-3">
+      <button class="btn btn-primary btn-md px-5" (click)="redirect()">
+        Submit
+      </button>
+      <div
+        class="text-primary d-flex align-items-center cursor-pointer"
+        (click)="openTermsModal()"
+      >
+        <img [src]="imgPath + 'images/icon-info.svg'" alt="info-icon" /><span
+          class="ms-1"
+          >Terms & Conditions</span
+        >
+      </div>
+    </div>
+  </footer>
+</div>
