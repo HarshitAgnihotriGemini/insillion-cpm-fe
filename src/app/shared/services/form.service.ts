@@ -12,7 +12,7 @@ import {
   providedIn: 'root',
 })
 export class FormService {
-  constructor(private fb: FormBuilder) {}
+  constructor(private readonly fb: FormBuilder) {}
 
   createFormGroup(sections: any[]): FormGroup {
     const group = this.fb.group({});

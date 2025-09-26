@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AttachmentsReviewComponent } from '@app/shared/common-components/attachments-review/attachments-review.component';
 import { BreadcrumbComponent } from '@app/shared/common-components/breadcrumb/breadcrumb.component';
@@ -13,13 +12,13 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import * as cpmReview from '@app/shared/schemas/cpm-policy-summary.json';
 import { ApiService } from '@app/shared/services/api.service';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-review-quote',
   standalone: true,
   imports: [
     CommonModule,
-    HttpClientModule,
     BreadcrumbComponent,
     PolicySummaryComponent,
     AttachmentsReviewComponent,
@@ -28,24 +27,24 @@ import { ApiService } from '@app/shared/services/api.service';
   templateUrl: './review-quote.component.html',
   styleUrl: './review-quote.component.scss',
 })
-export class ReviewQuoteComponent {
+export class ReviewQuoteComponent implements OnInit {
   bsModalRef?: BsModalRef;
-  public config: any;
-  private offcanvasService = inject(NgbOffcanvas);
-  public isProposal = false;
+  config: any;
+  private readonly offcanvasService = inject(NgbOffcanvas);
+  isProposal = false;
   isFinalized = false;
   imgPath: string;
   constructor(
-    private router: Router,
-    private modalService: BsModalService,
-    private toastr: ToastrService,
+    private readonly router: Router,
+    private readonly modalService: BsModalService,
+    private readonly toastr: ToastrService,
     private readonly apiService: ApiService,
   ) {
     this.imgPath = this.imgPath = `${this.apiService.commonPath}/assets/`;
   }
 
   ngOnInit(): void {
-    if (history.state && history.state.isProposal) {
+    if (history.state?.isProposal) {
       this.isProposal = true;
     }
     this.config = cpmReview;
@@ -76,7 +75,7 @@ export class ReviewQuoteComponent {
 
   handleFinalizeClick(): void {
     if (this.isFinalized) {
-      window.location.href = 'http://localhost:8902';
+      window.location.href = environment.paymentGatewayUrl;
     } else {
       this.toastr.success('The proposal has been submitted successfully');
       this.isFinalized = true;

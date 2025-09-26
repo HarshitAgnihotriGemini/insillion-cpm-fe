@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
-  AbstractControl,
-  FormArray,
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
@@ -10,12 +8,13 @@ import { Router } from '@angular/router';
 import { BreadcrumbComponent } from '@app/shared/common-components/breadcrumb/breadcrumb.component';
 import { SectionComponent } from '@app/shared/common-components/section/section.component';
 import { TermsAndConditionsModalComponent } from '@app/shared/common-components/terms-and-conditions/terms-and-conditions.component';
-import { FormService } from '@app/shared/services/form.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { CoverageOffcanvasComponent } from '@app/shared/common-components/coverage-offcanvas/coverage-offcanvas.component';
 import { ApiService } from '@app/shared/services/api.service';
 import * as cpmQuote from '@app/shared/schemas/cpm-quote.json';
+import { QuoteFormService } from '../../quote-form.service';
+
 @Component({
   standalone: true,
   selector: 'app-create-quote',
@@ -28,45 +27,30 @@ import * as cpmQuote from '@app/shared/schemas/cpm-quote.json';
   templateUrl: './create-quote.component.html',
   styleUrl: './create-quote.component.scss',
 })
-export class CreateQuoteComponent {
+export class CreateQuoteComponent implements OnInit {
   bsModalRef?: BsModalRef;
   config: any;
   form!: FormGroup;
   sectionState = new Map<string, boolean>();
-  private offcanvasService = inject(NgbOffcanvas);
+  private readonly offcanvasService = inject(NgbOffcanvas);
   imgPath: string;
   constructor(
-    private modalService: BsModalService,
-    private router: Router,
-    private formService: FormService,
-    private readonly apiService: ApiService
+    private readonly modalService: BsModalService,
+    private readonly router: Router,
+    private readonly apiService: ApiService,
+    private readonly quoteFormService: QuoteFormService
   ) {
     this.imgPath = this.imgPath = `${this.apiService.commonPath}/assets/`;
   }
 
   ngOnInit(): void {
     this.config = cpmQuote;
-    this.form = this.formService.createFormGroup(this.config.sections);
+    this.form = this.quoteFormService.initializeForm();
     this.config?.sections?.forEach((section: any) => {
       this.sectionState.set(section.title, true);
     });
   }
 
-  getFormArray(name: string): FormArray {
-    return this.formService.getFormArray(this.form, name);
-  }
-
-  addGroup(subsection: any): void {
-    this.formService.addGroup(this.form, subsection);
-  }
-
-  removeGroup(subsection: any, index: number): void {
-    this.formService.removeGroup(this.form, subsection.name, index);
-  }
-
-  getFormGroup(control: AbstractControl): FormGroup {
-    return this.formService.getFormGroup(control);
-  }
   openTermsModal() {
     const initialState = {
       items: this.config.modals.termsAndConditions,
