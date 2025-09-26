@@ -1,9 +1,19 @@
 {
   "title": "Contractor Plant and Machinery",
   "breadCrumbs": [
-    { "title": "Dashboard", "link": "/dashboard" },
-    { "title": "Engineering", "link": "/cl" },
-    { "title": "New Quote", "link": "/new-quote", "isActive": true }
+    {
+      "title": "Dashboard",
+      "link": "/dashboard"
+    },
+    {
+      "title": "Engineering",
+      "link": "/cl"
+    },
+    {
+      "title": "New Quote",
+      "link": "/new-quote",
+      "isActive": true
+    }
   ],
   "sections": [
     {
@@ -16,13 +26,20 @@
           "fields": [
             {
               "type": "input",
-              "name": "intermediary",
+              "name": "imd_code",
               "label": "Intermediary",
               "placeholder": "Enter Intermediary",
-              "validators": { "required": true },
-              "errors": { "required": "Intermediary is required." },
+              "validators": {
+                "required": true
+              },
+              "errors": {
+                "required": "Intermediary is required."
+              },
               "events": [
-                { "name": "input", "action": "validateIntermediary" }
+                {
+                  "name": "input",
+                  "action": "validateIntermediary"
+                }
               ]
             },
             {
@@ -30,21 +47,28 @@
               "name": "propositionSelection",
               "label": "Proposition Selection",
               "placeholder": "Select proposition selection",
-              "validators": { "required": true }
+              "validators": {
+                "required": true
+              }
             },
             {
               "type": "select",
-              "name": "transactionType",
+              "name": "policy_transaction_type",
               "label": "Transaction Type",
               "placeholder": "Select transaction type",
-              "validators": { "required": true }
+              "validators": {
+                "required": true
+              }
             },
             {
               "type": "input",
-              "name": "customerFirstName",
+              "name": "proposer_name_primary_insured",
               "label": "Customer First Name",
               "placeholder": "Enter customer first name",
-              "validators": { "required": true, "minLength": 2 },
+              "validators": {
+                "required": true,
+                "minLength": 2
+              },
               "errors": {
                 "required": "Customer first name is required.",
                 "minLength": "Customer first name must be at least 2 characters long."
@@ -52,31 +76,37 @@
             },
             {
               "type": "input",
-              "name": "customerContactNumber",
+              "name": "mobile_no",
               "label": "Customer Contact Number",
               "placeholder": "Enter customer contact number"
             },
             {
               "type": "input",
               "inputType": "email",
-              "name": "proposerEmail",
+              "name": "email",
               "label": "Proposer Email",
               "placeholder": "Enter proposer email",
-              "validators": { "required": true }
+              "validators": {
+                "required": true
+              }
             },
             {
               "type": "datepicker",
-              "name": "policyStartDate",
+              "name": "policy_start_date",
               "label": "Policy Start Date",
               "placeholder": "Select policy start date",
-              "validators": { "required": true }
+              "validators": {
+                "required": true
+              }
             },
             {
               "type": "datepicker",
-              "name": "policyEndDate",
+              "name": "policy_end_date",
               "label": "Policy End Date",
               "placeholder": "Select policy end date",
-              "validators": { "required": true }
+              "validators": {
+                "required": true
+              }
             },
             {
               "type": "input",
@@ -95,7 +125,9 @@
               "name": "product",
               "label": "Product",
               "placeholder": "Select product",
-              "validators": { "required": true }
+              "validators": {
+                "required": true
+              }
             }
           ]
         },
@@ -104,10 +136,12 @@
           "fields": [
             {
               "type": "select",
-              "name": "branch",
+              "name": "pol_serv_branch_name",
               "label": "Branch",
               "placeholder": "Select branch",
-              "validators": { "required": true }
+              "validators": {
+                "required": true
+              }
             }
           ]
         }
@@ -129,10 +163,12 @@
             },
             {
               "type": "select",
-              "name": "floaterCoverageWithin",
+              "name": "floater_coverage_in",
               "label": "Floater Coverage Within",
               "placeholder": "Select floater coverage within",
-              "validators": { "required": true }
+              "validators": {
+                "required": true
+              }
             },
             {
               "type": "select",
@@ -153,17 +189,19 @@
               "name": "location",
               "label": "Location",
               "placeholder": "Select location",
-              "validators": { "required": true }
+              "validators": {
+                "required": true
+              }
             },
             {
               "type": "select",
-              "name": "machinery",
+              "name": "type_machinery",
               "label": "Machinery",
               "placeholder": "Select machinery"
             },
             {
               "type": "input",
-              "name": "description",
+              "name": "machinery_description",
               "label": "Description",
               "placeholder": "Enter description"
             },
@@ -172,21 +210,27 @@
               "name": "make",
               "label": "Make",
               "placeholder": "Enter make",
-              "validators": { "required": true }
+              "validators": {
+                "required": true
+              }
             },
             {
               "type": "input",
               "name": "model",
               "label": "Model",
               "placeholder": "Enter model",
-              "validators": { "required": true }
+              "validators": {
+                "required": true
+              }
             },
             {
               "type": "input",
-              "name": "serialNo",
+              "name": "slno",
               "label": "Serial/Chassis No",
               "placeholder": "Enter serial no",
-              "validators": { "required": true }
+              "validators": {
+                "required": true
+              }
             },
             {
               "type": "input",
@@ -197,22 +241,26 @@
             {
               "type": "input",
               "inputType": "text",
-              "name": "yearOfManufacture",
+              "name": "yom",
               "label": "Year of Manufacturing",
               "placeholder": "Enter year of manufacturing",
-              "validators": { "required": true }
+              "validators": {
+                "required": true
+              }
             },
             {
               "type": "input",
               "inputType": "text",
-              "name": "costOfMachinery",
+              "name": "cost_of_machinery_si",
               "label": "Cost of Machinery",
               "placeholder": "Enter cost of machinery",
-              "validators": { "required": true }
+              "validators": {
+                "required": true
+              }
             },
             {
               "type": "select",
-              "name": "voluntaryExcess",
+              "name": "voluntary_excess",
               "label": "Voluntary Excess",
               "placeholder": "Select voluntary excess"
             }
@@ -227,7 +275,9 @@
               "name": "deTariffDiscount",
               "label": "Less : De-Tariff Discount (%)",
               "placeholder": "Enter discount",
-              "validators": { "required": true }
+              "validators": {
+                "required": true
+              }
             }
           ]
         },
@@ -236,16 +286,18 @@
           "fields": [
             {
               "type": "select",
-              "name": "earthquakeRequired",
+              "name": "earthquake_req",
               "label": "Earthquake Required",
               "placeholder": "Select earthquake required"
             },
             {
               "type": "select",
-              "name": "terrorismCover",
+              "name": "terrorism_req",
               "label": "Terrorism Cover",
               "placeholder": "Select terrorism cover",
-              "validators": { "required": true }
+              "validators": {
+                "required": true
+              }
             }
           ]
         },
@@ -254,7 +306,7 @@
           "fields": [
             {
               "type": "select",
-              "name": "optionalCover",
+              "name": "package_plan",
               "label": "Optional Cover",
               "placeholder": "Select optional cover"
             }
@@ -274,13 +326,19 @@
           "fields": [
             {
               "type": "select",
-              "name": "underwriterReferralNeeded",
+              "name": "manual_referral",
               "label": "Underwriter Referral Needed for This Quote?",
               "placeholder": "Select an option",
               "value": "no",
               "options": [
-                { "key": "yes", "name": "Yes" },
-                { "key": "no", "name": "No" }
+                {
+                  "key": "yes",
+                  "name": "Yes"
+                },
+                {
+                  "key": "no",
+                  "name": "No"
+                }
               ]
             },
             {
@@ -326,11 +384,13 @@
             {
               "type": "input",
               "inputType": "text",
-              "name": "customizeSI",
+              "name": "addon_si",
               "label": "Customize SI",
               "value": "25,00,000",
               "placeholder": "Enter customize SI",
-              "validators": { "required": true }
+              "validators": {
+                "required": true
+              }
             },
             {
               "type": "input",
@@ -339,7 +399,9 @@
               "label": "Max SI limit",
               "value": "50,00,000",
               "placeholder": "Enter cmax SI limit",
-              "validators": { "required": true }
+              "validators": {
+                "required": true
+              }
             },
             {
               "type": "select",
@@ -347,8 +409,15 @@
               "label": "AOA ADY",
               "placeholder": "Enter AOA ADY",
               "value": null,
-              "options": [{ "id": "1:2", "name": "1:2" }],
-              "validators": { "required": true }
+              "options": [
+                {
+                  "id": "1:2",
+                  "name": "1:2"
+                }
+              ],
+              "validators": {
+                "required": true
+              }
             }
           ]
         },
@@ -357,8 +426,16 @@
           "label": "Owners Surrounding Property",
           "checked": false
         },
-        { "name": "airFreight", "label": "Air Freight", "checked": false },
-        { "name": "escalation", "label": "Escalation", "checked": false },
+        {
+          "name": "airFreight",
+          "label": "Air Freight",
+          "checked": false
+        },
+        {
+          "name": "escalation",
+          "label": "Escalation",
+          "checked": false
+        },
         {
           "name": "additionalCustomDuty",
           "label": "Additional Custom Duty",
@@ -379,13 +456,21 @@
           "label": "Dismantling Cover",
           "checked": false
         },
-        { "name": "transitRisk", "label": "Transit Risk", "checked": false },
+        {
+          "name": "transitRisk",
+          "label": "Transit Risk",
+          "checked": false
+        },
         {
           "name": "expressFreight",
           "label": "Express Freight",
           "checked": false
         },
-        { "name": "mbCover", "label": "MB Cover", "checked": false }
+        {
+          "name": "mbCover",
+          "label": "MB Cover",
+          "checked": false
+        }
       ]
     }
   },
@@ -395,7 +480,7 @@
         "id": "RS/C & E/CPM/001",
         "title": "OWNERS SURROUNDING PROPERTY",
         "updatedDate": "April 2025",
-        "content": "In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site"
+        "content": "In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms and conditions of the Policy, that this insurance by within policy is extended to cover loss or damage to property located at or adjacent to the site In consideration of insured having paid extra premium, it is hereby agreed and declared, subject to otherwise terms an... [truncated]"
       },
       {
         "id": "RS/C & E/CPM/002",

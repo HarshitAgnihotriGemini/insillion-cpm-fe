@@ -69,7 +69,7 @@
     </button>
   </ng-container>
 
-  <div *ngIf="errorMessage" class="invalid-feedback d-block">
+  <div class="error-msg" [class.show]="errorMessage">
     {{ errorMessage }}
   </div>
 </div>
