@@ -12,6 +12,7 @@ import { ApiService } from '@app/shared/services/api.service';
 import * as cpmQuote from '@app/shared/schemas/cpm-quote.json';
 import { QuoteFormService } from '../../quote-form.service';
 import { DynamicOptionsService } from '@app/shared/services/dynamic-options.service';
+import { QuoteService } from '../../quote.service';
 
 @Component({
   standalone: true,
@@ -37,7 +38,8 @@ export class CreateQuoteComponent implements OnInit {
     private readonly router: Router,
     private readonly apiService: ApiService,
     private readonly quoteFormService: QuoteFormService,
-    private readonly dynamicOptionsService: DynamicOptionsService
+    private readonly dynamicOptionsService: DynamicOptionsService,
+    private readonly quoteService: QuoteService,
   ) {
     this.imgPath = this.imgPath = `${this.apiService.commonPath}/assets/`;
   }
@@ -87,7 +89,15 @@ export class CreateQuoteComponent implements OnInit {
 
   handleFieldEvent(event: { action: string; payload: any }) {
     if (event.action === 'validateIntermediary') {
-      console.log('even handler works');
+      this.validateIntermediary(event.payload.target.value);
+    }
+  }
+
+  async validateIntermediary(imdValue: string) {
+    try {
+      await this.quoteService.fetchPropositionData(imdValue);
+    } catch (error) {
+      console.error('Error validating intermediary:', error);
     }
   }
 

@@ -19,7 +19,7 @@
     {
       "title": "Quotation",
       "isCollapsible": true,
-      "isExpandedByDefault": false,
+      "isExpandedByDefault": true,
       "subsections": [
         {
           "title": "Contractor Plant and Machinery Insurance",
@@ -36,10 +36,7 @@
                 "required": "Intermediary is required."
               },
               "events": [
-                {
-                  "name": "input",
-                  "action": "validateIntermediary"
-                }
+                { "name": "change", "action": "validateIntermediary" }
               ]
             },
             {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
 import { ENVIRONMENTS } from '../constants/constants';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import {
   DEV_CONFIG,
@@ -68,17 +68,22 @@ export class ApiService {
   }
 
   /****  Common HTTP Get Method****/
-  async httpGetMethod(url: string): Promise<any[]> {
-    try {
-      const response: any = await firstValueFrom(
-        this.http.get(url, { observe: 'response' }),
-      );
-      const data = response['body'];
-      return data;
-    } catch (err: any) {
-      throw new Error(err?.error || 'Server error');
+  async httpGetMethod(url: string, payload?: Record<string, any>): Promise<any[]> {
+  try {
+    let params = new HttpParams();
+    if (payload) {
+      params = new HttpParams({ fromObject: payload });
     }
+
+    const response: any = await firstValueFrom(
+      this.http.get(url, { observe: 'response', params }),
+    );
+
+    return response.body;
+  } catch (err: any) {
+    throw new Error(err?.error || 'Server error');
   }
+}
 
   /****  Common HTTP Delete Method****/
   async httpDeleteMethod(url: string): Promise<any[]> {

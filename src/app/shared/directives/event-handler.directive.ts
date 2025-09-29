@@ -15,8 +15,8 @@ import {
 export class EventHandlerDirective implements OnInit, OnDestroy {
   @Input('appEventHandler') fieldConfig: any;
   @Output() onEvent = new EventEmitter<{ action: string; payload: Event }>();
-  private unlistenFunctions: (() => void)[] = [];
-  constructor(private elementRef: ElementRef) {}
+  private readonly unlistenFunctions: (() => void)[] = [];
+  constructor(private readonly elementRef: ElementRef) {}
   ngOnInit(): void {
     if (this.fieldConfig?.events) {
       for (const eventConfig of this.fieldConfig.events) {
