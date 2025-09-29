@@ -93,7 +93,7 @@ export class CreateQuoteComponent implements OnInit {
         this.form.controls['propositionSelection'].value,
       );
       this.form.controls['policy_transaction_type'].setValue(
-        transactionTypeRes?.data[0],
+        transactionTypeRes[0],
       );
     } catch (error) {
       console.error('Error validating intermediary:', error);
