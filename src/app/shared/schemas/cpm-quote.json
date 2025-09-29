@@ -45,13 +45,14 @@
               "optionsKey": "propositionOptions",
               "validators": {
                 "required": true
-              }
+              },
+              "events": [{ "name": "change", "action": "onPropositionChange" }]
             },
             {
               "type": "select",
               "name": "policy_transaction_type",
               "label": "Transaction Type",
-              "optionsKey":"transactionTypeOptions",
+              "optionsKey": "transactionTypeOptions",
               "placeholder": "Select transaction type",
               "validators": {
                 "required": true
@@ -75,7 +76,17 @@
               "type": "input",
               "name": "mobile_no",
               "label": "Customer Contact Number",
-              "placeholder": "Enter customer contact number"
+              "placeholder": "Enter customer contact number",
+              "validators": {
+                "required": true,
+                "minLength": 10,
+                "maxLength": 10
+              },
+              "errors": {
+                "required": "Customer contact number is required.",
+                "minLength": "Invalid Customer Contact number",
+                "maxLength": "Invalid Customer Contact number"
+              }
             },
             {
               "type": "input",
@@ -106,6 +117,7 @@
               "name": "policy_end_date",
               "label": "Policy End Date",
               "placeholder": "Select policy end date",
+              "isReadOnly": true,
               "validators": {
                 "required": true
               }
@@ -120,7 +132,8 @@
               "type": "input",
               "name": "leadCode",
               "label": "Lead Code",
-              "placeholder": "Enter lead code"
+              "placeholder": "Enter lead code",
+              "isReadOnly": true
             },
             {
               "type": "select",

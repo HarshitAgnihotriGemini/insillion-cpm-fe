@@ -18,6 +18,7 @@
       [class.error]="isInvalid"
       [appEventHandler]="field"
       (onEvent)="handleEvent($event)"
+      [readonly]="field?.isReadOnly"
     />
 
     <ng-select

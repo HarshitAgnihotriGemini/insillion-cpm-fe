@@ -78,25 +78,61 @@ export class CreateQuoteComponent implements OnInit {
   handleFieldEvent(event: { action: string; payload: any }) {
     if (event.action === 'validateIntermediary') {
       this.validateIntermediary(event.payload.target.value);
+    } else if (event.action === 'onPropositionChange') {
+      this.onPropositionChange(event.payload.target.value);
     }
   }
 
   async validateIntermediary(imdValue: string) {
     try {
-      const propositionRes =
-        await this.quoteService.fetchPropositionData(imdValue);
+      if (imdValue) {
+        const propositionRes =
+          await this.quoteService.fetchPropositionData(imdValue);
 
-      this.form.controls['propositionSelection'].setValue(
-        propositionRes?.data[0],
-      );
-      const transactionTypeRes = await this.quoteService.getTransactionTypes(
-        this.form.controls['propositionSelection'].value,
-      );
-      this.form.controls['policy_transaction_type'].setValue(
-        transactionTypeRes[0],
-      );
+        this.form.controls['propositionSelection'].setValue(
+          propositionRes?.data[0],
+        );
+        await this.onPropositionChange(
+          this.form.controls['propositionSelection'].value,
+        );
+      }
     } catch (error) {
       console.error('Error validating intermediary:', error);
+    }
+  }
+
+  async onPropositionChange(propositionName: string) {
+    try {
+      if (propositionName) {
+        const transactionTypeRes =
+          await this.quoteService.getTransactionTypes(propositionName);
+        this.form.controls['policy_transaction_type'].setValue(
+          transactionTypeRes[0],
+        );
+        await this.fetchProduct();
+      }
+    } catch (error) {
+      console.error('Error fetching transaction types:', error);
+    }
+  }
+
+  async fetchProduct() {
+    try {
+      if (
+        this.form.controls['propositionSelection'].value &&
+        this.form.controls['policy_transaction_type'].value
+      ) {
+        const payload = {
+          proposition_name: this.form.controls['propositionSelection'].value,
+          settings_name: 'product',
+          biz_type: this.form.controls['policy_transaction_type'].value,
+        };
+        const productNameRes =
+          await this.quoteService.fetchProductName(payload);
+        this.form.controls['product'].setValue(productNameRes[0]);
+      }
+    } catch (error) {
+      console.error('Error fetching transaction types:', error);
     }
   }
 

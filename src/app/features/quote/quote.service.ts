@@ -53,4 +53,16 @@ export class QuoteService {
       throw error;
     }
   }
+
+  async fetchProductName(body: Object) {
+    try {
+      const url = this.api.url + 'rater/lookup/get_product_code';
+      const res = await this.api.httpGetMethod(url, body);
+      const options = res.data.map((item: any) => item?.settings_value);
+      this.dynamicOptionsService.setOptions('productOptions', options);
+      return options;
+    } catch (error: unknown) {
+      throw error;
+    }
+  }
 }

@@ -32,7 +32,7 @@ export class FormFieldComponent implements OnInit {
   ngOnInit(): void {
     if (this.field.optionsKey) {
       this.options$ = this.dynamicOptionsService.getOptions(
-        this.field.optionsKey
+        this.field.optionsKey,
       );
     } else {
       this.options$ = of(this.field.options || []);
@@ -46,7 +46,7 @@ export class FormFieldComponent implements OnInit {
 
   get errorMessage(): string | null {
     const control = this.form.get(this.field.name);
-    if (this.isInvalid && control && control.errors) {
+    if (this.isInvalid && control?.errors) {
       const errorKeys = Object.keys(control.errors);
       if (errorKeys.length > 0) {
         const firstErrorKey = errorKeys[0];
@@ -57,7 +57,7 @@ export class FormFieldComponent implements OnInit {
           if (firstErrorKey === 'minlength' || firstErrorKey === 'maxlength') {
             return errorMessageTemplate.replace(
               '{requiredLength}',
-              error.requiredLength
+              error.requiredLength,
             );
           }
           return errorMessageTemplate;

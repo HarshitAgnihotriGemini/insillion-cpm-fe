@@ -10,6 +10,7 @@ export class DynamicOptionsService {
   } = {
     propositionOptions: new BehaviorSubject<any[]>([]),
     transactionTypeOptions: new BehaviorSubject<any[]>([]),
+    productOptions: new BehaviorSubject<any[]>([]),
   };
 
   constructor() {}
