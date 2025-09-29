@@ -97,6 +97,7 @@
               "name": "policy_start_date",
               "label": "Policy Start Date",
               "placeholder": "Select policy start date",
+              "readonly": true,
               "validators": {
                 "required": true
               }
