@@ -14,6 +14,7 @@ export class QuoteService {
   async fetchPropositionData(imdCode: string) {
     try {
       const url = this.api.url + 'cpm/proposition';
+      //Harcode values added
       const body = {
         imd_oa_agent: '',
         imd_code: imdCode || '',
@@ -38,6 +39,7 @@ export class QuoteService {
   async getTransactionTypes(propositionName: string) {
     try {
       const url = this.api.url + 'rater/lookup/get_trans_type';
+      //Hardcode values added
       const body = {
         proposition_name: propositionName,
         settings_name: 'policy_transaction_type',
@@ -57,10 +59,41 @@ export class QuoteService {
   async fetchProductName(body: Object) {
     try {
       const url = this.api.url + 'rater/lookup/get_product_code';
+      //Hardcode values added
       const res = await this.api.httpGetMethod(url, body);
       const options = res.data.map((item: any) => item?.settings_value);
       this.dynamicOptionsService.setOptions('productOptions', options);
       return options;
+    } catch (error: unknown) {
+      throw error;
+    }
+  }
+
+  async fetchBranchList() {
+    try {
+      const url = this.api.url + 'cpm/cpm_branches';
+      //hardcode values added
+      const body = {
+        settings_user_type: 'Internal',
+        region: 'select',
+        skip: '/v1/rater/',
+      };
+      const res = await this.api.httpGetMethod(url, body);
+      this.dynamicOptionsService.setOptions('branchListOptions', res?.['data']);
+    } catch (error: unknown) {
+      throw error;
+    }
+  }
+
+  async fetchPackagePlan(body: Object) {
+    try {
+      const url = this.api.url + 'cpm/package_plan';
+      //hardcode values added
+      const res = await this.api.httpGetMethod(url, body);
+      this.dynamicOptionsService.setOptions(
+        'packagePlanOptions',
+        res?.['data'],
+      );
     } catch (error: unknown) {
       throw error;
     }

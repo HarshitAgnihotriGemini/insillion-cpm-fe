@@ -48,6 +48,11 @@ export class CreateQuoteComponent implements OnInit {
     this.config?.sections?.forEach((section: any) => {
       this.sectionState.set(section.title, true);
     });
+    this.fetchBranchListAsync();
+  }
+
+  private async fetchBranchListAsync(): Promise<void> {
+    await this.quoteService.fetchBranchList();
   }
 
   openTermsModal() {
@@ -80,6 +85,8 @@ export class CreateQuoteComponent implements OnInit {
       this.validateIntermediary(event.payload.target.value);
     } else if (event.action === 'onPropositionChange') {
       this.onPropositionChange(event.payload.target.value);
+    } else if (event.action === 'onTransactionTypeChange') {
+      this.onTransactionTypeChange(event.payload.target.value);
     }
   }
 
@@ -110,6 +117,7 @@ export class CreateQuoteComponent implements OnInit {
           transactionTypeRes[0],
         );
         await this.fetchProduct();
+        await this.fetchPackagePlan();
       }
     } catch (error) {
       console.error('Error fetching transaction types:', error);
@@ -133,6 +141,33 @@ export class CreateQuoteComponent implements OnInit {
       }
     } catch (error) {
       console.error('Error fetching transaction types:', error);
+    }
+  }
+
+  async fetchPackagePlan() {
+    try {
+      if (this.form.controls['product'].value) {
+        const payload = {
+          proposition: this.form.controls['propositionSelection'].value,
+          product: this.form.controls['product'].value,
+          policy_transaction_type:
+            this.form.controls['policy_transaction_type'].value,
+          skip: '/v1/rater/',
+        };
+        await this.quoteService.fetchPackagePlan(payload);
+      }
+    } catch (error) {
+      console.error('Error fetching package plan:', error);
+    }
+  }
+
+  async onTransactionTypeChange(transactionType: string) {
+    try {
+      if (transactionType) {
+        await this.fetchPackagePlan();
+      }
+    } catch (error) {
+      console.error('Error fetching products:', error);
     }
   }
 

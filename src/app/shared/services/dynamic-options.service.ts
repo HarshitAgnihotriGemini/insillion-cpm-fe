@@ -8,9 +8,7 @@ export class DynamicOptionsService {
   private optionsSources: {
     [key: string]: BehaviorSubject<any[]>;
   } = {
-    propositionOptions: new BehaviorSubject<any[]>([]),
-    transactionTypeOptions: new BehaviorSubject<any[]>([]),
-    productOptions: new BehaviorSubject<any[]>([]),
+    // propositionOptions: new BehaviorSubject<any[]>([]), // Example predefined key
   };
 
   constructor() {}

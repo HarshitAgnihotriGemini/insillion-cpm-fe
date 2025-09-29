@@ -19,7 +19,7 @@
     {
       "title": "Quotation",
       "isCollapsible": true,
-      "isExpandedByDefault": true,
+      "isExpandedByDefault": false,
       "subsections": [
         {
           "title": "Contractor Plant and Machinery Insurance",
@@ -54,6 +54,9 @@
               "label": "Transaction Type",
               "optionsKey": "transactionTypeOptions",
               "placeholder": "Select transaction type",
+              "events": [
+                { "name": "change", "action": "onTransactionTypeChange" }
+              ],
               "validators": {
                 "required": true
               }
@@ -108,7 +111,6 @@
               "name": "policy_start_date",
               "label": "Policy Start Date",
               "placeholder": "Select policy start date",
-              "readonly": true,
               "validators": {
                 "required": true
               }
@@ -118,23 +120,35 @@
               "name": "policy_end_date",
               "label": "Policy End Date",
               "placeholder": "Select policy end date",
-              "isReadOnly": true,
+              "readonly": true,
               "validators": {
                 "required": true
+              },
+              "errors": {
+                "required": "Proposer email is required.",
+                "pattern": "Please enter a valid email address."
               }
             },
             {
               "type": "input",
               "name": "sezPrevilege",
               "label": "SEZ Previlege",
-              "placeholder": "Enter SEZ previlege"
+              "placeholder": "Enter SEZ previlege",
+              "value": "Apply-GST",
+              "validators": {
+                "required": true
+              },
+              "readonly": true,
+              "errors": {
+                "required": "SEZ previlege is required."
+              }
             },
             {
               "type": "input",
               "name": "leadCode",
               "label": "Lead Code",
               "placeholder": "Enter lead code",
-              "isReadOnly": true
+              "readonly": true
             },
             {
               "type": "select",
@@ -156,6 +170,7 @@
               "name": "pol_serv_branch_name",
               "label": "Branch",
               "placeholder": "Select branch",
+              "optionsKey": "branchListOptions",
               "validators": {
                 "required": true
               }
@@ -167,7 +182,7 @@
     {
       "title": "Risk Details",
       "isCollapsible": true,
-      "isExpandedByDefault": false,
+      "isExpandedByDefault": true,
       "subsections": [
         {
           "title": "Floater Details",
@@ -335,6 +350,7 @@
               "type": "select",
               "name": "package_plan",
               "label": "Optional Cover",
+              "optionsKey": "packagePlanOptions",
               "placeholder": "Select optional cover"
             }
           ],
