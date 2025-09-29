@@ -68,7 +68,7 @@
               },
               "errors": {
                 "required": "Customer first name is required.",
-                "minLength": "Customer first name must be at least 2 characters long."
+                "minlength": "Customer first name must be at least {requiredLength} characters long"
               }
             },
             {
@@ -84,7 +84,12 @@
               "label": "Proposer Email",
               "placeholder": "Enter proposer email",
               "validators": {
-                "required": true
+                "required": true,
+                "pattern": "EMAIL"
+              },
+              "errors": {
+                "required": "Proposer email is required.",
+                "pattern": "Please enter a valid email address."
               }
             },
             {

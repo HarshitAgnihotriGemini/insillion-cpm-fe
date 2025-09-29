@@ -20,32 +20,15 @@
       (onEvent)="handleEvent($event)"
     />
 
-    <ng-container *ngSwitchCase="'select'">
-      <ng-container *ngIf="(isObjectArray$ | async); else stringArraySelect">
-        <ng-select
-          [items]="options$ | async"
-          bindLabel="name"
-          bindValue="key"
-          [placeholder]="field.placeholder || ''"
-          [formControlName]="field.name"
-          [class.error]="isInvalid"
-          appendTo="body"
-          [appEventHandler]="field"
-          (onEvent)="handleEvent($event)"
-        ></ng-select>
-      </ng-container>
-      <ng-template #stringArraySelect>
-        <ng-select
-          [items]="options$ | async"
-          [placeholder]="field.placeholder || ''"
-          [formControlName]="field.name"
-          [class.error]="isInvalid"
-          appendTo="body"
-          [appEventHandler]="field"
-          (onEvent)="handleEvent($event)"
-        ></ng-select>
-      </ng-template>
-    </ng-container>
+    <ng-select
+      *ngSwitchCase="'select'"
+      [items]="options$ | async"
+      [placeholder]="field.placeholder || ''"
+      [formControlName]="field.name"
+      [class.error]="isInvalid"
+      [appEventHandler]="field"
+      (onEvent)="handleEvent($event)"
+    ></ng-select>
 
     <div
       *ngSwitchCase="'datepicker'"

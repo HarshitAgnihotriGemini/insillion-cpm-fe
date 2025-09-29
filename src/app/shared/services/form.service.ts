@@ -7,6 +7,7 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
+import { REGEX_PATTERNS } from '../constants/regex.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +26,7 @@ export class FormService {
             const validators = this.buildValidators(field.validators || {});
             group.addControl(
               field.name,
-              this.fb.control(field.value ?? null, validators),
+              this.fb.control(field.value ?? null, validators)
             );
           });
         }
@@ -57,11 +58,16 @@ export class FormService {
         case 'max':
           validatorFns.push(Validators.max(value));
           break;
-        case 'email':
-          if (value) validatorFns.push(Validators.email);
-          break;
         case 'pattern':
-          validatorFns.push(Validators.pattern(value));
+          if (REGEX_PATTERNS[value as keyof typeof REGEX_PATTERNS]) {
+            validatorFns.push(
+              Validators.pattern(
+                REGEX_PATTERNS[value as keyof typeof REGEX_PATTERNS]
+              )
+            );
+          } else {
+            validatorFns.push(Validators.pattern(value));
+          }
           break;
       }
     }
@@ -79,7 +85,7 @@ export class FormService {
       const validators = this.buildValidators(field.validators || {});
       newGroup.addControl(
         field.name,
-        this.fb.control(field.value || '', validators),
+        this.fb.control(field.value || '', validators)
       );
     });
     formArray.push(newGroup);
@@ -96,7 +102,9 @@ export class FormService {
   setupConditionalLogic(form: FormGroup, sections: any[]): void {
     const allFields = sections
       .flatMap((s) => s.subsections || [])
-      .flatMap((ss) => (ss.type === 'form-array' ? ss.formGroupTemplate : ss.fields) || []);
+      .flatMap((ss) =>
+        ss.type === 'form-array' ? ss.formGroupTemplate : ss.fields || []
+      );
 
     allFields.forEach((field) => {
       if (field) {
