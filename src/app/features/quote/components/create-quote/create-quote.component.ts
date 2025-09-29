@@ -11,7 +11,6 @@ import { CoverageOffcanvasComponent } from '@app/shared/common-components/covera
 import { ApiService } from '@app/shared/services/api.service';
 import * as cpmQuote from '@app/shared/schemas/cpm-quote.json';
 import { QuoteFormService } from '../../quote-form.service';
-import { DynamicOptionsService } from '@app/shared/services/dynamic-options.service';
 import { QuoteService } from '../../quote.service';
 
 @Component({
@@ -38,7 +37,6 @@ export class CreateQuoteComponent implements OnInit {
     private readonly router: Router,
     private readonly apiService: ApiService,
     private readonly quoteFormService: QuoteFormService,
-    private readonly dynamicOptionsService: DynamicOptionsService,
     private readonly quoteService: QuoteService,
   ) {
     this.imgPath = this.imgPath = `${this.apiService.commonPath}/assets/`;
@@ -50,16 +48,6 @@ export class CreateQuoteComponent implements OnInit {
     this.config?.sections?.forEach((section: any) => {
       this.sectionState.set(section.title, true);
     });
-
-    // Simulate API call
-    setTimeout(() => {
-      const productOptions = [
-        { key: 'product1', name: 'Product 1' },
-        { key: 'product2', name: 'Product 2' },
-        { key: 'product3', name: 'Product 3' },
-      ];
-      this.dynamicOptionsService.setOptions('productOptions', productOptions);
-    }, 1000);
   }
 
   openTermsModal() {
@@ -95,7 +83,18 @@ export class CreateQuoteComponent implements OnInit {
 
   async validateIntermediary(imdValue: string) {
     try {
-      await this.quoteService.fetchPropositionData(imdValue);
+      const propositionRes =
+        await this.quoteService.fetchPropositionData(imdValue);
+
+      this.form.controls['propositionSelection'].setValue(
+        propositionRes?.data[0],
+      );
+      const transactionTypeRes = await this.quoteService.getTransactionTypes(
+        this.form.controls['propositionSelection'].value,
+      );
+      this.form.controls['policy_transaction_type'].setValue(
+        transactionTypeRes?.data[0],
+      );
     } catch (error) {
       console.error('Error validating intermediary:', error);
     }

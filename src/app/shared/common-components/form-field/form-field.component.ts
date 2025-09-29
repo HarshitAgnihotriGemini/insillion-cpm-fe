@@ -6,6 +6,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { EventHandlerDirective } from '../../directives/event-handler.directive';
 import { DynamicOptionsService } from '@app/shared/services/dynamic-options.service';
 import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-form-field',
@@ -26,6 +27,7 @@ export class FormFieldComponent implements OnInit {
   @Output() fieldEvent = new EventEmitter<{ action: string; payload: any }>();
 
   options$!: Observable<any[]>;
+  isObjectArray$!: Observable<boolean>;
 
   constructor(private readonly dynamicOptionsService: DynamicOptionsService) {}
 
@@ -37,6 +39,15 @@ export class FormFieldComponent implements OnInit {
     } else {
       this.options$ = of(this.field.options || []);
     }
+
+    this.isObjectArray$ = this.options$.pipe(
+      map((options) => {
+        if (options && options.length > 0) {
+          return typeof options[0] === 'object' && options[0] !== null;
+        }
+        return false;
+      })
+    );
   }
 
   get isInvalid(): boolean {
@@ -54,17 +65,6 @@ export class FormFieldComponent implements OnInit {
       }
     }
     return null;
-  }
-
-  get bindValueKey() {
-    if (this.field.options && this.field.options.length > 0 && this.field.options[0].key !== undefined) {
-      return 'key';
-    }
-    // This part is tricky for dynamic options. We will assume 'key' for now if it's dynamic.
-    if (this.field.optionsKey) {
-        return 'key';
-    }
-    return 'id';
   }
 
   onButtonClick(): void {

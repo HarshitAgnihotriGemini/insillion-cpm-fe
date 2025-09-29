@@ -35,15 +35,14 @@
               "errors": {
                 "required": "Intermediary is required."
               },
-              "events": [
-                { "name": "change", "action": "validateIntermediary" }
-              ]
+              "events": [{ "name": "change", "action": "validateIntermediary" }]
             },
             {
               "type": "select",
               "name": "propositionSelection",
               "label": "Proposition Selection",
               "placeholder": "Select proposition selection",
+              "optionsKey": "propositionOptions",
               "validators": {
                 "required": true
               }
@@ -52,6 +51,7 @@
               "type": "select",
               "name": "policy_transaction_type",
               "label": "Transaction Type",
+              "optionsKey":"transactionTypeOptions",
               "placeholder": "Select transaction type",
               "validators": {
                 "required": true
@@ -159,10 +159,7 @@
               "label": "Floater",
               "placeholder": "Select floater",
               "value": "No",
-              "options": [
-                { "key": "Yes", "name": "Yes" },
-                { "key": "No", "name": "No" }
-              ]
+              "options": ["Yes", "No"]
             },
             {
               "type": "select",

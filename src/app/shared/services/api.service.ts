@@ -68,22 +68,25 @@ export class ApiService {
   }
 
   /****  Common HTTP Get Method****/
-  async httpGetMethod(url: string, payload?: Record<string, any>): Promise<any[]> {
-  try {
-    let params = new HttpParams();
-    if (payload) {
-      params = new HttpParams({ fromObject: payload });
+  async httpGetMethod(
+    url: string,
+    payload?: Record<string, any>,
+  ): Promise<any> {
+    try {
+      let params = new HttpParams();
+      if (payload) {
+        params = new HttpParams({ fromObject: payload });
+      }
+
+      const response: any = await firstValueFrom(
+        this.http.get(url, { observe: 'response', params }),
+      );
+
+      return response.body;
+    } catch (err: any) {
+      throw new Error(err?.error || 'Server error');
     }
-
-    const response: any = await firstValueFrom(
-      this.http.get(url, { observe: 'response', params }),
-    );
-
-    return response.body;
-  } catch (err: any) {
-    throw new Error(err?.error || 'Server error');
   }
-}
 
   /****  Common HTTP Delete Method****/
   async httpDeleteMethod(url: string): Promise<any[]> {

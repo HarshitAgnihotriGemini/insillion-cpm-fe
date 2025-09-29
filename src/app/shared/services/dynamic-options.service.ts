@@ -8,7 +8,8 @@ export class DynamicOptionsService {
   private optionsSources: {
     [key: string]: BehaviorSubject<any[]>;
   } = {
-    productOptions: new BehaviorSubject<any[]>([]),
+    propositionOptions: new BehaviorSubject<any[]>([]),
+    transactionTypeOptions: new BehaviorSubject<any[]>([]),
   };
 
   constructor() {}
@@ -20,7 +21,7 @@ export class DynamicOptionsService {
     return this.optionsSources[key].asObservable();
   }
 
-  setOptions(key: string, options: any[]): void {
+  setOptions(key: string, options: []): void {
     if (!this.optionsSources[key]) {
       this.optionsSources[key] = new BehaviorSubject<any[]>([]);
     }
