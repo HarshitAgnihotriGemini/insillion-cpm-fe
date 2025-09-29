@@ -10,6 +10,8 @@ export class QuoteFormService {
   constructor(private readonly formService: FormService) {}
 
   initializeForm(): FormGroup {
-    return this.formService.createFormGroup(cpmQuote.sections);
+    const form = this.formService.createFormGroup(cpmQuote.sections);
+    this.formService.setupConditionalLogic(form, cpmQuote.sections);
+    return form;
   }
 }

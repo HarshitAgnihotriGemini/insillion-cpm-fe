@@ -64,17 +64,20 @@
                         <span class="ms-1">Remove</span>
                       </div>
                     </div>
-                    <div
-                      *ngFor="let field of subsection.formGroupTemplate"
-                      class="col-4 ps-0"
+                    <ng-container *ngFor="let field of subsection.formGroupTemplate">
+                      <div
+                        *ngIf="field._visible"
+                        class="col-4 ps-0"
+                      >
+                    <app-form-field
+                      [field]="field"
+                      [form]="form"
+                      (buttonClick)="buttonClick.emit($event)"
+                      (fieldEvent)="handleFieldEvent($event)"
                     >
-                      <app-form-field
-                        [field]="field"
-                        [form]="getFormGroup(group)"
-                        (buttonClick)="buttonClick.emit($event)"
-                        (fieldEvent)="handleFieldEvent($event)"
-                      ></app-form-field>
-                    </div>
+                    </app-form-field>
+                      </div>
+                    </ng-container>
                   </div>
                 </div>
               </div>
@@ -102,15 +105,17 @@
               </p>
 
               <div class="row gy-4 gx-5">
-                <div *ngFor="let field of subsection.fields" class="col-4 ps-0">
-                  <app-form-field
-                    [field]="field"
-                    [form]="form"
-                    (buttonClick)="buttonClick.emit($event)"
-                    (fieldEvent)="handleFieldEvent($event)"
-                  >
-                  </app-form-field>
-                </div>
+                <ng-container *ngFor="let field of subsection.fields">
+                  <div *ngIf="field._visible" class="col-4 ps-0">
+                    <app-form-field
+                      [field]="field"
+                      [form]="form"
+                      (buttonClick)="buttonClick.emit($event)"
+                      (fieldEvent)="handleFieldEvent($event)"
+                    >
+                    </app-form-field>
+                  </div>
+                </ng-container>
               </div>
               <div *ngIf="subsection.actions" class="mt-4 row gx-5">
                 <div

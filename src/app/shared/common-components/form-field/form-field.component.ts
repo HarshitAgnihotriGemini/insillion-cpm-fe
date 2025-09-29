@@ -1,9 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { EventHandlerDirective } from '../../directives/event-handler.directive';
+import { DynamicOptionsService } from '@app/shared/services/dynamic-options.service';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-form-field',
@@ -17,13 +19,25 @@ import { EventHandlerDirective } from '../../directives/event-handler.directive'
   ],
   templateUrl: './form-field.component.html',
 })
-export class FormFieldComponent {
+export class FormFieldComponent implements OnInit {
   @Input() field: any;
   @Input() form!: FormGroup;
   @Output() buttonClick = new EventEmitter<any>();
   @Output() fieldEvent = new EventEmitter<{ action: string; payload: any }>();
 
-  constructor() {}
+  options$!: Observable<any[]>;
+
+  constructor(private readonly dynamicOptionsService: DynamicOptionsService) {}
+
+  ngOnInit(): void {
+    if (this.field.optionsKey) {
+      this.options$ = this.dynamicOptionsService.getOptions(
+        this.field.optionsKey
+      );
+    } else {
+      this.options$ = of(this.field.options || []);
+    }
+  }
 
   get isInvalid(): boolean {
     const control = this.form.get(this.field.name);
@@ -40,6 +54,17 @@ export class FormFieldComponent {
       }
     }
     return null;
+  }
+
+  get bindValueKey() {
+    if (this.field.options && this.field.options.length > 0 && this.field.options[0].key !== undefined) {
+      return 'key';
+    }
+    // This part is tricky for dynamic options. We will assume 'key' for now if it's dynamic.
+    if (this.field.optionsKey) {
+        return 'key';
+    }
+    return 'id';
   }
 
   onButtonClick(): void {

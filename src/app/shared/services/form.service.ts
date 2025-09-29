@@ -92,4 +92,72 @@ export class FormService {
   getFormGroup(control: AbstractControl): FormGroup {
     return control as FormGroup;
   }
+
+  setupConditionalLogic(form: FormGroup, sections: any[]): void {
+    const allFields = sections
+      .flatMap((s) => s.subsections || [])
+      .flatMap((ss) => (ss.type === 'form-array' ? ss.formGroupTemplate : ss.fields) || []);
+
+    allFields.forEach((field) => {
+      if (field) {
+        // Set initial visibility
+        field._visible = !field.visibleWhen;
+
+        const applyLogic = () => {
+          // Conditional Visibility
+          if (field.visibleWhen) {
+            const targetControl = form.get(field.visibleWhen.field);
+            if (targetControl) {
+              field._visible = targetControl.value === field.visibleWhen.value;
+            }
+          }
+
+          // Conditional Validators
+          if (field.validatorsWhen) {
+            const control = form.get(field.name);
+            if (control) {
+              let newValidators: ValidatorFn[] = this.buildValidators(
+                field.validators || {}
+              );
+              field.validatorsWhen.forEach((valWhen: any) => {
+                const targetControl = form.get(valWhen.condition.field);
+                if (
+                  targetControl &&
+                  targetControl.value === valWhen.condition.value
+                ) {
+                  newValidators = [
+                    ...newValidators,
+                    ...this.buildValidators(valWhen.validators),
+                  ];
+                }
+              });
+              control.setValidators(newValidators);
+              control.updateValueAndValidity();
+            }
+          }
+        };
+
+        // Subscribe to dependencies
+        const dependencies = new Set<string>();
+        if (field.visibleWhen) {
+          dependencies.add(field.visibleWhen.field);
+        }
+        if (field.validatorsWhen) {
+          field.validatorsWhen.forEach((v: any) =>
+            dependencies.add(v.condition.field)
+          );
+        }
+
+        dependencies.forEach((depName) => {
+          const targetControl = form.get(depName);
+          if (targetControl) {
+            targetControl.valueChanges.subscribe(() => applyLogic());
+          }
+        });
+
+        // Apply initial logic
+        applyLogic();
+      }
+    });
+  }
 }

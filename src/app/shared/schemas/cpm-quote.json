@@ -125,6 +125,7 @@
               "name": "product",
               "label": "Product",
               "placeholder": "Select product",
+              "optionsKey": "productOptions",
               "validators": {
                 "required": true
               }
@@ -159,16 +160,29 @@
               "type": "select",
               "name": "floater",
               "label": "Floater",
-              "placeholder": "Select floater"
+              "placeholder": "Select floater",
+              "value": "No",
+              "options": [
+                { "key": "Yes", "name": "Yes" },
+                { "key": "No", "name": "No" }
+              ]
             },
             {
               "type": "select",
               "name": "floater_coverage_in",
               "label": "Floater Coverage Within",
               "placeholder": "Select floater coverage within",
-              "validators": {
-                "required": true
-              }
+              "validators": {},
+              "errors": {
+                "required": "Floater Coverage Within is required."
+              },
+              "visibleWhen": { "field": "floater", "value": "Yes" },
+              "validatorsWhen": [
+                {
+                  "condition": { "field": "floater", "value": "Yes" },
+                  "validators": { "required": true }
+                }
+              ]
             },
             {
               "type": "select",

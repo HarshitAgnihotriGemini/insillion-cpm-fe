@@ -11,6 +11,7 @@ import { CoverageOffcanvasComponent } from '@app/shared/common-components/covera
 import { ApiService } from '@app/shared/services/api.service';
 import * as cpmQuote from '@app/shared/schemas/cpm-quote.json';
 import { QuoteFormService } from '../../quote-form.service';
+import { DynamicOptionsService } from '@app/shared/services/dynamic-options.service';
 
 @Component({
   standalone: true,
@@ -36,6 +37,7 @@ export class CreateQuoteComponent implements OnInit {
     private readonly router: Router,
     private readonly apiService: ApiService,
     private readonly quoteFormService: QuoteFormService,
+    private readonly dynamicOptionsService: DynamicOptionsService
   ) {
     this.imgPath = this.imgPath = `${this.apiService.commonPath}/assets/`;
   }
@@ -46,6 +48,16 @@ export class CreateQuoteComponent implements OnInit {
     this.config?.sections?.forEach((section: any) => {
       this.sectionState.set(section.title, true);
     });
+
+    // Simulate API call
+    setTimeout(() => {
+      const productOptions = [
+        { key: 'product1', name: 'Product 1' },
+        { key: 'product2', name: 'Product 2' },
+        { key: 'product3', name: 'Product 3' },
+      ];
+      this.dynamicOptionsService.setOptions('productOptions', productOptions);
+    }, 1000);
   }
 
   openTermsModal() {
