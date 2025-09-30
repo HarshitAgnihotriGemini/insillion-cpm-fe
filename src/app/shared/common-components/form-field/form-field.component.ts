@@ -71,6 +71,44 @@ export class FormFieldComponent implements OnInit {
     this.buttonClick.emit(this.field);
   }
 
+  handleDateChange(event: any): void {
+    if (this.field.events) {
+      const changeEvent = this.field.events.find(
+        (e: any) => e.name === 'change'
+      );
+      if (changeEvent) {
+        const customEvent = {
+          target: {
+            value: event,
+          },
+        };
+        this.fieldEvent.emit({
+          action: changeEvent.action,
+          payload: customEvent as any,
+        });
+      }
+    }
+  }
+
+  handleNgSelectChange(event: any): void {
+    if (this.field.events) {
+      const changeEvent = this.field.events.find(
+        (e: any) => e.name === 'change'
+      );
+      if (changeEvent) {
+        const customEvent = {
+          target: {
+            value: event,
+          },
+        };
+        this.fieldEvent.emit({
+          action: changeEvent.action,
+          payload: customEvent as any, // Type assertion to avoid type errors
+        });
+      }
+    }
+  }
+
   handleEvent(event: { action: string; payload: any }) {
     this.fieldEvent.emit(event);
   }

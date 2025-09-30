@@ -16,9 +16,9 @@
       [formControlName]="field.name"
       [placeholder]="field.placeholder || ''"
       [class.error]="isInvalid"
-      [ngClass]="{ readonly: field.readonly }"
       [appEventHandler]="field"
       (onEvent)="handleEvent($event)"
+      [ngClass]="{ readonly: field.readonly }"
     />
 
     <ng-select
@@ -27,9 +27,8 @@
       [placeholder]="field.placeholder || ''"
       [formControlName]="field.name"
       [class.error]="isInvalid"
-      [appEventHandler]="field"
-      (onEvent)="handleEvent($event)"
-      [readonly]="field.readonly"
+      (change)="handleNgSelectChange($event)"
+      [ngClass]="{ 'readonly': field.readonly }"
     ></ng-select>
 
     <div
@@ -43,13 +42,9 @@
         [formControlName]="field.name"
         [placeholder]="field.placeholder || ''"
         bsDatepicker
+        (bsValueChange)="handleDateChange($event)"
         [class.error]="isInvalid"
-        [ngClass]="{ readonly: field.readonly }"
-        [appEventHandler]="field"
-        (onEvent)="handleEvent($event)"
-        (keydown)="field.readonly ? $event.preventDefault() : true"
-        [readonly]="field.readonly"
-        [disabled]="field.disabled"
+        [ngClass]="{ 'readonly': field.readonly }"
       />
     </div>
     <button

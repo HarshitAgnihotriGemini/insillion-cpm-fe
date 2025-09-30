@@ -87,6 +87,8 @@ export class CreateQuoteComponent implements OnInit {
       this.onPropositionChange(event.payload.target.value);
     } else if (event.action === 'onTransactionTypeChange') {
       this.onTransactionTypeChange(event.payload.target.value);
+    } else if (event.action === 'onDateChange') {
+      console.log('-=-=-=-=-=-=-=-=-');
     }
   }
 
