@@ -23,7 +23,7 @@ export class FormService {
           group.addControl(subsection.name, this.fb.array([]));
         } else {
           subsection.fields?.forEach((field: any) => {
-            const validators = this.buildValidators(field.validators || {});
+            const validators = this.buildValidators(field.validators);
             group.addControl(
               field.name,
               this.fb.control(field.value ?? null, validators)
@@ -37,38 +37,40 @@ export class FormService {
 
   buildValidators(validators: any): ValidatorFn[] {
     const validatorFns: ValidatorFn[] = [];
-    for (const key in validators) {
-      const value = validators[key];
-      switch (key) {
-        case 'required':
-          if (value) validatorFns.push(Validators.required);
-          break;
-        case 'requiredTrue':
-          if (value) validatorFns.push(Validators.requiredTrue);
-          break;
-        case 'minLength':
-          validatorFns.push(Validators.minLength(value));
-          break;
-        case 'maxLength':
-          validatorFns.push(Validators.maxLength(value));
-          break;
-        case 'min':
-          validatorFns.push(Validators.min(value));
-          break;
-        case 'max':
-          validatorFns.push(Validators.max(value));
-          break;
-        case 'pattern':
-          if (REGEX_PATTERNS[value as keyof typeof REGEX_PATTERNS]) {
-            validatorFns.push(
-              Validators.pattern(
-                REGEX_PATTERNS[value as keyof typeof REGEX_PATTERNS]
-              )
-            );
-          } else {
-            validatorFns.push(Validators.pattern(value));
-          }
-          break;
+    if (validators) {
+      for (const key in validators) {
+        const value = validators[key];
+        switch (key) {
+          case 'required':
+            if (value) validatorFns.push(Validators.required);
+            break;
+          case 'requiredTrue':
+            if (value) validatorFns.push(Validators.requiredTrue);
+            break;
+          case 'minLength':
+            validatorFns.push(Validators.minLength(value));
+            break;
+          case 'maxLength':
+            validatorFns.push(Validators.maxLength(value));
+            break;
+          case 'min':
+            validatorFns.push(Validators.min(value));
+            break;
+          case 'max':
+            validatorFns.push(Validators.max(value));
+            break;
+          case 'pattern':
+            if (REGEX_PATTERNS[value as keyof typeof REGEX_PATTERNS]) {
+              validatorFns.push(
+                Validators.pattern(
+                  REGEX_PATTERNS[value as keyof typeof REGEX_PATTERNS]
+                )
+              );
+            } else {
+              validatorFns.push(Validators.pattern(value));
+            }
+            break;
+        }
       }
     }
     return validatorFns;
@@ -80,15 +82,12 @@ export class FormService {
 
   addGroup(form: FormGroup, subsection: any): void {
     const formArray = this.getFormArray(form, subsection.name);
-    const newGroup = this.fb.group({});
+    const group: { [key: string]: any } = {};
     subsection.formGroupTemplate.forEach((field: any) => {
-      const validators = this.buildValidators(field.validators || {});
-      newGroup.addControl(
-        field.name,
-        this.fb.control(field.value || '', validators)
-      );
+        const validators = this.buildValidators(field.validators);
+        group[field.name] = [field.value ?? null, validators];
     });
-    formArray.push(newGroup);
+    formArray.push(this.fb.group(group));
   }
 
   removeGroup(form: FormGroup, subsectionName: string, index: number): void {
@@ -146,7 +145,7 @@ export class FormService {
           if (field.validatorsWhen) {
             const control = form.get(field.name);
             if (control) {
-              const baseValidators = this.buildValidators(field.validators || {});
+              const baseValidators = this.buildValidators(field.validators);
               const conditionalValidators = field._visible
                 ? this.buildValidators(field.validatorsWhen)
                 : [];

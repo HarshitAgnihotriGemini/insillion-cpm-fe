@@ -14,10 +14,12 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { provideToastr } from 'ngx-toastr';
 import { HttpConfigInterceptor } from './shared/interceptors/http-config.interceptor';
+import { provideNgxMask } from 'ngx-mask';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
+    provideNgxMask(),
     provideRouter(routes, withHashLocation()),
     provideAnimations(),
     importProvidersFrom(ModalModule.forRoot()),

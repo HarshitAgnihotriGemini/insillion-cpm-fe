@@ -12,6 +12,7 @@ import { ApiService } from '@app/shared/services/api.service';
 import * as cpmQuote from '@app/shared/schemas/cpm-quote.json';
 import { QuoteFormService } from '../../quote-form.service';
 import { QuoteService } from '../../quote.service';
+import moment from 'moment';
 
 @Component({
   standalone: true,
@@ -175,10 +176,10 @@ export class CreateQuoteComponent implements OnInit {
   }
 
   onPolicyStartDateChange(date: string) {
-    try {
-      console.log('11111111', date);
-    } catch (error) {
-      throw error;
+    if (date) {
+      const startDate = moment(date);
+      const endDate = startDate.add(1, 'year').subtract(1, 'day');
+      this.form.controls['policy_end_date'].setValue(endDate.toDate());
     }
   }
 

@@ -53,7 +53,7 @@
               "validators": {
                 "required": true
               },
-                  "errors": {
+              "errors": {
                 "required": "Proposition selection is required."
               },
               "events": [{ "name": "change", "action": "onPropositionChange" }]
@@ -218,6 +218,7 @@
               "name": "existingPolicyExpiryDate",
               "label": "Existing Policy Expiry Date",
               "placeholder": "Select expiry date",
+              "mask": "DATE",
               "visibleWhen": {
                 "or": [
                   {
@@ -237,6 +238,7 @@
               "name": "policy_start_date",
               "label": "Policy Start Date",
               "placeholder": "Select policy start date",
+              "mask": "DATE",
               "validators": {
                 "required": true
               },

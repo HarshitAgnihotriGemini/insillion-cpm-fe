@@ -43,7 +43,7 @@
                   "
                   class="form-array-group mb-lg"
                 >
-                  <div [formGroupName]="i" class="row gy-4 gx-5">
+                  <div [formGroup]="toFormGroup(group)" class="row gy-4 gx-5">
                     <div
                       class="col-12 d-flex justify-content-between align-items-center p-0"
                     >
@@ -64,18 +64,17 @@
                         <span class="ms-1">Remove</span>
                       </div>
                     </div>
-                    <ng-container *ngFor="let field of subsection.formGroupTemplate">
-                      <div
-                        *ngIf="field._visible"
-                        class="col-4 ps-0"
-                      >
-                    <app-form-field
-                      [field]="field"
-                      [form]="form"
-                      (buttonClick)="buttonClick.emit($event)"
-                      (fieldEvent)="handleFieldEvent($event)"
+                    <ng-container
+                      *ngFor="let field of subsection.formGroupTemplate"
                     >
-                    </app-form-field>
+                      <div *ngIf="field._visible" class="col-4 ps-0">
+                        <app-form-field
+                          [field]="field"
+                          [form]="toFormGroup(group)"
+                          (buttonClick)="buttonClick.emit($event)"
+                          (fieldEvent)="handleFieldEvent($event)"
+                        >
+                        </app-form-field>
                       </div>
                     </ng-container>
                   </div>

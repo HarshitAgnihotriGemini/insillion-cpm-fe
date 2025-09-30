@@ -20,6 +20,7 @@
         [appEventHandler]="field"
         (onEvent)="handleEvent($event)"
         [ngClass]="{ readonly: field.readonly }"
+        [mask]="maskPattern"
       />
     </div>
 
@@ -47,9 +48,11 @@
         [formControlName]="field.name"
         [placeholder]="field.placeholder || ''"
         bsDatepicker
+        [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY' }"
         (bsValueChange)="handleDateChange($event)"
         [class.error]="isInvalid"
         [ngClass]="{ readonly: field.readonly }"
+        [mask]="maskPattern"
       />
     </div>
     <button

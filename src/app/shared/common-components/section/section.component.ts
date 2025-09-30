@@ -34,7 +34,7 @@ export class SectionComponent implements OnInit {
 
   constructor(
     private formService: FormService,
-    private readonly apiService: ApiService
+    private readonly apiService: ApiService,
   ) {
     this.imgPath = `${this.apiService.commonPath}/assets/`;
   }
@@ -70,5 +70,9 @@ export class SectionComponent implements OnInit {
 
   handleFieldEvent(event: { action: string; payload: any }) {
     this.fieldEvent.emit(event);
+  }
+
+  toFormGroup(group: any) {
+    return group as FormGroup;
   }
 }

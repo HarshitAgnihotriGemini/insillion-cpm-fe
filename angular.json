@@ -33,7 +33,8 @@
             ],
             "styles": ["src/styles.scss"],
             "sourceMap": true,
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": ["moment"]
           },
           "configurations": {
             "production": {

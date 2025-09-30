@@ -6,6 +6,8 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { EventHandlerDirective } from '../../directives/event-handler.directive';
 import { DynamicOptionsService } from '@app/shared/services/dynamic-options.service';
 import { Observable, of } from 'rxjs';
+import { NgxMaskDirective } from 'ngx-mask';
+import { MASKS } from '../../constants/masks.constants';
 
 @Component({
   selector: 'app-form-field',
@@ -16,6 +18,7 @@ import { Observable, of } from 'rxjs';
     NgSelectModule,
     BsDatepickerModule,
     EventHandlerDirective,
+    NgxMaskDirective,
   ],
   templateUrl: './form-field.component.html',
 })
@@ -26,6 +29,7 @@ export class FormFieldComponent implements OnInit {
   @Output() fieldEvent = new EventEmitter<{ action: string; payload: any }>();
 
   options$!: Observable<any[]>;
+  public readonly MASKS = MASKS;
 
   constructor(private readonly dynamicOptionsService: DynamicOptionsService) {}
 
@@ -65,6 +69,13 @@ export class FormFieldComponent implements OnInit {
       }
     }
     return null;
+  }
+
+  get maskPattern(): string {
+    if (this.field.mask && this.MASKS[this.field.mask as keyof typeof this.MASKS]) {
+      return this.MASKS[this.field.mask as keyof typeof this.MASKS];
+    }
+    return '';
   }
 
   onButtonClick(): void {
