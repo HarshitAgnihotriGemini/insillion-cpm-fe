@@ -113,8 +113,7 @@
               "placeholder": "Select policy start date",
               "validators": {
                 "required": true
-              },
-              "events": [{ "name": "change", "action": "onDateChange" }]
+              }
             },
             {
               "type": "datepicker",
@@ -124,8 +123,7 @@
               "errors": {
                 "required": "Proposer email is required.",
                 "pattern": "Please enter a valid email address."
-              },
-              "events": [{ "name": "change", "action": "onDateChange" }]
+              }
             },
             {
               "type": "input",

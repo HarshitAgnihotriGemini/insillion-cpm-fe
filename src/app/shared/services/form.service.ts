@@ -116,7 +116,16 @@ export class FormService {
           if (field.visibleWhen) {
             const targetControl = form.get(field.visibleWhen.field);
             if (targetControl) {
+              const wasVisible = field._visible;
               field._visible = targetControl.value === field.visibleWhen.value;
+
+              // Reset touched state when field is hidden
+              if (wasVisible && !field._visible) {
+                const controlToReset = form.get(field.name);
+                if (controlToReset) {
+                  controlToReset.markAsUntouched();
+                }
+              }
             }
           }
 
@@ -145,7 +154,7 @@ export class FormService {
           }
         };
 
-        // Subscribe to dependencies
+        // Subscribe to dependencies for visibility and validators
         const dependencies = new Set<string>();
         if (field.visibleWhen) {
           dependencies.add(field.visibleWhen.field);
@@ -163,7 +172,20 @@ export class FormService {
           }
         });
 
-        // Apply initial logic
+        if (field.resetsFields) {
+          const sourceControl = form.get(field.name);
+          if (sourceControl) {
+            sourceControl.valueChanges.subscribe(() => {
+              field.resetsFields.forEach((fieldName: string) => {
+                const controlToReset = form.get(fieldName);
+                if (controlToReset) {
+                  controlToReset.reset();
+                }
+              });
+            });
+          }
+        }
+
         applyLogic();
       }
     });
