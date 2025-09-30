@@ -35,7 +35,10 @@
               "errors": {
                 "required": "Intermediary is required."
               },
-              "events": [{ "name": "change", "action": "validateIntermediary" }]
+              "events": [
+                { "name": "change", "action": "validateIntermediary" }
+              ],
+              "readonly": true
             },
             {
               "type": "select",

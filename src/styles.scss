@@ -15,4 +15,9 @@
 }
 .readonly {
   pointer-events: none;
+  background-color: #f1f5fd !important;
 }
+.readonly-wrapper {
+  cursor: not-allowed;
+}
+

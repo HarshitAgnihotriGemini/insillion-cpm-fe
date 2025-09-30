@@ -8,32 +8,37 @@
     {{ field.label }}
   </label>
   <ng-container [ngSwitch]="field.type">
-    <input
-      *ngSwitchCase="'input'"
-      [type]="field.inputType || 'text'"
-      [id]="field.name"
-      class="form-control"
-      [formControlName]="field.name"
-      [placeholder]="field.placeholder || ''"
-      [class.error]="isInvalid"
-      [appEventHandler]="field"
-      (onEvent)="handleEvent($event)"
-      [ngClass]="{ readonly: field.readonly }"
-    />
+    <div [ngClass]="{ 'readonly-wrapper': field.readonly }">
+      <input
+        *ngSwitchCase="'input'"
+        [type]="field.inputType || 'text'"
+        [id]="field.name"
+        class="form-control"
+        [formControlName]="field.name"
+        [placeholder]="field.placeholder || ''"
+        [class.error]="isInvalid"
+        [appEventHandler]="field"
+        (onEvent)="handleEvent($event)"
+        [ngClass]="{ readonly: field.readonly }"
+      />
+    </div>
 
-    <ng-select
-      *ngSwitchCase="'select'"
-      [items]="options$ | async"
-      [placeholder]="field.placeholder || ''"
-      [formControlName]="field.name"
-      [class.error]="isInvalid"
-      (change)="handleNgSelectChange($event)"
-      [ngClass]="{ 'readonly': field.readonly }"
-    ></ng-select>
+    <div [ngClass]="{ 'readonly-wrapper': field.readonly }">
+      <ng-select
+        *ngSwitchCase="'select'"
+        [items]="options$ | async"
+        [placeholder]="field.placeholder || ''"
+        [formControlName]="field.name"
+        [class.error]="isInvalid"
+        (change)="handleNgSelectChange($event)"
+        [ngClass]="{ readonly: field.readonly }"
+      ></ng-select>
+    </div>
 
     <div
       *ngSwitchCase="'datepicker'"
       class="input-icon icon-right icon-calendar"
+      [ngClass]="{ 'readonly-wrapper': field.readonly }"
     >
       <input
         type="text"
@@ -44,7 +49,7 @@
         bsDatepicker
         (bsValueChange)="handleDateChange($event)"
         [class.error]="isInvalid"
-        [ngClass]="{ 'readonly': field.readonly }"
+        [ngClass]="{ readonly: field.readonly }"
       />
     </div>
     <button
