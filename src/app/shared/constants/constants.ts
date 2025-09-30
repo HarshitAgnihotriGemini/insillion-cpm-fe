@@ -1,6 +1,12 @@
 export const ENVIRONMENTS = {
-    DEV: 'DEV',
-    UAT: 'UAT',
-    PREPROD: 'PREPROD',
-    PROD: 'PROD',
-}
+  DEV: 'DEV',
+  UAT: 'UAT',
+  PREPROD: 'PREPROD',
+  PROD: 'PROD',
+};
+
+export const DATEFORMATS = {
+  DDMMYYYY_SLASH: 'DD/MM/YYYY',
+  MMDDYYYY_SLASH: 'MM/DD/YYYY',
+  YYYYMMDD_HYPHEN: 'YYYY-MM-DD',
+};

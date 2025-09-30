@@ -33,6 +33,13 @@ export class HttpConfigInterceptor implements HttpInterceptor {
 
           if (headers) {
             const data = response;
+            // Token Check
+            if (event.headers.get('set-in-auth-token') !== null) {
+              sessionStorage.setItem(
+                'in-auth-token',
+                event.headers.get('set-in-auth-token') ?? '',
+              );
+            }
 
             // API error handling on status
             if (data.status) {

@@ -87,6 +87,8 @@ export class CreateQuoteComponent implements OnInit {
       this.onPropositionChange(event.payload.target.value);
     } else if (event.action === 'onTransactionTypeChange') {
       this.onTransactionTypeChange(event.payload.target.value);
+    } else if (event.action === 'onPolicyStartDateChange') {
+      this.onPolicyStartDateChange(event.payload.target.value);
     }
   }
 
@@ -164,10 +166,19 @@ export class CreateQuoteComponent implements OnInit {
   async onTransactionTypeChange(transactionType: string) {
     try {
       if (transactionType) {
+        await this.fetchProduct();
         await this.fetchPackagePlan();
       }
     } catch (error) {
       console.error('Error fetching products:', error);
+    }
+  }
+
+  onPolicyStartDateChange(date: string) {
+    try {
+      console.log('11111111', date);
+    } catch (error) {
+      throw error;
     }
   }
 

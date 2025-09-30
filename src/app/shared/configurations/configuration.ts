@@ -3,7 +3,7 @@ export const DEV_CONFIG = {
   paymentUrl: '',
   domain: 'https://ipds2.cloware.in',
   domainUrl: 'https://ipds1.cloware.in/api/v1/',
-  productId: 'M200000000034',
+  productId: 'M000000000019',
   commonPath:
     'https://harshitagnihotrigemini.github.io/insillion-common-styles-fe-harshit',
   commonUtilityPath:
@@ -19,7 +19,7 @@ export const UAT_CONFIG = {
   paymentUrl: '',
   domain: 'https://uatipds2.cloware.in',
   domainUrl: 'https://uatipds1.cloware.in/api/v1/',
-  productId: 'M200000000034',
+  productId: 'M000000000019',
   commonPath:
     'https://harshitagnihotrigemini.github.io/insillion-common-styles-fe-harshit',
   commonUtilityPath:
@@ -35,7 +35,7 @@ export const PREPROD_CONFIG = {
   paymentUrl: '',
   domain: 'https://ipdsbeta.cloware.in',
   domainUrl: 'https://ipdsbeta.cloware.in/api/v1/',
-  productId: 'M200000000034',
+  productId: 'M000000000019',
   commonPath:
     'https://harshitagnihotrigemini.github.io/insillion-common-styles-fe-harshit',
   commonUtilityPath:
@@ -51,7 +51,7 @@ export const PROD_CONFIG = {
   paymentUrl: '',
   domain: 'https://sellonline.tataaig.com',
   domainUrl: 'https://sellonline.tataaig.com/api/v1/',
-  productId: 'M200000000034',
+  productId: 'M000000000019',
   commonPath:
     'https://harshitagnihotrigemini.github.io/insillion-common-styles-fe-harshit',
   commonUtilityPath:
