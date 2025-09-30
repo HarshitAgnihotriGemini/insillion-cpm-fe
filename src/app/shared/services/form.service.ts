@@ -114,17 +114,30 @@ export class FormService {
         const applyLogic = () => {
           // Conditional Visibility
           if (field.visibleWhen) {
-            const targetControl = form.get(field.visibleWhen.field);
-            if (targetControl) {
-              const wasVisible = field._visible;
-              field._visible = targetControl.value === field.visibleWhen.value;
-
-              // Reset touched state when field is hidden
-              if (wasVisible && !field._visible) {
-                const controlToReset = form.get(field.name);
-                if (controlToReset) {
-                  controlToReset.markAsUntouched();
+            let isVisible = false;
+            if (field.visibleWhen.or) {
+              for (const condition of field.visibleWhen.or) {
+                const targetControl = form.get(condition.field);
+                if (targetControl && targetControl.value === condition.value) {
+                  isVisible = true;
+                  break;
                 }
+              }
+            } else {
+              const targetControl = form.get(field.visibleWhen.field);
+              if (targetControl) {
+                isVisible = targetControl.value === field.visibleWhen.value;
+              }
+            }
+
+            const wasVisible = field._visible;
+            field._visible = isVisible;
+
+            // Reset touched state when field is hidden
+            if (wasVisible && !field._visible) {
+              const controlToReset = form.get(field.name);
+              if (controlToReset) {
+                controlToReset.markAsUntouched();
               }
             }
           }
@@ -133,22 +146,11 @@ export class FormService {
           if (field.validatorsWhen) {
             const control = form.get(field.name);
             if (control) {
-              let newValidators: ValidatorFn[] = this.buildValidators(
-                field.validators || {}
-              );
-              field.validatorsWhen.forEach((valWhen: any) => {
-                const targetControl = form.get(valWhen.condition.field);
-                if (
-                  targetControl &&
-                  targetControl.value === valWhen.condition.value
-                ) {
-                  newValidators = [
-                    ...newValidators,
-                    ...this.buildValidators(valWhen.validators),
-                  ];
-                }
-              });
-              control.setValidators(newValidators);
+              const baseValidators = this.buildValidators(field.validators || {});
+              const conditionalValidators = field._visible
+                ? this.buildValidators(field.validatorsWhen)
+                : [];
+              control.setValidators([...baseValidators, ...conditionalValidators]);
               control.updateValueAndValidity();
             }
           }
@@ -157,12 +159,25 @@ export class FormService {
         // Subscribe to dependencies for visibility and validators
         const dependencies = new Set<string>();
         if (field.visibleWhen) {
-          dependencies.add(field.visibleWhen.field);
+          if (field.visibleWhen.or) {
+            field.visibleWhen.or.forEach((condition: any) =>
+              dependencies.add(condition.field)
+            );
+          } else {
+            dependencies.add(field.visibleWhen.field);
+          }
         }
         if (field.validatorsWhen) {
-          field.validatorsWhen.forEach((v: any) =>
-            dependencies.add(v.condition.field)
-          );
+            // Since validatorsWhen depends on visibility, we need to add the visibility dependencies
+            if (field.visibleWhen) {
+                if (field.visibleWhen.or) {
+                    field.visibleWhen.or.forEach((condition: any) =>
+                        dependencies.add(condition.field)
+                    );
+                } else {
+                    dependencies.add(field.visibleWhen.field);
+                }
+            }
         }
 
         dependencies.forEach((depName) => {

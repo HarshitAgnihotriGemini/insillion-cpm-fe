@@ -49,8 +49,12 @@
               "label": "Proposition Selection",
               "placeholder": "Select proposition selection",
               "optionsKey": "propositionOptions",
+
               "validators": {
                 "required": true
+              },
+                  "errors": {
+                "required": "Proposition selection is required."
               },
               "events": [{ "name": "change", "action": "onPropositionChange" }]
             },
@@ -110,6 +114,122 @@
               "errors": {
                 "required": "Proposer email is required.",
                 "pattern": "Please enter a valid email address."
+              }
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "existingPolicyNo",
+              "label": "Existing Policy No",
+              "placeholder": "Enter existing policy number",
+              "visibleWhen": {
+                "or": [
+                  {
+                    "field": "policy_transaction_type",
+                    "value": "Market Renewal"
+                  },
+                  { "field": "policy_transaction_type", "value": "RS Renewal" },
+                  {
+                    "field": "policy_transaction_type",
+                    "value": "Deviated Renewal"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "select",
+              "name": "existingInsurer",
+              "label": "Existing Insurer",
+              "placeholder": "Select existing insurer",
+              "visibleWhen": {
+                "or": [
+                  {
+                    "field": "policy_transaction_type",
+                    "value": "Market Renewal"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "select",
+              "name": "existingProduct",
+              "label": "Existing Product",
+              "placeholder": "CPM Base Cover",
+              "visibleWhen": {
+                "or": [
+                  {
+                    "field": "policy_transaction_type",
+                    "value": "Deviated Renewal"
+                  },
+                  { "field": "policy_transaction_type", "value": "RS Renewal" }
+                ]
+              }
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "partyId",
+              "label": "Party Id",
+              "placeholder": "Enter Party Id",
+              "visibleWhen": {
+                "or": [
+                  {
+                    "field": "policy_transaction_type",
+                    "value": "Deviated Renewal"
+                  },
+                  { "field": "policy_transaction_type", "value": "RS Renewal" }
+                ]
+              }
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "claim",
+              "label": "Claim",
+              "placeholder": "Enter claim",
+              "visibleWhen": {
+                "or": [
+                  {
+                    "field": "policy_transaction_type",
+                    "value": "Deviated Renewal"
+                  },
+                  { "field": "policy_transaction_type", "value": "RS Renewal" }
+                ]
+              }
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "endtNo",
+              "label": "Endt No",
+              "placeholder": "Enter Endt No",
+              "visibleWhen": {
+                "or": [
+                  {
+                    "field": "policy_transaction_type",
+                    "value": "Deviated Renewal"
+                  },
+                  { "field": "policy_transaction_type", "value": "RS Renewal" }
+                ]
+              }
+            },
+            {
+              "type": "datepicker",
+              "name": "existingPolicyExpiryDate",
+              "label": "Existing Policy Expiry Date",
+              "placeholder": "Select expiry date",
+              "visibleWhen": {
+                "or": [
+                  {
+                    "field": "policy_transaction_type",
+                    "value": "Market Renewal"
+                  },
+                  { "field": "policy_transaction_type", "value": "RS Renewal" },
+                  {
+                    "field": "policy_transaction_type",
+                    "value": "Deviated Renewal"
+                  }
+                ]
               }
             },
             {
@@ -211,12 +331,7 @@
                 "required": "Floater Coverage Within is required."
               },
               "visibleWhen": { "field": "floater", "value": "Yes" },
-              "validatorsWhen": [
-                {
-                  "condition": { "field": "floater", "value": "Yes" },
-                  "validators": { "required": true }
-                }
-              ]
+              "validatorsWhen": { "required": true }
             },
             {
               "type": "select",
