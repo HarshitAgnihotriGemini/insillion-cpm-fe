@@ -8,12 +8,15 @@ import {
   Validators,
 } from '@angular/forms';
 import { REGEX_PATTERNS } from '../constants/constants';
-
+import { UtilsService } from '../utils/utils.service';
 @Injectable({
   providedIn: 'root',
 })
 export class FormService {
-  constructor(private readonly fb: FormBuilder) {}
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly utilsService: UtilsService,
+  ) {}
 
   createFormGroup(sections: any[]): FormGroup {
     const group = this.fb.group({});
@@ -69,6 +72,12 @@ export class FormService {
             } else {
               validatorFns.push(Validators.pattern(value));
             }
+            break;
+          case 'minDate':
+            validatorFns.push(this.utilsService.minDate(value));
+            break;
+          case 'maxDate':
+            validatorFns.push(this.utilsService.maxDate(value));
             break;
         }
       }

@@ -49,6 +49,8 @@
         [placeholder]="field.placeholder || ''"
         bsDatepicker
         [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY' }"
+        [minDate]="minDate"
+        [maxDate]="maxDate"
         (bsValueChange)="handleDateChange($event)"
         [class.error]="isInvalid"
         [ngClass]="{ readonly: field.readonly }"

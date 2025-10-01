@@ -8,7 +8,7 @@ import { DynamicOptionsService } from '@app/shared/services/dynamic-options.serv
 import { Observable, of } from 'rxjs';
 import { NgxMaskDirective } from 'ngx-mask';
 import { MASKS } from '@app/shared/constants/constants';
-
+import moment from 'moment';
 @Component({
   selector: 'app-form-field',
   standalone: true,
@@ -30,6 +30,8 @@ export class FormFieldComponent implements OnInit {
 
   options$!: Observable<any[]>;
   public readonly MASKS = MASKS;
+  minDate?: Date;
+  maxDate?: Date;
 
   constructor(private readonly dynamicOptionsService: DynamicOptionsService) {}
 
@@ -40,6 +42,18 @@ export class FormFieldComponent implements OnInit {
       );
     } else {
       this.options$ = of(this.field.options || []);
+    }
+
+    if (this.field.validators?.minDate) {
+      this.minDate = moment()
+        .subtract(this.field.validators.minDate.daysAgo, 'days')
+        .toDate();
+    }
+
+    if (this.field.validators?.maxDate) {
+      this.maxDate = moment()
+        .add(this.field.validators.maxDate.daysFuture, 'days')
+        .toDate();
     }
   }
 
@@ -64,6 +78,12 @@ export class FormFieldComponent implements OnInit {
               error.requiredLength,
             );
           }
+          if (firstErrorKey === 'minDate' || firstErrorKey === 'maxDate') {
+            return errorMessageTemplate.replace(
+              '{requiredDate}',
+              error.requiredDate,
+            );
+          }
           return errorMessageTemplate;
         }
       }
@@ -86,6 +106,11 @@ export class FormFieldComponent implements OnInit {
   }
 
   handleDateChange(event: any): void {
+    const control = this.form.get(this.field.name);
+    if (control) {
+      control.setValue(event);
+    }
+
     if (this.field.events) {
       const changeEvent = this.field.events.find(
         (e: any) => e.name === 'change',
