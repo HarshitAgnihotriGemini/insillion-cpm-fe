@@ -240,11 +240,15 @@
               "placeholder": "Select policy start date",
               "mask": "DATE",
               "validators": {
-                "required": true
+                "required": true,
+                "minDate": { "daysAgo": 1 },
+                "maxDate": { "daysFuture": 2 }
               },
-              "events": [
-                { "name": "change", "action": "onPolicyStartDateChange" }
-              ]
+              "errors": {
+                "required": "Policy start date is required.",
+                "minDate": "Date cannot be before {requiredDate}.",
+                "maxDate": "Date cannot be after {requiredDate}."
+              }
             },
             {
               "type": "datepicker",
