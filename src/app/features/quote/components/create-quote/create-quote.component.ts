@@ -13,6 +13,7 @@ import * as cpmQuote from '@app/shared/schemas/cpm-quote.json';
 import { QuoteFormService } from '../../quote-form.service';
 import { QuoteService } from '../../quote.service';
 import moment from 'moment';
+import { concatMap, firstValueFrom, forkJoin, from } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -90,6 +91,8 @@ export class CreateQuoteComponent implements OnInit {
       this.onTransactionTypeChange(event.payload.target.value);
     } else if (event.action === 'onPolicyStartDateChange') {
       this.onPolicyStartDateChange(event.payload.target.value);
+    } else if (event.action === 'fetchLocationDetails') {
+      this.fetchLocationDetails(event.payload.target.value);
     }
   }
 
@@ -119,8 +122,9 @@ export class CreateQuoteComponent implements OnInit {
         this.form.controls['policy_transaction_type'].setValue(
           transactionTypeRes[0],
         );
-        await this.fetchProduct();
-        await this.fetchPackagePlan();
+        this.onTransactionTypeChange(
+          this.form.controls['policy_transaction_type'].value,
+        );
       }
     } catch (error) {
       console.error('Error fetching transaction types:', error);
@@ -165,13 +169,31 @@ export class CreateQuoteComponent implements OnInit {
   }
 
   async onTransactionTypeChange(transactionType: string) {
+    if (!transactionType) return;
+
     try {
-      if (transactionType) {
-        await this.fetchProduct();
-        await this.fetchPackagePlan();
+      await firstValueFrom(
+        forkJoin([
+          from(this.fetchProduct()).pipe(
+            concatMap(() => from(this.fetchPackagePlan())),
+          ),
+          from(this.quoteService.fetchMachineryTypes()),
+          from(this.quoteService.fetchVoluntaryExcess()),
+        ]),
+      );
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  }
+
+  async fetchLocationDetails(pincode: string) {
+    try {
+      if (pincode && pincode.length === 6) {
+        const locationRes =
+          await this.quoteService.fetchLocationDetails(pincode);
       }
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error('Error fetching location details:', error);
     }
   }
 

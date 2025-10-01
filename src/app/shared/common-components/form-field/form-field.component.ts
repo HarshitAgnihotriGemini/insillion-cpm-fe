@@ -7,7 +7,7 @@ import { EventHandlerDirective } from '../../directives/event-handler.directive'
 import { DynamicOptionsService } from '@app/shared/services/dynamic-options.service';
 import { Observable, of } from 'rxjs';
 import { NgxMaskDirective } from 'ngx-mask';
-import { MASKS } from '../../constants/masks.constants';
+import { MASKS } from '@app/shared/constants/constants';
 
 @Component({
   selector: 'app-form-field',
@@ -58,7 +58,7 @@ export class FormFieldComponent implements OnInit {
         const errorMessageTemplate = this.field.errors?.[firstErrorKey];
 
         if (errorMessageTemplate) {
-          if (firstErrorKey === 'minlength' || firstErrorKey === 'maxlength') {
+          if (firstErrorKey === 'minLength' || firstErrorKey === 'maxLength') {
             return errorMessageTemplate.replace(
               '{requiredLength}',
               error.requiredLength,
@@ -72,7 +72,10 @@ export class FormFieldComponent implements OnInit {
   }
 
   get maskPattern(): string {
-    if (this.field.mask && this.MASKS[this.field.mask as keyof typeof this.MASKS]) {
+    if (
+      this.field.mask &&
+      this.MASKS[this.field.mask as keyof typeof this.MASKS]
+    ) {
       return this.MASKS[this.field.mask as keyof typeof this.MASKS];
     }
     return '';
@@ -85,7 +88,7 @@ export class FormFieldComponent implements OnInit {
   handleDateChange(event: any): void {
     if (this.field.events) {
       const changeEvent = this.field.events.find(
-        (e: any) => e.name === 'change'
+        (e: any) => e.name === 'change',
       );
       if (changeEvent) {
         const customEvent = {
@@ -104,7 +107,7 @@ export class FormFieldComponent implements OnInit {
   handleNgSelectChange(event: any): void {
     if (this.field.events) {
       const changeEvent = this.field.events.find(
-        (e: any) => e.name === 'change'
+        (e: any) => e.name === 'change',
       );
       if (changeEvent) {
         const customEvent = {

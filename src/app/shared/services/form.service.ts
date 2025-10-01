@@ -7,7 +7,7 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { REGEX_PATTERNS } from '../constants/regex.constants';
+import { REGEX_PATTERNS } from '../constants/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -26,7 +26,7 @@ export class FormService {
             const validators = this.buildValidators(field.validators);
             group.addControl(
               field.name,
-              this.fb.control(field.value ?? null, validators)
+              this.fb.control(field.value ?? null, validators),
             );
           });
         }
@@ -63,8 +63,8 @@ export class FormService {
             if (REGEX_PATTERNS[value as keyof typeof REGEX_PATTERNS]) {
               validatorFns.push(
                 Validators.pattern(
-                  REGEX_PATTERNS[value as keyof typeof REGEX_PATTERNS]
-                )
+                  REGEX_PATTERNS[value as keyof typeof REGEX_PATTERNS],
+                ),
               );
             } else {
               validatorFns.push(Validators.pattern(value));
@@ -84,8 +84,8 @@ export class FormService {
     const formArray = this.getFormArray(form, subsection.name);
     const group: { [key: string]: any } = {};
     subsection.formGroupTemplate.forEach((field: any) => {
-        const validators = this.buildValidators(field.validators);
-        group[field.name] = [field.value ?? null, validators];
+      const validators = this.buildValidators(field.validators);
+      group[field.name] = [field.value ?? null, validators];
     });
     formArray.push(this.fb.group(group));
   }
@@ -174,7 +174,10 @@ export class FormService {
             const conditionalValidators = item._visible
               ? this.buildValidators(item.validatorsWhen)
               : [];
-            control.setValidators([...baseValidators, ...conditionalValidators]);
+            control.setValidators([
+              ...baseValidators,
+              ...conditionalValidators,
+            ]);
             control.updateValueAndValidity();
           }
         }
@@ -184,7 +187,7 @@ export class FormService {
       if (hasConditionalVisibility) {
         if (item.visibleWhen.or) {
           item.visibleWhen.or.forEach((condition: any) =>
-            dependencies.add(condition.field)
+            dependencies.add(condition.field),
           );
         } else {
           dependencies.add(item.visibleWhen.field);
@@ -194,7 +197,7 @@ export class FormService {
         if (item.visibleWhen) {
           if (item.visibleWhen.or) {
             item.visibleWhen.or.forEach((condition: any) =>
-              dependencies.add(condition.field)
+              dependencies.add(condition.field),
             );
           } else {
             dependencies.add(item.visibleWhen.field);

@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '@app/shared/services/api.service';
 import { DynamicOptionsService } from '@app/shared/services/dynamic-options.service';
+import { QuoteFormService } from './quote-form.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class QuoteService {
   constructor(
+    private readonly quoteFormService: QuoteFormService,
     private readonly api: ApiService,
     private readonly dynamicOptionsService: DynamicOptionsService,
   ) {}
@@ -92,6 +94,67 @@ export class QuoteService {
       const res = await this.api.httpGetMethod(url, body);
       this.dynamicOptionsService.setOptions(
         'packagePlanOptions',
+        res?.['data'],
+      );
+    } catch (error: unknown) {
+      throw error;
+    }
+  }
+
+  async fetchLocationDetails(pincode: string) {
+    try {
+      const url = this.api.url + 'firstgen/pinCode';
+      //Hardcode values added
+      const body = {
+        pincode: pincode,
+        skip: '/v1/rater/',
+      };
+      const res = await this.api.httpGetMethod(url, body);
+      const options = res?.['data']?.map(
+        (item: Record<string, any>) => item?.['iaxzip_name'],
+      );
+      this.dynamicOptionsService.setOptions('locationOptions', options);
+    } catch (error: unknown) {
+      throw error;
+    }
+  }
+
+  async fetchMachineryTypes() {
+    try {
+      const url = this.api.url + 'rater/lookup/cpm_machinery';
+      //Hardcode values added
+      const body = {
+        proposition_name:
+          this.quoteFormService.form.controls['propositionSelection'].value,
+        biz_type:
+          this.quoteFormService.form.controls['policy_transaction_type'].value,
+        effective_from: '45931',
+        effective_to: '45931',
+      };
+      const res = await this.api.httpGetMethod(url, body);
+      const options = res?.['data']?.map(
+        (item: Record<string, any>) => item?.['machinery_type'],
+      );
+      this.dynamicOptionsService.setOptions('machineryTypeOptions', options);
+    } catch (error: unknown) {
+      throw error;
+    }
+  }
+
+  async fetchVoluntaryExcess() {
+    try {
+      const url = this.api.url + 'cpm/voluntary_excess_tmpl';
+      //Hardcode values added
+      const body = {
+        proposition:
+          this.quoteFormService.form.controls['propositionSelection'].value,
+        policy_transaction_type:
+          this.quoteFormService.form.controls['policy_transaction_type'].value,
+        skip: '/v1/rater/',
+      };
+      const res = await this.api.httpGetMethod(url, body);
+      this.dynamicOptionsService.setOptions(
+        'voluntaryExcessOptions',
         res?.['data'],
       );
     } catch (error: unknown) {
