@@ -22,113 +22,116 @@
           <app-attachments [section]="section"> </app-attachments>
         </div>
         <div>
-          <div
-            *ngFor="let subsection of section.subsections"
-            class="form-section"
-          >
-            <ng-container
-              *ngIf="subsection.type === 'form-array'; else standardSection"
-            >
-              <p
-                class="text-base text-blue-secondary font-semibold mb-lg"
-                *ngIf="subsection.title"
+          <ng-container *ngFor="let subsection of section.subsections">
+            <div *ngIf="subsection._visible" class="form-section">
+              <ng-container
+                *ngIf="subsection.type === 'form-array'; else standardSection"
               >
-                {{ subsection.title }}
-              </p>
-              <div [formArrayName]="subsection.name">
-                <div
-                  *ngFor="
-                    let group of getFormArray(subsection.name).controls;
-                    let i = index
-                  "
-                  class="form-array-group mb-lg"
+                <p
+                  class="text-base text-blue-secondary font-semibold mb-lg"
+                  *ngIf="subsection.title"
                 >
-                  <div [formGroup]="toFormGroup(group)" class="row gy-4 gx-5">
-                    <div
-                      class="col-12 d-flex justify-content-between align-items-center p-0"
-                    >
-                      <p
-                        class="text-base text-primary font-semibold mb-md"
-                        *ngIf="subsection.title"
-                      >
-                        {{ subsection.title }} {{ i + 1 }}
-                      </p>
+                  {{ subsection.title }}
+                </p>
+                <div [formArrayName]="subsection.name">
+                  <div
+                    *ngFor="
+                      let group of getFormArray(subsection.name).controls;
+                      let i = index
+                    "
+                    class="form-array-group mb-lg"
+                  >
+                    <div [formGroup]="toFormGroup(group)" class="row gy-4 gx-5">
                       <div
-                        class="d-inline-flex align-items-center text-red-200 text-base cursor-pointer"
-                        (click)="removeGroup(subsection, i)"
+                        class="col-12 d-flex justify-content-between align-items-center p-0"
                       >
-                        <img
-                          [src]="imgPath + 'images/icon-remove.svg'"
-                          alt="remove icon"
-                        />
-                        <span class="ms-1">Remove</span>
-                      </div>
-                    </div>
-                    <ng-container
-                      *ngFor="let field of subsection.formGroupTemplate"
-                    >
-                      <div *ngIf="field._visible" class="col-4 ps-0">
-                        <app-form-field
-                          [field]="field"
-                          [form]="toFormGroup(group)"
-                          (buttonClick)="buttonClick.emit($event)"
-                          (fieldEvent)="handleFieldEvent($event)"
+                        <p
+                          class="text-base text-primary font-semibold mb-md"
+                          *ngIf="subsection.title"
                         >
-                        </app-form-field>
+                          {{ subsection.title }} {{ i + 1 }}
+                        </p>
+                        <div
+                          class="d-inline-flex align-items-center text-red-200 text-base cursor-pointer"
+                          (click)="removeGroup(subsection, i)"
+                        >
+                          <img
+                            [src]="imgPath + 'images/icon-remove.svg'"
+                            alt="remove icon"
+                          />
+                          <span class="ms-1">Remove</span>
+                        </div>
                       </div>
-                    </ng-container>
+                      <ng-container
+                        *ngFor="let field of subsection.formGroupTemplate"
+                      >
+                        <div *ngIf="field._visible" class="col-4 ps-0">
+                          <app-form-field
+                            [field]="field"
+                            [form]="toFormGroup(group)"
+                            (buttonClick)="buttonClick.emit($event)"
+                            (fieldEvent)="handleFieldEvent($event)"
+                          >
+                          </app-form-field>
+                        </div>
+                      </ng-container>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="mt-4 col-4 pe-4">
-                <button
-                  type="button"
-                  class="btn btn-outline btn-md w-100"
-                  (click)="addGroup(subsection)"
+                <div class="mt-4 col-4 pe-4">
+                  <button
+                    type="button"
+                    class="btn btn-outline btn-md w-100"
+                    (click)="addGroup(subsection)"
+                    [disabled]="
+                      getFormArray(subsection.name).length >=
+                      subsection.limit
+                    "
+                  >
+                    <img
+                      [src]="imgPath + 'images/icon-add.svg'"
+                      [alt]="subsection.addButtonLabel"
+                      class="btn-icon"
+                    />
+                    <span>{{ subsection.addButtonLabel }}</span>
+                  </button>
+                </div>
+              </ng-container>
+              <ng-template #standardSection
+                ><p
+                  class="text-base text-blue-secondary font-semibold mb-lg"
+                  *ngIf="subsection.title"
                 >
-                  <img
-                    [src]="imgPath + 'images/icon-add.svg'"
-                    [alt]="subsection.addButtonLabel"
-                    class="btn-icon"
-                  />
-                  <span>{{ subsection.addButtonLabel }}</span>
-                </button>
-              </div>
-            </ng-container>
-            <ng-template #standardSection
-              ><p
-                class="text-base text-blue-secondary font-semibold mb-lg"
-                *ngIf="subsection.title"
-              >
-                {{ subsection.title }}
-              </p>
+                  {{ subsection.title }}
+                </p>
 
-              <div class="row gy-4 gx-5">
-                <ng-container *ngFor="let field of subsection.fields">
-                  <div *ngIf="field._visible" class="col-4 ps-0">
+                <div class="row gy-4 gx-5">
+                  <ng-container *ngFor="let field of subsection.fields">
+                    <div *ngIf="field._visible" class="col-4 ps-0">
+                      <app-form-field
+                        [field]="field"
+                        [form]="form"
+                        (buttonClick)="buttonClick.emit($event)"
+                        (fieldEvent)="handleFieldEvent($event)"
+                      >
+                      </app-form-field>
+                    </div>
+                  </ng-container>
+                </div>
+                <div *ngIf="subsection.actions" class="mt-4 row gx-5">
+                  <div
+                    *ngFor="let action of subsection.actions"
+                    class="col-4 ps-0"
+                  >
                     <app-form-field
-                      [field]="field"
+                      [field]="action"
                       [form]="form"
                       (buttonClick)="buttonClick.emit($event)"
-                      (fieldEvent)="handleFieldEvent($event)"
-                    >
-                    </app-form-field>
-                  </div>
-                </ng-container>
-              </div>
-              <div *ngIf="subsection.actions" class="mt-4 row gx-5">
-                <div
-                  *ngFor="let action of subsection.actions"
-                  class="col-4 ps-0"
-                >
-                  <app-form-field
-                    [field]="action"
-                    [form]="form"
-                    (buttonClick)="buttonClick.emit($event)"
-                  ></app-form-field>
-                </div></div
-            ></ng-template>
-          </div>
+                    ></app-form-field>
+                  </div></div
+              ></ng-template>
+            </div>
+          </ng-container>
         </div>
       </ng-container>
     </div>

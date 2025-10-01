@@ -99,109 +99,120 @@ export class FormService {
   }
 
   setupConditionalLogic(form: FormGroup, sections: any[]): void {
-    const allFields = sections
-      .flatMap((s) => s.subsections || [])
-      .flatMap((ss) =>
-        ss.type === 'form-array' ? ss.formGroupTemplate : ss.fields || []
-      );
+    const setupItemLogic = (item: any) => {
+      if (!item) return;
 
-    allFields.forEach((field) => {
-      if (field) {
-        // Set initial visibility
-        field._visible = !field.visibleWhen;
+      // Set initial visibility
+      item._visible = !item.visibleWhen;
 
-        const applyLogic = () => {
-          // Conditional Visibility
-          if (field.visibleWhen) {
-            let isVisible = false;
-            if (field.visibleWhen.or) {
-              for (const condition of field.visibleWhen.or) {
-                const targetControl = form.get(condition.field);
-                if (targetControl && targetControl.value === condition.value) {
-                  isVisible = true;
-                  break;
-                }
-              }
-            } else {
-              const targetControl = form.get(field.visibleWhen.field);
-              if (targetControl) {
-                isVisible = targetControl.value === field.visibleWhen.value;
+      const applyLogic = () => {
+        // Conditional Visibility
+        if (item.visibleWhen) {
+          let isVisible = false;
+          if (item.visibleWhen.or) {
+            for (const condition of item.visibleWhen.or) {
+              const targetControl = form.get(condition.field);
+              if (targetControl && targetControl.value === condition.value) {
+                isVisible = true;
+                break;
               }
             }
+          } else {
+            const targetControl = form.get(item.visibleWhen.field);
+            if (targetControl) {
+              isVisible = targetControl.value === item.visibleWhen.value;
+            }
+          }
 
-            const wasVisible = field._visible;
-            field._visible = isVisible;
+          const wasVisible = item._visible;
+          item._visible = isVisible;
 
+          if (item.name) {
+            // only fields have name and can be reset
             // Reset touched state when field is hidden
-            if (wasVisible && !field._visible) {
-              const controlToReset = form.get(field.name);
+            if (wasVisible && !item._visible) {
+              const controlToReset = form.get(item.name);
               if (controlToReset) {
                 controlToReset.markAsUntouched();
               }
             }
           }
+        } else {
+          item._visible = true;
+        }
 
-          // Conditional Validators
-          if (field.validatorsWhen) {
-            const control = form.get(field.name);
-            if (control) {
-              const baseValidators = this.buildValidators(field.validators);
-              const conditionalValidators = field._visible
-                ? this.buildValidators(field.validatorsWhen)
-                : [];
-              control.setValidators([...baseValidators, ...conditionalValidators]);
-              control.updateValueAndValidity();
-            }
+        // Conditional Validators (only for fields)
+        if (item.validatorsWhen && item.name) {
+          const control = form.get(item.name);
+          if (control) {
+            const baseValidators = this.buildValidators(item.validators);
+            const conditionalValidators = item._visible
+              ? this.buildValidators(item.validatorsWhen)
+              : [];
+            control.setValidators([...baseValidators, ...conditionalValidators]);
+            control.updateValueAndValidity();
           }
-        };
+        }
+      };
 
-        // Subscribe to dependencies for visibility and validators
-        const dependencies = new Set<string>();
-        if (field.visibleWhen) {
-          if (field.visibleWhen.or) {
-            field.visibleWhen.or.forEach((condition: any) =>
+      // Subscribe to dependencies for visibility and validators
+      const dependencies = new Set<string>();
+      if (item.visibleWhen) {
+        if (item.visibleWhen.or) {
+          item.visibleWhen.or.forEach((condition: any) =>
+            dependencies.add(condition.field)
+          );
+        } else {
+          dependencies.add(item.visibleWhen.field);
+        }
+      }
+      if (item.validatorsWhen) {
+        if (item.visibleWhen) {
+          if (item.visibleWhen.or) {
+            item.visibleWhen.or.forEach((condition: any) =>
               dependencies.add(condition.field)
             );
           } else {
-            dependencies.add(field.visibleWhen.field);
+            dependencies.add(item.visibleWhen.field);
           }
         }
-        if (field.validatorsWhen) {
-            // Since validatorsWhen depends on visibility, we need to add the visibility dependencies
-            if (field.visibleWhen) {
-                if (field.visibleWhen.or) {
-                    field.visibleWhen.or.forEach((condition: any) =>
-                        dependencies.add(condition.field)
-                    );
-                } else {
-                    dependencies.add(field.visibleWhen.field);
-                }
-            }
-        }
-
-        dependencies.forEach((depName) => {
-          const targetControl = form.get(depName);
-          if (targetControl) {
-            targetControl.valueChanges.subscribe(() => applyLogic());
-          }
-        });
-
-        if (field.resetsFields) {
-          const sourceControl = form.get(field.name);
-          if (sourceControl) {
-            sourceControl.valueChanges.subscribe(() => {
-              field.resetsFields.forEach((fieldName: string) => {
-                const controlToReset = form.get(fieldName);
-                if (controlToReset) {
-                  controlToReset.reset();
-                }
-              });
-            });
-          }
-        }
-
-        applyLogic();
       }
+
+      dependencies.forEach((depName) => {
+        const targetControl = form.get(depName);
+        if (targetControl) {
+          targetControl.valueChanges.subscribe(() => applyLogic());
+        }
+      });
+
+      if (item.resetsFields && item.name) {
+        const sourceControl = form.get(item.name);
+        if (sourceControl) {
+          sourceControl.valueChanges.subscribe(() => {
+            item.resetsFields.forEach((fieldName: string) => {
+              const controlToReset = form.get(fieldName);
+              if (controlToReset) {
+                controlToReset.reset();
+              }
+            });
+          });
+        }
+      }
+
+      applyLogic();
+    };
+
+    sections.forEach((section) => {
+      section.subsections?.forEach((subsection: any) => {
+        setupItemLogic(subsection);
+        const fields =
+          subsection.type === 'form-array'
+            ? subsection.formGroupTemplate
+            : subsection.fields || [];
+        fields.forEach((field: any) => {
+          setupItemLogic(field);
+        });
+      });
     });
   }
 }

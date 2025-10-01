@@ -57,6 +57,12 @@ export class SectionComponent implements OnInit {
     return this.formService.getFormArray(this.form, name);
   }
   addGroup(subsection: any): void {
+    if (
+      subsection.limit &&
+      this.getFormArray(subsection.name).length >= subsection.limit
+    ) {
+      return;
+    }
     this.formService.addGroup(this.form, subsection);
   }
 

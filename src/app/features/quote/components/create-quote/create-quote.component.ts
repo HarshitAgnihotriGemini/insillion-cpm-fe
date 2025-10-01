@@ -179,7 +179,9 @@ export class CreateQuoteComponent implements OnInit {
     if (date) {
       const startDate = moment(date);
       const endDate = startDate.add(1, 'year').subtract(1, 'day');
-      this.form.controls['policy_end_date'].setValue(endDate.toDate());
+      this.form.controls['policy_end_date'].setValue(
+        endDate.format('DD/MM/YYYY'),
+      );
     }
   }
 

@@ -320,8 +320,9 @@
               "name": "floater",
               "label": "Floater",
               "placeholder": "Select floater",
-              "value": "No",
-              "options": ["Yes", "No"]
+              "value": "Yes",
+              "options": ["Yes", "No"],
+              "events": [{ "name": "change", "action": "onFloaterChange" }]
             },
             {
               "type": "select",
@@ -339,7 +340,51 @@
               "type": "select",
               "name": "projectInWhichMachineryIsOperated",
               "label": "Project in Which Machinery is Operated",
-              "placeholder": "Select project in which machinery is operated"
+              "placeholder": "Select project in which machinery is operated",
+              "visibleWhen": { "field": "floater", "value": "Yes" }
+            }
+          ]
+        },
+        {
+          "title": "Risk Location",
+          "type": "form-array",
+          "name": "riskLocation",
+          "addButtonLabel": "Add Risk Details",
+          "limit": 1,
+          "visibleWhen": {
+            "field": "floater",
+            "value": "No"
+          },
+          "formGroupTemplate": [
+            {
+              "type": "input",
+              "name": "pincode",
+              "label": "Pincode",
+              "placeholder": "Enter pincode"
+            },
+            {
+              "type": "select",
+              "name": "location",
+              "label": "Location",
+              "placeholder": "Select location"
+            },
+            {
+              "type": "input",
+              "name": "address_1",
+              "label": "Address 1",
+              "placeholder": "Enter address 1"
+            },
+            {
+              "type": "input",
+              "name": "address_2",
+              "label": "Address 2",
+              "placeholder": "Enter address 2"
+            },
+            {
+              "type": "input",
+              "name": "ed_zone",
+              "label": "EQ Zone",
+              "placeholder": "Enter EQ zone"
             }
           ]
         },
@@ -348,6 +393,7 @@
           "type": "form-array",
           "name": "machineryDetails",
           "addButtonLabel": "Add Machinery Details",
+          "limit": 1,
           "formGroupTemplate": [
             {
               "type": "select",
