@@ -99,16 +99,16 @@ export class FormService {
   }
 
   setupConditionalLogic(form: FormGroup, sections: any[]): void {
-    const setupItemLogic = (item: any) => {
+    const setupItemLogic = (item: any, isSubsection: boolean) => {
       if (!item) return;
 
-      // Set initial visibility
-      item._visible = !item.visibleWhen;
+      const hasConditionalVisibility = !!item.visibleWhen;
+      item._visible = !hasConditionalVisibility;
 
       const applyLogic = () => {
-        // Conditional Visibility
-        if (item.visibleWhen) {
-          let isVisible = false;
+        let isVisible = true;
+        if (hasConditionalVisibility) {
+          isVisible = false;
           if (item.visibleWhen.or) {
             for (const condition of item.visibleWhen.or) {
               const targetControl = form.get(condition.field);
@@ -123,26 +123,51 @@ export class FormService {
               isVisible = targetControl.value === item.visibleWhen.value;
             }
           }
+        }
 
-          const wasVisible = item._visible;
+        if (item._visible !== isVisible) {
           item._visible = isVisible;
 
-          if (item.name) {
-            // only fields have name and can be reset
-            // Reset touched state when field is hidden
-            if (wasVisible && !item._visible) {
-              const controlToReset = form.get(item.name);
-              if (controlToReset) {
-                controlToReset.markAsUntouched();
+          if (isSubsection) {
+            if (item.type === 'form-array') {
+              const formArray = form.get(item.name) as FormArray;
+              if (formArray) {
+                if (isVisible) {
+                  formArray.enable();
+                } else {
+                  formArray.disable();
+                  formArray.clear();
+                }
+              }
+            } else {
+              const fields = item.fields || [];
+              fields.forEach((field: any) => {
+                const control = form.get(field.name);
+                if (control) {
+                  if (isVisible) {
+                    control.enable();
+                  } else {
+                    control.disable();
+                    control.reset();
+                  }
+                }
+              });
+            }
+          } else {
+            // is a field
+            const control = form.get(item.name);
+            if (control) {
+              if (isVisible) {
+                control.enable();
+              } else {
+                control.disable();
+                control.reset();
               }
             }
           }
-        } else {
-          item._visible = true;
         }
 
-        // Conditional Validators (only for fields)
-        if (item.validatorsWhen && item.name) {
+        if (!isSubsection && item.validatorsWhen) {
           const control = form.get(item.name);
           if (control) {
             const baseValidators = this.buildValidators(item.validators);
@@ -155,9 +180,8 @@ export class FormService {
         }
       };
 
-      // Subscribe to dependencies for visibility and validators
       const dependencies = new Set<string>();
-      if (item.visibleWhen) {
+      if (hasConditionalVisibility) {
         if (item.visibleWhen.or) {
           item.visibleWhen.or.forEach((condition: any) =>
             dependencies.add(condition.field)
@@ -166,7 +190,7 @@ export class FormService {
           dependencies.add(item.visibleWhen.field);
         }
       }
-      if (item.validatorsWhen) {
+      if (!isSubsection && item.validatorsWhen) {
         if (item.visibleWhen) {
           if (item.visibleWhen.or) {
             item.visibleWhen.or.forEach((condition: any) =>
@@ -185,7 +209,7 @@ export class FormService {
         }
       });
 
-      if (item.resetsFields && item.name) {
+      if (!isSubsection && item.resetsFields) {
         const sourceControl = form.get(item.name);
         if (sourceControl) {
           sourceControl.valueChanges.subscribe(() => {
@@ -204,13 +228,13 @@ export class FormService {
 
     sections.forEach((section) => {
       section.subsections?.forEach((subsection: any) => {
-        setupItemLogic(subsection);
+        setupItemLogic(subsection, true);
         const fields =
           subsection.type === 'form-array'
             ? subsection.formGroupTemplate
             : subsection.fields || [];
         fields.forEach((field: any) => {
-          setupItemLogic(field);
+          setupItemLogic(field, false);
         });
       });
     });
