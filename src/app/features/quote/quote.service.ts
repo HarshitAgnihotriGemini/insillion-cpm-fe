@@ -161,4 +161,12 @@ export class QuoteService {
       throw error;
     }
   }
+
+  async getQuote() {
+    try {
+      console.log('Getting Quote');
+    } catch (error) {
+      throw error;
+    }
+  }
 }

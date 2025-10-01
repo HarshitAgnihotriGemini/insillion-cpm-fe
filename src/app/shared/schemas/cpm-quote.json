@@ -249,7 +249,10 @@
                 "required": "Policy start date is required.",
                 "minDate": "Date cannot be before {requiredDate}.",
                 "maxDate": "Date cannot be after {requiredDate}."
-              }
+              },
+              "events": [
+                { "name": "change", "action": "onPolicyStartDateChange" }
+              ]
             },
             {
               "type": "datepicker",
@@ -539,7 +542,8 @@
               "type": "select",
               "name": "earthquake_req",
               "label": "Earthquake Required",
-              "placeholder": "Select earthquake required"
+              "placeholder": "Select earthquake required",
+              "options": ["Yes", "No"]
             },
             {
               "type": "select",
@@ -548,7 +552,8 @@
               "placeholder": "Select terrorism cover",
               "validators": {
                 "required": true
-              }
+              },
+              "options": ["Yes", "No"]
             }
           ]
         },

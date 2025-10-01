@@ -207,6 +207,13 @@ export class CreateQuoteComponent implements OnInit {
     }
   }
 
+  async getQuote() {
+    try {
+    } catch (error) {
+      console.error('Error in get quote:', error);
+    }
+  }
+
   redirect() {
     this.router.navigate(['/quote/review-quote'], {
       state: { isProposal: false },
