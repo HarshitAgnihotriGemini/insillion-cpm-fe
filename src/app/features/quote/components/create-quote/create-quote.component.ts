@@ -16,6 +16,8 @@ import moment from 'moment';
 import { concatMap, firstValueFrom, forkJoin, from } from 'rxjs';
 import { LoaderService } from '@app/shared/services/loader.service';
 import { ViewBreakupComponent } from '@app/shared/common-components/view-breakup/view-breakup.component';
+import { REVIEW_QUOTE } from '@app/shared/constants/routes';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   standalone: true,
@@ -48,6 +50,7 @@ export class CreateQuoteComponent implements OnInit {
     private readonly quoteFormService: QuoteFormService,
     private readonly quoteService: QuoteService,
     private readonly loaderService: LoaderService,
+    private readonly toastr: ToastrService,
   ) {
     this.imgPath = this.imgPath = `${this.apiService.commonPath}/assets/`;
   }
@@ -250,6 +253,7 @@ export class CreateQuoteComponent implements OnInit {
         await this.quoteService.saveQuote();
         this.isBreakupVisible = true;
       } else {
+        this.toastr.error('Form is not valid');
         console.error('Form is invalid:', this.form);
       }
     } catch (error) {
@@ -260,8 +264,11 @@ export class CreateQuoteComponent implements OnInit {
   }
 
   redirect() {
-    this.router.navigate(['/quote/review-quote'], {
-      state: { isProposal: false },
-    });
+    this.router.navigate(
+      [`/quote/${REVIEW_QUOTE}/${this.quoteService.getPolicyId}`],
+      {
+        state: { isProposal: false },
+      },
+    );
   }
 }
