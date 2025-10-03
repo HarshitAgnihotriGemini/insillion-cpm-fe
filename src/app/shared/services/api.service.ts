@@ -55,7 +55,7 @@ export class ApiService {
   }
 
   /****  Common HTTP POST Method****/
-  async httpPostMethod(url: string, parameter: any): Promise<any[]> {
+  async httpPostMethod(url: string, parameter: any): Promise<any> {
     try {
       const response: any = await firstValueFrom(
         this.http.post(url, parameter, { observe: 'response' }),

@@ -342,14 +342,16 @@
                 "required": "Floater Coverage Within is required."
               },
               "visibleWhen": { "field": "floater", "value": "Yes" },
-              "validatorsWhen": { "required": true }
+              "validatorsWhen": { "required": true },
+              "options": ["Anywhere in India"]
             },
             {
               "type": "select",
               "name": "projectInWhichMachineryIsOperated",
               "label": "Project in Which Machinery is Operated",
               "placeholder": "Select project in which machinery is operated",
-              "visibleWhen": { "field": "floater", "value": "Yes" }
+              "visibleWhen": { "field": "floater", "value": "Yes" },
+              "options": ["Anywhere in India"]
             }
           ]
         },
@@ -429,7 +431,7 @@
         {
           "title": "Machinery Details",
           "type": "form-array",
-          "name": "machineryDetails",
+          "name": "machinery",
           "addButtonLabel": "Add Machinery Details",
           "limit": 1,
           "formGroupTemplate": [
@@ -440,7 +442,8 @@
               "placeholder": "Select location",
               "validators": {
                 "required": true
-              }
+              },
+              "options": ["Anywhere in India"]
             },
             {
               "type": "select",

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BreadcrumbComponent } from '@app/shared/common-components/breadcrumb/breadcrumb.component';
 import { SectionComponent } from '@app/shared/common-components/section/section.component';
 import { TermsAndConditionsModalComponent } from '@app/shared/common-components/terms-and-conditions/terms-and-conditions.component';
@@ -37,6 +37,7 @@ export class CreateQuoteComponent implements OnInit {
   constructor(
     private readonly modalService: BsModalService,
     private readonly router: Router,
+    private readonly _route: ActivatedRoute,
     private readonly apiService: ApiService,
     private readonly quoteFormService: QuoteFormService,
     private readonly quoteService: QuoteService,
@@ -50,7 +51,17 @@ export class CreateQuoteComponent implements OnInit {
     this.config?.sections?.forEach((section: any) => {
       this.sectionState.set(section.title, true);
     });
-    this.fetchBranchListAsync();
+    this._route.params?.subscribe(async (params) => {
+      try {
+        this.quoteService.setPolicyId = params?.['id'];
+        if (this.quoteService.getPolicyId !== 'new') {
+          await this.quoteService.getDetailByPolicyId();
+        }
+        this.fetchBranchListAsync();
+      } catch (error) {
+        console.log('Error in Create quote: ' + error);
+      }
+    });
   }
 
   private async fetchBranchListAsync(): Promise<void> {
@@ -209,6 +220,11 @@ export class CreateQuoteComponent implements OnInit {
 
   async getQuote() {
     try {
+      if (this.form.valid) {
+        await this.quoteService.saveQuote();
+      } else {
+        console.error('Form is invalid:', this.form);
+      }
     } catch (error) {
       console.error('Error in get quote:', error);
     }

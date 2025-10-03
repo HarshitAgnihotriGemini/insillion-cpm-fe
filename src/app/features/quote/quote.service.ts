@@ -2,16 +2,55 @@ import { Injectable } from '@angular/core';
 import { ApiService } from '@app/shared/services/api.service';
 import { DynamicOptionsService } from '@app/shared/services/dynamic-options.service';
 import { QuoteFormService } from './quote-form.service';
+import { QuoteReqService } from '@app/shared/model/quote/quote-req/quote-req.service';
+import { Location } from '@angular/common';
+import { QuoteRes } from '@app/shared/model/quote/quote-res/quote-res.model';
+import { QuoteResService } from '@app/shared/model/quote/quote-res/quote-res.service';
+import { CREATE_QUOTE } from '@app/shared/constants/routes';
 
 @Injectable({
   providedIn: 'root',
 })
 export class QuoteService {
+  private policyId = 'new';
+  public quoteRes!: QuoteRes;
+
   constructor(
     private readonly quoteFormService: QuoteFormService,
     private readonly api: ApiService,
     private readonly dynamicOptionsService: DynamicOptionsService,
+    private readonly quoteReqService: QuoteReqService,
+    private readonly _location: Location,
+    private readonly quoteResService: QuoteResService,
   ) {}
+
+  /*  Getter for policyId
+   To restrict the user from direct manipulating the policyId in components
+   */
+  get getPolicyId() {
+    return this.policyId;
+  }
+
+  /*Setter for policyId
+  To change the policyId in other components
+  */
+  set setPolicyId(policyId: string) {
+    this.policyId = policyId;
+  }
+
+  public async getDetailByPolicyId() {
+    try {
+      const url = this.api.url + 'policy/' + this.getPolicyId;
+      const res = await this.api.httpGetMethod(url);
+      if (res?.['data']?.[0]) {
+        this.quoteRes = this.quoteResService.adapt(res['data'][0]);
+      } else if (res?.['txt']) {
+        throw new Error('Error in Policy Response.');
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
 
   async fetchPropositionData(imdCode: string) {
     try {
@@ -162,9 +201,26 @@ export class QuoteService {
     }
   }
 
-  async getQuote() {
+  async saveQuote() {
     try {
-      console.log('Getting Quote');
+      const url = this.api.url + 'quote';
+      const body = this.quoteReqService.adapt({
+        formData: this.quoteFormService.form.value,
+        productId: this.api.productId,
+      });
+      const res = await this.api.httpPostMethod(url, body);
+      if (res?.['data']?.[0]) {
+        this.quoteRes = this.quoteResService.adapt(res?.['data']?.[0]);
+        if (this.getPolicyId === 'new' && this.quoteRes?.policyId) {
+          //To update the parameters in the url without reloading the page.
+          this.setPolicyId = this.quoteRes?.policyId;
+          this._location?.replaceState(
+            `quote/${CREATE_QUOTE}/${this.getPolicyId}`,
+          );
+        }
+      } else {
+        throw new Error('Error in quote API!!!');
+      }
     } catch (error) {
       throw error;
     }

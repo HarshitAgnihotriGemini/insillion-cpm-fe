@@ -3,7 +3,7 @@ import { CreateQuoteComponent } from './components/create-quote/create-quote.com
 import { ReviewQuoteComponent } from './components/review-quote/review-quote.component';
 
 export const QUOTE_ROUTES: Routes = [
-  { path: '', redirectTo: 'create-quote', pathMatch: 'full' },
-  { path: 'create-quote', component: CreateQuoteComponent },
-  { path: 'review-quote', component: ReviewQuoteComponent },
+  { path: '', redirectTo: 'create-quote/new', pathMatch: 'full' },
+  { path: 'create-quote/:id', component: CreateQuoteComponent },
+  { path: 'review-quote/:id', component: ReviewQuoteComponent },
 ];

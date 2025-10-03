@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AttachmentsReviewComponent } from '@app/shared/common-components/attachments-review/attachments-review.component';
 import { BreadcrumbComponent } from '@app/shared/common-components/breadcrumb/breadcrumb.component';
 import { CkycOffcanvasComponent } from '@app/shared/common-components/ckyc-offcanvas/ckyc-offcanvas.component';
@@ -13,6 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 import * as cpmReview from '@app/shared/schemas/cpm-policy-summary.json';
 import { ApiService } from '@app/shared/services/api.service';
 import { environment } from 'environments/environment';
+import { QuoteService } from '../../quote.service';
 
 @Component({
   selector: 'app-review-quote',
@@ -39,6 +40,8 @@ export class ReviewQuoteComponent implements OnInit {
     private readonly modalService: BsModalService,
     private readonly toastr: ToastrService,
     private readonly apiService: ApiService,
+    private readonly _route: ActivatedRoute,
+    private readonly quoteService: QuoteService,
   ) {
     this.imgPath = this.imgPath = `${this.apiService.commonPath}/assets/`;
   }
@@ -48,6 +51,16 @@ export class ReviewQuoteComponent implements OnInit {
       this.isProposal = true;
     }
     this.config = cpmReview;
+    this._route.params?.subscribe(async (params) => {
+      try {
+        this.quoteService.setPolicyId = params?.['id'];
+        if (this.quoteService.getPolicyId !== 'new') {
+          await this.quoteService.getDetailByPolicyId();
+        }
+      } catch (error) {
+        console.log('Error in Create quote: ' + error);
+      }
+    });
   }
   redirect() {
     this.router.navigate(['/proposal']);
