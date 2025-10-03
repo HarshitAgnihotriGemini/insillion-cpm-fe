@@ -40,7 +40,10 @@
               ></app-attachments-review>
             </ng-container>
             <ng-container *ngSwitchDefault>
-              <app-policy-summary [config]="section"></app-policy-summary>
+              <app-policy-summary
+                [config]="section"
+                [dataRes]="quoteService.quoteRes || ''"
+              ></app-policy-summary>
             </ng-container>
           </ng-container>
         </div>

@@ -15,6 +15,7 @@ import { QuoteService } from '../../quote.service';
 import moment from 'moment';
 import { concatMap, firstValueFrom, forkJoin, from } from 'rxjs';
 import { LoaderService } from '@app/shared/services/loader.service';
+import { ViewBreakupComponent } from '@app/shared/common-components/view-breakup/view-breakup.component';
 
 @Component({
   standalone: true,
@@ -24,6 +25,7 @@ import { LoaderService } from '@app/shared/services/loader.service';
     ReactiveFormsModule,
     BreadcrumbComponent,
     SectionComponent,
+    ViewBreakupComponent,
   ],
   templateUrl: './create-quote.component.html',
   styleUrl: './create-quote.component.scss',
@@ -35,6 +37,9 @@ export class CreateQuoteComponent implements OnInit {
   sectionState = new Map<string, boolean>();
   private readonly offcanvasService = inject(NgbOffcanvas);
   imgPath: string;
+  isBreakupVisible = false;
+  isGettingPremium = false;
+
   constructor(
     private readonly modalService: BsModalService,
     private readonly router: Router,
@@ -188,8 +193,10 @@ export class CreateQuoteComponent implements OnInit {
 
   async onTransactionTypeChange(transactionType: string) {
     if (!transactionType) return;
-
+    const fieldKey = 'policy_transaction_type';
+    this.loaderService.showLoader(fieldKey);
     try {
+      const proposition = this.form.controls['propositionSelection'].value;
       await firstValueFrom(
         forkJoin([
           from(this.fetchProduct()).pipe(
@@ -197,10 +204,18 @@ export class CreateQuoteComponent implements OnInit {
           ),
           from(this.quoteService.fetchMachineryTypes()),
           from(this.quoteService.fetchVoluntaryExcess()),
+          from(
+            this.quoteService.fetchFloaterCoverage(
+              proposition,
+              transactionType,
+            ),
+          ),
         ]),
       );
     } catch (error) {
       console.error('Error fetching data:', error);
+    } finally {
+      this.loaderService.hideLoader(fieldKey);
     }
   }
 
@@ -229,14 +244,18 @@ export class CreateQuoteComponent implements OnInit {
   }
 
   async getQuote() {
+    this.isGettingPremium = true;
     try {
       if (this.form.valid) {
         await this.quoteService.saveQuote();
+        this.isBreakupVisible = true;
       } else {
         console.error('Form is invalid:', this.form);
       }
     } catch (error) {
       console.error('Error in get quote:', error);
+    } finally {
+      this.isGettingPremium = false;
     }
   }
 

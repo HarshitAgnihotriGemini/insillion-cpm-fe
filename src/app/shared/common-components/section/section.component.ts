@@ -31,6 +31,8 @@ export class SectionComponent implements OnInit {
   @Output() removeFile = new EventEmitter<any>();
   @Output() fieldEvent = new EventEmitter<{ action: string; payload: any }>();
   imgPath: string;
+  isExpanded = true;
+  isOverflowVisible = false;
 
   constructor(
     private formService: FormService,
@@ -38,10 +40,13 @@ export class SectionComponent implements OnInit {
   ) {
     this.imgPath = `${this.apiService.commonPath}/assets/`;
   }
-  isExpanded = true;
 
   ngOnInit(): void {
     this.isExpanded = this.section.isExpandedByDefault ?? true;
+    if (this.isExpanded) {
+      // If it starts expanded, make overflow visible immediately
+      this.isOverflowVisible = true;
+    }
   }
 
   get isCollapsible(): boolean {
@@ -50,9 +55,23 @@ export class SectionComponent implements OnInit {
 
   toggle(): void {
     if (this.isCollapsible) {
-      this.isExpanded = !this.isExpanded;
+      if (this.isExpanded) {
+        // Start collapsing: hide overflow immediately, then start animation
+        this.isOverflowVisible = false;
+        this.isExpanded = false;
+      } else {
+        // Start expanding: start animation, overflow will be made visible on transition end
+        this.isExpanded = true;
+      }
     }
   }
+
+  onTransitionEnd() {
+    if (this.isExpanded) {
+      this.isOverflowVisible = true;
+    }
+  }
+
   getFormArray(name: string): FormArray {
     return this.formService.getFormArray(this.form, name);
   }

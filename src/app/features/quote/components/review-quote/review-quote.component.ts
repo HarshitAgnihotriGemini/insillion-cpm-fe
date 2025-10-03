@@ -41,7 +41,7 @@ export class ReviewQuoteComponent implements OnInit {
     private readonly toastr: ToastrService,
     private readonly apiService: ApiService,
     private readonly _route: ActivatedRoute,
-    private readonly quoteService: QuoteService,
+    public readonly quoteService: QuoteService,
   ) {
     this.imgPath = this.imgPath = `${this.apiService.commonPath}/assets/`;
   }
@@ -56,6 +56,7 @@ export class ReviewQuoteComponent implements OnInit {
         this.quoteService.setPolicyId = params?.['id'];
         if (this.quoteService.getPolicyId !== 'new') {
           await this.quoteService.getDetailByPolicyId();
+          console.log('111111', this.quoteService.quoteRes);
         }
       } catch (error) {
         console.log('Error in Create quote: ' + error);

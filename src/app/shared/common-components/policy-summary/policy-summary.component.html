@@ -1,29 +1,47 @@
-<div class="ps-4 pt-4">
+<div class="ps-4 pt-4" *ngIf="config">
   <div class="text-lg font-semibold">{{ config.title }}</div>
 </div>
 
-<div class="px-4">
-  <div
-    *ngFor="let subsection of config.subsections"
-    class="subsection-review border-bottom-grey-2 pt-4"
-  >
-    <p class="text-base font-semibold mb-4" *ngIf="subsection.title">
-      {{ subsection.title }}
-    </p>
+<div class="px-4" *ngIf="config">
+  <ng-container *ngFor="let subsection of config.subsections">
+    <div
+      *ngIf="shouldShowField(subsection)"
+      class="subsection-review border-bottom-grey-2 pt-4"
+    >
+      <p class="text-base font-semibold mb-4" *ngIf="subsection.title">
+        {{ subsection.title }}
+      </p>
 
-    <ng-container *ngIf="subsection.type === 'form-array'; else standardFields">
-    </ng-container>
-    <ng-template #standardFields>
-      <div class="row g-4 mb-4">
-        <div *ngFor="let field of subsection.fields" class="col-3 ps-0 text-sm">
-          <div class="text-grey font-bold">
-            {{ field.label }}
-          </div>
-          <div class="review-field-value">
-            {{ field.value }}
-          </div>
+      <ng-container
+        *ngIf="subsection.type === 'form-array'; else standardFields"
+      >
+        <table class="table">
+          <thead>
+            <tr>
+              <th *ngFor="let header of subsection.headers">{{ header }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of subsection.rows">
+              <td *ngFor="let key of objectKeys(row)">{{ row[key] }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </ng-container>
+      <ng-template #standardFields>
+        <div class="row g-4 mb-4">
+          <ng-container *ngFor="let field of subsection.fields">
+            <div *ngIf="shouldShowField(field)" class="col-3 ps-0 text-sm">
+              <div class="text-grey font-bold">
+                {{ field.label }}
+              </div>
+              <div class="review-field-value">
+                {{ dataRes?.data?.[field.name] || '-' }}
+              </div>
+            </div>
+          </ng-container>
         </div>
-      </div>
-    </ng-template>
-  </div>
+      </ng-template>
+    </div>
+  </ng-container>
 </div>

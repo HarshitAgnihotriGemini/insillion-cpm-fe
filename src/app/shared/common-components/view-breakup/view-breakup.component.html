@@ -1,29 +1,18 @@
-<div class="px-4">
-  <div
-    class="d-flex justify-content-between align-items-center text-md py-4 border-bottom-grey"
-  >
-    <p class="pull-left">{{ config.title }}</p>
-    <img
-      class="cursor-pointer"
-      [src]="imgPath + 'images/icon-close-dark.svg'"
-      alt="icon-close"
-      (click)="bsModalRef.hide()"
-    />
+<section class="section-card bg-light">
+  <div class="card-header-grey">
+    <div class="text-md font-semibold">Total Premium ₹ {{ config?.total }}</div>
   </div>
-  <div class="modal-body">
-    <div
-      *ngFor="let item of config.items"
-      class="border-bottom-grey py-3 d-flex justify-content-between align-items-center text-sm"
-    >
-      <span class="summary-item-label text-grey">{{ item.label }}</span>
-      <span class="summary-item-value">{{ item.value }}</span>
-    </div>
-
-    <div
-      class="summary-total py-3 d-flex justify-content-between align-items-center text-md"
-    >
-      <span class="summary-total-label">{{ config.total.label }}</span>
-      <span class="summary-total-value">{{ config.total.value }}</span>
+  <div class="review-section-wrapper">
+    <div class="p-4 row g-4">
+      <div class="col-12 ps-0 font-semibold">{{ config.title }}</div>
+      <div class="col-3 ps-0 text-sm" *ngFor="let item of config.items">
+        <div class="text-grey font-bold">
+          {{ item.label }}
+        </div>
+        <div class="review-field-value">
+          {{ item.value }}
+        </div>
+      </div>
     </div>
   </div>
-</div>
+</section>

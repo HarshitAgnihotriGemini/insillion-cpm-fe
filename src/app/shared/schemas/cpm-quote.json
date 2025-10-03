@@ -71,6 +71,9 @@
               ],
               "validators": {
                 "required": true
+              },
+              "errors": {
+                "required": "Transaction Type is required."
               }
             },
             {
@@ -296,6 +299,9 @@
               "optionsKey": "productOptions",
               "validators": {
                 "required": true
+              },
+              "errors": {
+                "required": "Product is required."
               }
             }
           ]
@@ -311,6 +317,9 @@
               "optionsKey": "branchListOptions",
               "validators": {
                 "required": true
+              },
+              "errors": {
+                "required": "Branch is required."
               }
             }
           ]
@@ -345,7 +354,7 @@
               },
               "visibleWhen": { "field": "floater", "value": "Yes" },
               "validatorsWhen": { "required": true },
-              "options": ["Anywhere in India"]
+              "optionsKey": "floaterCoverageOptions"
             },
             {
               "type": "select",
@@ -403,10 +412,12 @@
               "label": "Address 1",
               "placeholder": "Enter address 1",
               "validators": {
-                "required": true
+                "required": true,
+                "maxLength": 180
               },
               "errors": {
-                "required": "Address 1 is required."
+                "required": "Address 1 is required.",
+                "maxlength": "Address length 1 cannot exceed 180 characters."
               }
             },
             {
@@ -415,10 +426,12 @@
               "label": "Address 2",
               "placeholder": "Enter address 2",
               "validators": {
-                "required": true
+                "required": true,
+                "maxLength": 180
               },
               "errors": {
-                "required": "Address 2 is required."
+                "required": "Address 2 is required.",
+                "maxlength": "Address length 2 cannot exceed 180 characters."
               }
             },
             {
@@ -445,7 +458,10 @@
               "validators": {
                 "required": true
               },
-              "options": ["Anywhere in India"]
+              "options": ["Anywhere in India"],
+              "errors": {
+                "required": "Location is required."
+              }
             },
             {
               "type": "select",
@@ -467,6 +483,9 @@
               "placeholder": "Enter make",
               "validators": {
                 "required": true
+              },
+              "errors": {
+                "required": "Make is required."
               }
             },
             {
@@ -476,6 +495,9 @@
               "placeholder": "Enter model",
               "validators": {
                 "required": true
+              },
+              "errors": {
+                "required": "Model is required."
               }
             },
             {
@@ -485,6 +507,9 @@
               "placeholder": "Enter serial no",
               "validators": {
                 "required": true
+              },
+              "errors": {
+                "required": "Serial/Chassis No is required."
               }
             },
             {
@@ -503,6 +528,9 @@
               "mask": "YYYY",
               "validators": {
                 "required": true
+              },
+              "errors": {
+                "required": "Year of Manufacturing is required."
               }
             },
             {
@@ -514,6 +542,9 @@
               "mask": "NUMERIC",
               "validators": {
                 "required": true
+              },
+              "errors": {
+                "required": "Cost of Machinery is required."
               }
             },
             {
@@ -536,6 +567,9 @@
               "placeholder": "Enter discount",
               "validators": {
                 "required": true
+              },
+              "errors": {
+                "required": "De-Tariff Discount is required."
               }
             }
           ]
@@ -558,7 +592,10 @@
               "validators": {
                 "required": true
               },
-              "options": ["Yes", "No"]
+              "options": ["Yes", "No"],
+              "errors": {
+                "required": "Terrorism Cover is required."
+              }
             }
           ]
         },
@@ -591,17 +628,8 @@
               "name": "manual_referral",
               "label": "Underwriter Referral Needed for This Quote?",
               "placeholder": "Select an option",
-              "value": "no",
-              "options": [
-                {
-                  "key": "yes",
-                  "name": "Yes"
-                },
-                {
-                  "key": "no",
-                  "name": "No"
-                }
-              ]
+              "value": "No",
+              "options": ["Yes", "No"]
             },
             {
               "type": "input",
@@ -609,15 +637,13 @@
               "name": "underwriterRemarks",
               "label": "Underwriter Remarks",
               "placeholder": "Enter remarks",
-              "showWhen": {
-                "field": "underwriterReferralNeeded",
-                "value": "yes"
+              "visibleWhen": {
+                "field": "manual_referral",
+                "value": "Yes"
               },
-              "validators": {
-                "requiredWhen": {
-                  "field": "underwriterReferralNeeded",
-                  "value": "yes"
-                }
+              "validatorsWhen": { "required": true },
+              "errors": {
+                "required": "Underwriter Remarks is required."
               }
             }
           ]
@@ -632,6 +658,16 @@
       "addButtonLabel": "Add More"
     }
   ],
+  "viewBreakup": {
+    "title": "Premium Summary",
+    "items": [
+      { "label": "Premium Excluding Terrorism", "value": "₹ 4,000.00" },
+      { "label": "Terrorism Premium", "value": "₹ 115.50" },
+      { "label": "Gross Premium", "value": "₹ 4,115.50" },
+      { "label": "IGST 18%:", "value": "₹ 740.79" }
+    ],
+    "total": "4,856.00"
+  },
   "offCanvasConfigs": {
     "addCovers": {
       "title": "Add Covers",
@@ -652,6 +688,9 @@
               "placeholder": "Enter customize SI",
               "validators": {
                 "required": true
+              },
+              "errors": {
+                "required": "Customize SI is required."
               }
             },
             {
@@ -663,6 +702,9 @@
               "placeholder": "Enter cmax SI limit",
               "validators": {
                 "required": true
+              },
+              "errors": {
+                "required": "Max SI limit is required."
               }
             },
             {
@@ -679,6 +721,9 @@
               ],
               "validators": {
                 "required": true
+              },
+              "errors": {
+                "required": "AOA ADY is required."
               }
             }
           ]
@@ -792,6 +837,19 @@
         "updatedDate": "April 2025",
         "content": "Content for Excluded Machinery goes here..."
       }
-    ]
+    ],
+    "premiumSummary": {
+      "title": "Premium Summary",
+      "items": [
+        { "label": "Premium Excluding Terrorism", "value": "₹ 4,000.00" },
+        { "label": "Terrorism Premium", "value": "₹ 115.50" },
+        { "label": "Gross Premium", "value": "₹ 4,115.50" },
+        { "label": "IGST 18%:", "value": "₹ 740.79" }
+      ],
+      "total": {
+        "label": "Total Premium",
+        "value": "₹ 4,856.00"
+      }
+    }
   }
 }

@@ -201,6 +201,21 @@ export class QuoteService {
     }
   }
 
+  async fetchFloaterCoverage(proposition: string, policy_transaction_type: string) {
+    try {
+      const url = this.api.url + 'cpm/floater_coverage_in';
+      const body = {
+        proposition: proposition,
+        policy_transaction_type: policy_transaction_type,
+        skip: '/v1/rater/',
+      };
+      const res = await this.api.httpGetMethod(url, body);
+      this.dynamicOptionsService.setOptions('floaterCoverageOptions', res?.['data']);
+    } catch (error: unknown) {
+      throw error;
+    }
+  }
+
   async saveQuote() {
     try {
       const url = this.api.url + 'quote';

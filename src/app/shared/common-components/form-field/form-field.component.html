@@ -3,7 +3,9 @@
     [for]="field.name"
     class="form-label"
     *ngIf="field.type !== 'button' && field.type !== 'toggle'"
-    [class.required]="field.validators?.required"
+    [class.required]="
+      field.validators?.required || field.validatorsWhen?.required
+    "
   >
     {{ field.label }}
   </label>

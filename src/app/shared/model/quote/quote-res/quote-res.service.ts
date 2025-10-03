@@ -11,6 +11,7 @@ export class QuoteResService implements Adapter<QuoteRes> {
   adapt(item: any): QuoteRes {
     const data = item?.quote?.data;
     const quoteRes: QuoteRes = {
+      data: data,
       policyId: item?.policy_id,
       quoteId: item?.quote_id,
     };
