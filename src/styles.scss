@@ -21,3 +21,19 @@
   cursor: not-allowed;
 }
 
+.field-container {
+  position: relative;
+  width: 100%;
+}
+.spinner-icon {
+  position: absolute;
+  top: 35%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+}
+/* Adjust padding for inputs that have the loader to prevent text overlap */
+.form-control.loading {
+  padding-right: 35px; /* Adjust based on loader width + spacing */
+}

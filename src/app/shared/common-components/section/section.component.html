@@ -69,6 +69,7 @@
                           <app-form-field
                             [field]="field"
                             [form]="toFormGroup(group)"
+                            [fieldKey]="subsection.name + '.' + i + '.' + field.name"
                             (buttonClick)="buttonClick.emit($event)"
                             (fieldEvent)="handleFieldEvent($event)"
                           >
@@ -111,6 +112,7 @@
                       <app-form-field
                         [field]="field"
                         [form]="form"
+                        [fieldKey]="field.name"
                         (buttonClick)="buttonClick.emit($event)"
                         (fieldEvent)="handleFieldEvent($event)"
                       >

@@ -75,7 +75,7 @@ export class SectionComponent implements OnInit {
   }
 
   handleFieldEvent(event: { action: string; payload: any }) {
-    this.fieldEvent.emit(event);
+    this.fieldEvent.emit({ action: event.action, payload: event.payload });
   }
 
   toFormGroup(group: any) {

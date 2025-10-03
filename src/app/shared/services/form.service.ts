@@ -228,7 +228,11 @@ export class FormService {
             item.resetsFields.forEach((fieldName: string) => {
               const controlToReset = form.get(fieldName);
               if (controlToReset) {
-                controlToReset.reset();
+                if (controlToReset instanceof FormArray) {
+                  controlToReset.clear();
+                } else {
+                  controlToReset.reset();
+                }
               }
             });
           });
