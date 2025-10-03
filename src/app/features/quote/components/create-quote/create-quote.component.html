@@ -14,24 +14,20 @@
         </app-section>
       </form>
     </div>
-  </div>
-
-  <footer
-    class="page-footer bg-white shadow-md d-flex justify-content-between ps-2"
-  >
-    <div class="d-flex align-items-center gap-3 p-3">
-      <button class="btn btn-primary btn-md px-5" (click)="getQuote()">
-        Submit
-      </button>
+    <div class="d-flex align-items-center justify-content-end gap-3">
       <div
         class="text-primary d-flex align-items-center cursor-pointer"
         (click)="openTermsModal()"
       >
-        <img [src]="imgPath + 'images/icon-info.svg'" alt="info-icon" /><span
-          class="ms-1"
-          >Terms & Conditions</span
-        >
+        <img [src]="imgPath + 'images/icon-info.svg'" alt="info-icon" />
+        <span class="ms-1">Terms & Conditions</span>
       </div>
+      <button class="btn btn-primary btn-md px-5" (click)="redirect()">
+        Submit
+      </button>
+      <button class="btn btn-primary btn-md px-5" (click)="getQuote()">
+        Get Premium
+      </button>
     </div>
-  </footer>
+  </div>
 </div>

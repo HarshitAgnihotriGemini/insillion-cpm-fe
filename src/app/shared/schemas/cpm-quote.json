@@ -56,7 +56,8 @@
               "errors": {
                 "required": "Proposition selection is required."
               },
-              "events": [{ "name": "change", "action": "onPropositionChange" }]
+              "events": [{ "name": "change", "action": "onPropositionChange" }],
+              "resetsFields": ["machineryDetails"]
             },
             {
               "type": "select",
@@ -64,6 +65,7 @@
               "label": "Transaction Type",
               "optionsKey": "transactionTypeOptions",
               "placeholder": "Select transaction type",
+              "resetsFields": ["machineryDetails"],
               "events": [
                 { "name": "change", "action": "onTransactionTypeChange" }
               ],

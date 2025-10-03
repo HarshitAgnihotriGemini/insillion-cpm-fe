@@ -7,73 +7,92 @@
   >
     {{ field.label }}
   </label>
-  <ng-container [ngSwitch]="field.type">
-    <div [ngClass]="{ 'readonly-wrapper': field.readonly }">
-      <input
+  <div class="field-wrapper">
+    <ng-container [ngSwitch]="field.type">
+      <div
         *ngSwitchCase="'input'"
-        [type]="field.inputType || 'text'"
-        [id]="field.name"
-        class="form-control"
-        [formControlName]="field.name"
-        [placeholder]="field.placeholder || ''"
-        [class.error]="isInvalid"
-        [appEventHandler]="field"
-        (onEvent)="handleEvent($event)"
-        [ngClass]="{ readonly: field.readonly }"
-        [mask]="maskPattern"
-      />
-    </div>
+        class="field-container"
+        [ngClass]="{ 'readonly-wrapper': field.readonly }"
+      >
+        <input
+          [type]="field.inputType || 'text'"
+          [id]="field.name"
+          class="form-control"
+          [class.loading]="loading$ | async"
+          [formControlName]="field.name"
+          [placeholder]="field.placeholder || ''"
+          [class.error]="isInvalid"
+          [appEventHandler]="field"
+          (onEvent)="handleEvent($event)"
+          [ngClass]="{ readonly: field.readonly }"
+          [mask]="maskPattern"
+        />
+        <span *ngIf="loading$ | async">
+          <img [src]="loaderURL" alt="Loading..." class="spinner-icon" />
+        </span>
+      </div>
 
-    <div [ngClass]="{ 'readonly-wrapper': field.readonly }">
-      <ng-select
+      <div
         *ngSwitchCase="'select'"
-        [items]="options$ | async"
-        [placeholder]="field.placeholder || ''"
-        [formControlName]="field.name"
-        [class.error]="isInvalid"
-        (change)="handleNgSelectChange($event)"
-        [ngClass]="{ readonly: field.readonly }"
-      ></ng-select>
-    </div>
+        class="field-container"
+        [ngClass]="{ 'readonly-wrapper': field.readonly }"
+      >
+        <ng-select
+          [items]="options$ | async"
+          [placeholder]="field.placeholder || ''"
+          [formControlName]="field.name"
+          [class.error]="isInvalid"
+          (change)="handleNgSelectChange($event)"
+          [ngClass]="{ readonly: field.readonly }"
+        ></ng-select>
+        <span *ngIf="loading$ | async">
+          <img [src]="loaderURL" alt="Loading..." class="spinner-icon" />
+        </span>
+      </div>
 
-    <div
-      *ngSwitchCase="'datepicker'"
-      class="input-icon icon-right icon-calendar"
-      [ngClass]="{ 'readonly-wrapper': field.readonly }"
-    >
-      <input
-        type="text"
-        class="form-control"
-        [id]="field.name"
-        [formControlName]="field.name"
-        [placeholder]="field.placeholder || ''"
-        bsDatepicker
-        [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY' }"
-        [minDate]="minDate"
-        [maxDate]="maxDate"
-        (bsValueChange)="handleDateChange($event)"
-        [class.error]="isInvalid"
-        [ngClass]="{ readonly: field.readonly }"
-        [mask]="maskPattern"
-      />
-    </div>
-    <button
-      *ngSwitchCase="'button'"
-      type="button"
-      class="btn btn-outline btn-md w-100"
-      (click)="onButtonClick()"
-    >
-      <img
-        *ngIf="field.iconPath"
-        [src]="field.iconPath"
-        [alt]="field.label"
-        class="btn-icon"
-      />
-      <span>{{ field.label }}</span>
-    </button>
-  </ng-container>
+      <div
+        *ngSwitchCase="'datepicker'"
+        class="field-container input-icon icon-right icon-calendar"
+        [ngClass]="{ 'readonly-wrapper': field.readonly }"
+      >
+        <input
+          type="text"
+          class="form-control"
+          [class.loading]="loading$ | async"
+          [id]="field.name"
+          [formControlName]="field.name"
+          [placeholder]="field.placeholder || ''"
+          bsDatepicker
+          [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY' }"
+          [minDate]="minDate"
+          [maxDate]="maxDate"
+          (bsValueChange)="handleDateChange($event)"
+          [class.error]="isInvalid"
+          [ngClass]="{ readonly: field.readonly }"
+          [mask]="maskPattern"
+        />
+        <span *ngIf="loading$ | async">
+          <img [src]="loaderURL" alt="Loading..." class="spinner-icon" />
+        </span>
+      </div>
+      <button
+        *ngSwitchCase="'button'"
+        type="button"
+        class="btn btn-outline btn-md w-100"
+        (click)="onButtonClick()"
+      >
+        <img
+          *ngIf="field.iconPath"
+          [src]="field.iconPath"
+          [alt]="field.label"
+          class="btn-icon"
+        />
+        <span>{{ field.label }}</span>
+      </button>
+    </ng-container>
 
-  <div class="error-msg" [class.show]="errorMessage">
-    {{ errorMessage }}
+    <div class="error-msg" [class.show]="errorMessage">
+      {{ errorMessage }}
+    </div>
   </div>
 </div>

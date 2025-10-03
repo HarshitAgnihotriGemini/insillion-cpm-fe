@@ -9,6 +9,9 @@ import { Observable, of } from 'rxjs';
 import { NgxMaskDirective } from 'ngx-mask';
 import { MASKS } from '@app/shared/constants/constants';
 import moment from 'moment';
+import { ApiService } from '@app/shared/services/api.service';
+import { LoaderService } from '@app/shared/services/loader.service';
+
 @Component({
   selector: 'app-form-field',
   standalone: true,
@@ -25,6 +28,7 @@ import moment from 'moment';
 export class FormFieldComponent implements OnInit {
   @Input() field: any;
   @Input() form!: FormGroup;
+  @Input() fieldKey!: string;
   @Output() buttonClick = new EventEmitter<any>();
   @Output() fieldEvent = new EventEmitter<{ action: string; payload: any }>();
 
@@ -32,10 +36,20 @@ export class FormFieldComponent implements OnInit {
   public readonly MASKS = MASKS;
   minDate?: Date;
   maxDate?: Date;
+  loaderURL: string;
+  loading$!: Observable<boolean>;
 
-  constructor(private readonly dynamicOptionsService: DynamicOptionsService) {}
+  constructor(
+    private readonly dynamicOptionsService: DynamicOptionsService,
+    private readonly apiService: ApiService,
+    private readonly loaderService: LoaderService,
+  ) {
+    this.loaderURL = `${this.apiService.commonPath}/assets/images/Loader_blue.svg`;
+  }
 
   ngOnInit(): void {
+    this.loading$ = this.loaderService.isLoading(this.fieldKey);
+
     if (this.field.optionsKey) {
       this.options$ = this.dynamicOptionsService.getOptions(
         this.field.optionsKey,
@@ -120,6 +134,7 @@ export class FormFieldComponent implements OnInit {
           target: {
             value: event,
           },
+          fieldKey: this.fieldKey,
         };
         this.fieldEvent.emit({
           action: changeEvent.action,
@@ -139,6 +154,7 @@ export class FormFieldComponent implements OnInit {
           target: {
             value: event,
           },
+          fieldKey: this.fieldKey,
         };
         this.fieldEvent.emit({
           action: changeEvent.action,
@@ -149,6 +165,19 @@ export class FormFieldComponent implements OnInit {
   }
 
   handleEvent(event: { action: string; payload: any }) {
-    this.fieldEvent.emit(event);
+    const originalPayload = event.payload;
+    let finalPayload;
+
+    if (originalPayload && originalPayload.target) {
+      finalPayload = originalPayload;
+      finalPayload.fieldKey = this.fieldKey;
+    } else {
+      finalPayload = { 
+        target: { value: originalPayload },
+        fieldKey: this.fieldKey 
+      };
+    }
+
+    this.fieldEvent.emit({ action: event.action, payload: finalPayload });
   }
 }

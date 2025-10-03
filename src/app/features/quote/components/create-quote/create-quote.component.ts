@@ -14,6 +14,7 @@ import { QuoteFormService } from '../../quote-form.service';
 import { QuoteService } from '../../quote.service';
 import moment from 'moment';
 import { concatMap, firstValueFrom, forkJoin, from } from 'rxjs';
+import { LoaderService } from '@app/shared/services/loader.service';
 
 @Component({
   standalone: true,
@@ -41,6 +42,7 @@ export class CreateQuoteComponent implements OnInit {
     private readonly apiService: ApiService,
     private readonly quoteFormService: QuoteFormService,
     private readonly quoteService: QuoteService,
+    private readonly loaderService: LoaderService,
   ) {
     this.imgPath = this.imgPath = `${this.apiService.commonPath}/assets/`;
   }
@@ -94,20 +96,23 @@ export class CreateQuoteComponent implements OnInit {
   }
 
   handleFieldEvent(event: { action: string; payload: any }) {
+    const { target, fieldKey } = event.payload;
+    const value = target.value;
     if (event.action === 'validateIntermediary') {
-      this.validateIntermediary(event.payload.target.value);
+      this.validateIntermediary(value, fieldKey);
     } else if (event.action === 'onPropositionChange') {
-      this.onPropositionChange(event.payload.target.value);
+      this.onPropositionChange(value);
     } else if (event.action === 'onTransactionTypeChange') {
-      this.onTransactionTypeChange(event.payload.target.value);
+      this.onTransactionTypeChange(value);
     } else if (event.action === 'onPolicyStartDateChange') {
-      this.onPolicyStartDateChange(event.payload.target.value);
+      this.onPolicyStartDateChange(value);
     } else if (event.action === 'fetchLocationDetails') {
-      this.fetchLocationDetails(event.payload.target.value);
+      this.fetchLocationDetails(value, fieldKey);
     }
   }
 
-  async validateIntermediary(imdValue: string) {
+  async validateIntermediary(imdValue: string, fieldKey: string) {
+    this.loaderService.showLoader(fieldKey);
     try {
       if (imdValue) {
         const propositionRes =
@@ -122,6 +127,8 @@ export class CreateQuoteComponent implements OnInit {
       }
     } catch (error) {
       console.error('Error validating intermediary:', error);
+    } finally {
+      this.loaderService.hideLoader(fieldKey);
     }
   }
 
@@ -197,7 +204,8 @@ export class CreateQuoteComponent implements OnInit {
     }
   }
 
-  async fetchLocationDetails(pincode: string) {
+  async fetchLocationDetails(pincode: string, fieldKey: string) {
+    this.loaderService.showLoader(fieldKey);
     try {
       if (pincode && pincode.length === 6) {
         const locationRes =
@@ -205,6 +213,8 @@ export class CreateQuoteComponent implements OnInit {
       }
     } catch (error) {
       console.error('Error fetching location details:', error);
+    } finally {
+      this.loaderService.hideLoader(fieldKey);
     }
   }
 
