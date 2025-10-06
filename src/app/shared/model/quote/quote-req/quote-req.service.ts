@@ -8,7 +8,7 @@ import { QuoteReq } from './quote-req.model';
 export class QuoteReqService implements Adapter<QuoteReq> {
   constructor() {}
 
-  adapt(form: any): QuoteReq {
+  adapt(form: any, isFinalize = false): QuoteReq {
     const quoteReq: QuoteReq = {
       ...form?.formData,
       quote_id: '', //
@@ -22,9 +22,12 @@ export class QuoteReqService implements Adapter<QuoteReq> {
       branch_id: 'T3', //
       imd_channel: 'AAR', //
       imd_subchannel: 'OEM', //
-      // _ready: '1', //
-      // __finalize: 1, //
     };
+
+    if (isFinalize) {
+      quoteReq['_ready'] = '1';
+      quoteReq['__finalize'] = 1;
+    }
 
     console.log('Adapted QuoteReq:', quoteReq);
     return quoteReq;

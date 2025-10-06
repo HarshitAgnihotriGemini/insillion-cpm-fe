@@ -89,14 +89,17 @@ export class FormService {
     return form.get(name) as FormArray;
   }
 
-  addGroup(form: FormGroup, subsection: any): void {
+  addGroup(form: FormGroup, subsection: any, initialState?: any): void {
     const formArray = this.getFormArray(form, subsection.name);
-    const group: { [key: string]: any } = {};
+    const group = this.fb.group({});
+
     subsection.formGroupTemplate.forEach((field: any) => {
       const validators = this.buildValidators(field.validators);
-      group[field.name] = [field.value ?? null, validators];
+      const value = initialState ? initialState[field.name] : field.value ?? null;
+      group.addControl(field.name, this.fb.control(value, validators));
     });
-    formArray.push(this.fb.group(group));
+
+    formArray.push(group);
   }
 
   removeGroup(form: FormGroup, subsectionName: string, index: number): void {

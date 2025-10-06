@@ -5,15 +5,15 @@ import { AttachmentsReviewComponent } from '@app/shared/common-components/attach
 import { BreadcrumbComponent } from '@app/shared/common-components/breadcrumb/breadcrumb.component';
 import { CkycOffcanvasComponent } from '@app/shared/common-components/ckyc-offcanvas/ckyc-offcanvas.component';
 import { PolicySummaryComponent } from '@app/shared/common-components/policy-summary/policy-summary.component';
-import { TotalPremiumComponent } from '@app/shared/common-components/total-premium/total-premium.component';
 import { ViewBreakupComponent } from '@app/shared/common-components/view-breakup/view-breakup.component';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import * as cpmReview from '@app/shared/schemas/cpm-policy-summary.json';
 import { ApiService } from '@app/shared/services/api.service';
-import { environment } from 'environments/environment';
 import { QuoteService } from '../../quote.service';
+import { FormGroup } from '@angular/forms';
+import { QuoteFormService } from '../../quote-form.service';
 
 @Component({
   selector: 'app-review-quote',
@@ -23,17 +23,19 @@ import { QuoteService } from '../../quote.service';
     BreadcrumbComponent,
     PolicySummaryComponent,
     AttachmentsReviewComponent,
-    TotalPremiumComponent,
-  ],
+    ViewBreakupComponent
+],
   templateUrl: './review-quote.component.html',
   styleUrl: './review-quote.component.scss',
 })
 export class ReviewQuoteComponent implements OnInit {
   bsModalRef?: BsModalRef;
+  form!: FormGroup;
   config: any;
   private readonly offcanvasService = inject(NgbOffcanvas);
   isProposal = false;
   isFinalized = false;
+  isFinalizing = false;
   imgPath: string;
   constructor(
     private readonly router: Router,
@@ -42,6 +44,7 @@ export class ReviewQuoteComponent implements OnInit {
     private readonly apiService: ApiService,
     private readonly _route: ActivatedRoute,
     public readonly quoteService: QuoteService,
+    private readonly quoteFormService: QuoteFormService,
   ) {
     this.imgPath = this.imgPath = `${this.apiService.commonPath}/assets/`;
   }
@@ -51,6 +54,7 @@ export class ReviewQuoteComponent implements OnInit {
       this.isProposal = true;
     }
     this.config = cpmReview;
+    this.form = this.quoteFormService.initializeForm();
     this._route.params?.subscribe(async (params) => {
       try {
         this.quoteService.setPolicyId = params?.['id'];
@@ -87,12 +91,18 @@ export class ReviewQuoteComponent implements OnInit {
     }
   }
 
-  handleFinalizeClick(): void {
-    if (this.isFinalized) {
-      window.location.href = environment.paymentGatewayUrl;
-    } else {
-      this.toastr.success('The proposal has been submitted successfully');
+  async finalizeProposal() {
+    this.isFinalizing = true;
+    try {
+      await this.quoteService.saveQuote(true);
       this.isFinalized = true;
+      this.toastr.success('The proposal has been submitted successfully');
+    } catch (error) {
+      console.error('Error finalizing proposal:', error);
+      this.toastr.error('Error finalizing proposal');
+    } finally {
+      this.isFinalizing = false;
     }
   }
+
 }

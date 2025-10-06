@@ -13,18 +13,27 @@
           "title": "Contractor Plant and Machinery Insurance",
           "fields": [
             { "label": "Intermediary", "name": "imd_code" },
-            { "label": "Proposition Selection", "name": "propositionSelection" },
+            { "label": "Proposition Selection", "name": "proposition" },
             { "label": "Transaction Type", "name": "policy_transaction_type" },
-            { "label": "Customer First Name", "name": "proposer_name_primary_insured" },
+            {
+              "label": "Customer First Name",
+              "name": "proposer_name_primary_insured"
+            },
             { "label": "Proposer Email", "name": "email" },
             {
               "label": "Existing Policy No",
               "name": "existingPolicyNo",
               "visibleWhen": {
                 "or": [
-                  { "field": "policy_transaction_type", "value": "Market Renewal" },
+                  {
+                    "field": "policy_transaction_type",
+                    "value": "Market Renewal"
+                  },
                   { "field": "policy_transaction_type", "value": "RS Renewal" },
-                  { "field": "policy_transaction_type", "value": "Deviated Renewal" }
+                  {
+                    "field": "policy_transaction_type",
+                    "value": "Deviated Renewal"
+                  }
                 ]
               }
             },
@@ -32,12 +41,21 @@
               "label": "Existing Insurer",
               "name": "existingInsurer",
               "visibleWhen": {
-                "or": [{ "field": "policy_transaction_type", "value": "Market Renewal" }]
+                "or": [
+                  {
+                    "field": "policy_transaction_type",
+                    "value": "Market Renewal"
+                  }
+                ]
               }
             },
             { "label": "Policy Start Date", "name": "policy_start_date" },
             { "label": "Policy End Date", "name": "policy_end_date" },
-            { "label": "SEZ Previlege", "name": "sezPrevilege" },
+            {
+              "label": "SEZ Previlege",
+              "name": "sezPrevilege",
+              "value": "Apply-GST"
+            },
             { "label": "Lead Code", "name": "leadCode" },
             { "label": "Product", "name": "product" }
           ]
@@ -75,7 +93,13 @@
           "title": "Risk Location",
           "type": "form-array",
           "name": "riskLocation",
-          "headers": ["Pincode", "Location", "Address 1", "Address 2", "EQ Zone"],
+          "headers": [
+            "Pincode",
+            "Location",
+            "Address 1",
+            "Address 2",
+            "EQ Zone"
+          ],
           "rows": [],
           "visibleWhen": {
             "field": "floater",
@@ -85,17 +109,19 @@
         {
           "title": "Machinery Details",
           "type": "form-array",
-          "name": "machineryDetails",
-          "headers": [
-            "Location",
-            "Machinery",
-            "Description",
-            "Make",
-            "Model",
-            "Serial/Chassis No.",
-            "Year of Manufacturing"
-          ],
-          "rows": []
+          "name": "machinery",
+          "formGroupTemplate": [
+            { "name": "location", "label": "Location" },
+            { "name": "type_machinery", "label": "Machinery" },
+            { "name": "machinery_description", "label": "Description" },
+            { "name": "make", "label": "Make" },
+            { "name": "model", "label": "Model" },
+            { "name": "slno", "label": "Serial/Chassis No" },
+            { "name": "capacity", "label": "Capacity" },
+            { "name": "yom", "label": "Year of Manufacturing" },
+            { "name": "cost_of_machinery_si", "label": "Cost of Machinery" },
+            { "name": "voluntary_excess", "label": "Voluntary Excess" }
+          ]
         },
         {
           "title": "Policy Addons",
@@ -138,6 +164,16 @@
       "data": []
     }
   ],
+  "viewBreakup": {
+    "title": "Premium Summary",
+    "items": [
+      { "label": "Premium Excluding Terrorism", "value": "₹ 4,000.00" },
+      { "label": "Terrorism Premium", "value": "₹ 115.50" },
+      { "label": "Gross Premium", "value": "₹ 4,115.50" },
+      { "label": "IGST 18%:", "value": "₹ 740.79" }
+    ],
+    "total": "4,856.00"
+  },
   "modals": {
     "premiumSummary": {
       "title": "Premium Summary",

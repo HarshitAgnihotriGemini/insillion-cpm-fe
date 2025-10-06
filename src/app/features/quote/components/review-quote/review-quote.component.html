@@ -48,51 +48,39 @@
           </ng-container>
         </div>
       </section>
-      <div *ngIf="config.ckycAction && !isProposal" class="mt-4">
-        <button
-          [ngClass]="'btn-' + config.ckycAction.type"
-          class="btn btn-md"
-          (click)="handleButtonClick(config.ckycAction)"
-        >
-          {{ config.ckycAction.label }}
-        </button>
-      </div>
+    </div>
+    <div class="mt-4">
+      <app-view-breakup [config]="config.viewBreakup"></app-view-breakup>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-end gap-3 mt-4">
+      <!-- <button
+        [ngClass]="'btn-' + config.ckycAction.type"
+        class="btn btn-md"
+        (click)="handleButtonClick(config.ckycAction)"
+      >
+        {{ config.ckycAction.label }}
+      </button> -->
+      <button
+        class="btn btn-primary btn-md px-5 d-flex align-items-center gap-2"
+        *ngIf="!isFinalized"
+        [disabled]="isFinalizing"
+        (click)="finalizeProposal()"
+      >
+        <span
+          class="spinner-border spinner-border-sm"
+          aria-hidden="true"
+          *ngIf="isFinalizing"
+        ></span>
+        <span>Finalize Proposal</span>
+      </button>
+      <button
+        class="btn btn-primary btn-md px-5 d-flex align-items-center gap-2"
+        *ngIf="isFinalized"
+        (click)="redirect()"
+      >
+        <span>Proceed To Proposal</span>
+      </button>
     </div>
   </div>
-
-  <footer
-    class="page-footer bg-white shadow-md d-flex justify-content-between ps-2"
-    *ngIf="!isProposal"
-  >
-    <div class="d-flex align-items-center gap-3 p-3">
-      <button class="btn btn-outline btn-md px-5" (click)="redirect()">
-        Quote versioning
-      </button>
-      <button class="btn btn-primary btn-md px-5" (click)="redirect()">
-        Proceed to Proposal
-      </button>
-    </div>
-    <app-total-premium
-      [totalPremium]="config.totalPremium"
-      (viewBreakup)="viewBreakup()"
-    ></app-total-premium>
-  </footer>
-  <footer
-    class="page-footer bg-white shadow-md d-flex justify-content-between ps-2"
-    *ngIf="isProposal"
-  >
-    <div class="d-flex align-items-center gap-3 p-3">
-      <button
-        class="btn btn-primary btn-md px-5"
-        (click)="handleFinalizeClick()"
-      >
-        {{ isFinalized ? "Complete Transaction" : "Finalize" }}
-      </button>
-    </div>
-
-    <app-total-premium
-      [totalPremium]="config.totalPremium"
-      (viewBreakup)="viewBreakup()"
-    ></app-total-premium>
-  </footer>
 </div>

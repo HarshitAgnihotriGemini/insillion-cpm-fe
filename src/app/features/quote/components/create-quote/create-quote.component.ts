@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BreadcrumbComponent } from '@app/shared/common-components/breadcrumb/breadcrumb.component';
 import { SectionComponent } from '@app/shared/common-components/section/section.component';
@@ -18,6 +18,7 @@ import { LoaderService } from '@app/shared/services/loader.service';
 import { ViewBreakupComponent } from '@app/shared/common-components/view-breakup/view-breakup.component';
 import { REVIEW_QUOTE } from '@app/shared/constants/routes';
 import { ToastrService } from 'ngx-toastr';
+import { FormService } from '@app/shared/services/form.service';
 
 @Component({
   standalone: true,
@@ -50,7 +51,8 @@ export class CreateQuoteComponent implements OnInit {
     private readonly quoteFormService: QuoteFormService,
     private readonly quoteService: QuoteService,
     private readonly loaderService: LoaderService,
-    private readonly toastr: ToastrService
+    private readonly toastr: ToastrService,
+    private readonly formService: FormService,
   ) {
     this.imgPath = this.imgPath = `${this.apiService.commonPath}/assets/`;
   }
@@ -59,19 +61,53 @@ export class CreateQuoteComponent implements OnInit {
     this.config = cpmQuote;
     this.form = this.quoteFormService.initializeForm();
     this.config?.sections?.forEach((section: any) => {
-      this.sectionState.set(section.title, true);
+      this.sectionState.set(section.title, section.isExpandedByDefault);
     });
     this._route.params?.subscribe(async (params) => {
       try {
         this.quoteService.setPolicyId = params?.['id'];
         if (this.quoteService.getPolicyId !== 'new') {
           await this.quoteService.getDetailByPolicyId();
+
+          this.populateForm();
+          console.log(this.quoteService.quoteRes.data);
+          await this.validateIntermediary(this.form.controls['imd_code'].value);
         }
         this.fetchBranchListAsync();
       } catch (error) {
         console.log('Error in Create quote: ' + error);
       }
     });
+  }
+
+  private populateForm(): void {
+    if (this.quoteService.quoteRes.data) {
+      this.form.patchValue(this.quoteService.quoteRes.data);
+      this.form.updateValueAndValidity();
+      const machineryData = this.quoteService.quoteRes.data.machinery;
+      if (
+        machineryData &&
+        Array.isArray(machineryData) &&
+        machineryData.length > 0
+      ) {
+        const machineryFormArray = this.form.get('machinery') as FormArray;
+        machineryFormArray.clear();
+
+        const machinerySubsection = this.config.sections
+          .flatMap((s: any) => s.subsections)
+          .find((ss: any) => ss.name === 'machinery');
+
+        if (machinerySubsection) {
+          machineryData.forEach((machineryItem: any) => {
+            this.formService.addGroup(
+              this.form,
+              machinerySubsection,
+              machineryItem,
+            );
+          });
+        }
+      }
+    }
   }
 
   private async fetchBranchListAsync(): Promise<void> {
@@ -107,7 +143,7 @@ export class CreateQuoteComponent implements OnInit {
     const { target, fieldKey } = event.payload;
     const value = target.value;
     if (event.action === 'validateIntermediary') {
-      this.validateIntermediary(value, fieldKey);
+      this.validateIntermediary(value);
     } else if (event.action === 'onPropositionChange') {
       this.onPropositionChange(value);
     } else if (event.action === 'onTransactionTypeChange') {
@@ -119,19 +155,16 @@ export class CreateQuoteComponent implements OnInit {
     }
   }
 
-  async validateIntermediary(imdValue: string, fieldKey: string) {
+  async validateIntermediary(imdValue: string) {
+    const fieldKey = 'imd_code';
     this.loaderService.showLoader(fieldKey);
     try {
       if (imdValue) {
         const propositionRes =
           await this.quoteService.fetchPropositionData(imdValue);
 
-        this.form.controls['propositionSelection'].setValue(
-          propositionRes?.data[0],
-        );
-        await this.onPropositionChange(
-          this.form.controls['propositionSelection'].value,
-        );
+        this.form.controls['proposition'].setValue(propositionRes?.data[0]);
+        await this.onPropositionChange(this.form.controls['proposition'].value);
       }
     } catch (error) {
       console.error('Error validating intermediary:', error);
@@ -160,11 +193,11 @@ export class CreateQuoteComponent implements OnInit {
   async fetchProduct() {
     try {
       if (
-        this.form.controls['propositionSelection'].value &&
+        this.form.controls['proposition'].value &&
         this.form.controls['policy_transaction_type'].value
       ) {
         const payload = {
-          proposition_name: this.form.controls['propositionSelection'].value,
+          proposition_name: this.form.controls['proposition'].value,
           settings_name: 'product',
           biz_type: this.form.controls['policy_transaction_type'].value,
         };
@@ -181,7 +214,7 @@ export class CreateQuoteComponent implements OnInit {
     try {
       if (this.form.controls['product'].value) {
         const payload = {
-          proposition: this.form.controls['propositionSelection'].value,
+          proposition: this.form.controls['proposition'].value,
           product: this.form.controls['product'].value,
           policy_transaction_type:
             this.form.controls['policy_transaction_type'].value,
@@ -199,7 +232,7 @@ export class CreateQuoteComponent implements OnInit {
     const fieldKey = 'policy_transaction_type';
     this.loaderService.showLoader(fieldKey);
     try {
-      const proposition = this.form.controls['propositionSelection'].value;
+      const proposition = this.form.controls['proposition'].value;
       await firstValueFrom(
         forkJoin([
           from(this.fetchProduct()).pipe(

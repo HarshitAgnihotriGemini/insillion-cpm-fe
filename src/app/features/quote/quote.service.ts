@@ -164,7 +164,7 @@ export class QuoteService {
       //Hardcode values added
       const body = {
         proposition_name:
-          this.quoteFormService.form.controls['propositionSelection'].value,
+          this.quoteFormService.form.controls['proposition'].value,
         biz_type:
           this.quoteFormService.form.controls['policy_transaction_type'].value,
         effective_from: '45931',
@@ -185,8 +185,7 @@ export class QuoteService {
       const url = this.api.url + 'cpm/voluntary_excess_tmpl';
       //Hardcode values added
       const body = {
-        proposition:
-          this.quoteFormService.form.controls['propositionSelection'].value,
+        proposition: this.quoteFormService.form.controls['proposition'].value,
         policy_transaction_type:
           this.quoteFormService.form.controls['policy_transaction_type'].value,
         skip: '/v1/rater/',
@@ -201,7 +200,10 @@ export class QuoteService {
     }
   }
 
-  async fetchFloaterCoverage(proposition: string, policy_transaction_type: string) {
+  async fetchFloaterCoverage(
+    proposition: string,
+    policy_transaction_type: string,
+  ) {
     try {
       const url = this.api.url + 'cpm/floater_coverage_in';
       const body = {
@@ -210,19 +212,25 @@ export class QuoteService {
         skip: '/v1/rater/',
       };
       const res = await this.api.httpGetMethod(url, body);
-      this.dynamicOptionsService.setOptions('floaterCoverageOptions', res?.['data']);
+      this.dynamicOptionsService.setOptions(
+        'floaterCoverageOptions',
+        res?.['data'],
+      );
     } catch (error: unknown) {
       throw error;
     }
   }
 
-  async saveQuote() {
+  async saveQuote(isFinalize = false) {
     try {
       const url = this.api.url + 'quote';
-      const body = this.quoteReqService.adapt({
-        formData: this.quoteFormService.form.value,
-        productId: this.api.productId,
-      });
+      const body = this.quoteReqService.adapt(
+        {
+          formData: this.quoteFormService.form.value,
+          productId: this.api.productId,
+        },
+        isFinalize,
+      );
       const res = await this.api.httpPostMethod(url, body);
       if (res?.['data']?.[0]) {
         this.quoteRes = this.quoteResService.adapt(res?.['data']?.[0]);

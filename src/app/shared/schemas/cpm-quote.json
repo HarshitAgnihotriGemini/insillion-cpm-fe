@@ -38,14 +38,11 @@
               "events": [
                 { "name": "change", "action": "validateIntermediary" }
               ],
-              "resetsFields": [
-                "propositionSelection",
-                "policy_transaction_type"
-              ]
+              "resetsFields": ["proposition", "policy_transaction_type"]
             },
             {
               "type": "select",
-              "name": "propositionSelection",
+              "name": "proposition",
               "label": "Proposition Selection",
               "placeholder": "Select proposition selection",
               "optionsKey": "propositionOptions",
@@ -96,13 +93,11 @@
               "label": "Customer Contact Number",
               "placeholder": "Enter customer contact number",
               "validators": {
-                "required": true,
                 "minLength": 10,
                 "maxLength": 10
               },
               "mask": "PHONE",
               "errors": {
-                "required": "Customer contact number is required.",
                 "minlength": "Invalid Customer Contact number",
                 "maxlength": "Invalid Customer Contact number"
               }
@@ -369,7 +364,7 @@
         {
           "title": "Risk Location",
           "type": "form-array",
-          "name": "riskLocation",
+          "name": "risk_location",
           "addButtonLabel": "Add Risk Details",
           "limit": 1,
           "visibleWhen": {
@@ -562,7 +557,7 @@
             {
               "type": "input",
               "inputType": "text",
-              "name": "deTariffDiscount",
+              "name": "less_detariff",
               "label": "Less : De-Tariff Discount (%)",
               "placeholder": "Enter discount",
               "validators": {

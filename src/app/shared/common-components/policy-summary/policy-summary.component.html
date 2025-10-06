@@ -15,19 +15,27 @@
       <ng-container
         *ngIf="subsection.type === 'form-array'; else standardFields"
       >
-        <table class="table">
-          <thead>
-            <tr>
-              <th *ngFor="let header of subsection.headers">{{ header }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let row of subsection.rows">
-              <td *ngFor="let key of objectKeys(row)">{{ row[key] }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <ng-container *ngFor="let item of dataRes?.data?.[subsection.name]; let i = index">
+          <div class="subsection-review">
+            <p class="text-sm font-semibold mb-4">
+              {{ subsection.title }} {{ i + 1 }}
+            </p>
+            <div class="row g-4 mb-4">
+              <ng-container *ngFor="let field of subsection.formGroupTemplate">
+                <div class="col-3 ps-0 text-sm">
+                  <div class="text-grey font-bold">
+                    {{ field.label }}
+                  </div>
+                  <div class="review-field-value">
+                    {{ item[field.name] || "-" }}
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </ng-container>
       </ng-container>
+
       <ng-template #standardFields>
         <div class="row g-4 mb-4">
           <ng-container *ngFor="let field of subsection.fields">
@@ -36,7 +44,7 @@
                 {{ field.label }}
               </div>
               <div class="review-field-value">
-                {{ dataRes?.data?.[field.name] || '-' }}
+                {{ dataRes?.data?.[field.name] || field.value || "-" }}
               </div>
             </div>
           </ng-container>

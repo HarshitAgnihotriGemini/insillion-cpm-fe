@@ -17,19 +17,10 @@ export class PolicySummaryComponent {
   }
 
   private getFieldValue(name: string): any {
-    if (!this.config || !this.config.subsections) {
+    if (!this.dataRes || !this.dataRes.data) {
       return undefined;
     }
-
-    for (const subsection of this.config.subsections) {
-      if (subsection.fields) {
-        const field = subsection.fields.find((f: any) => f.name === name);
-        if (field) {
-          return field.value;
-        }
-      }
-    }
-    return undefined;
+    return this.dataRes.data[name];
   }
 
   shouldShowField(field: any): boolean {
