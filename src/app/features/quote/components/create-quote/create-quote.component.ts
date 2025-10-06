@@ -50,7 +50,7 @@ export class CreateQuoteComponent implements OnInit {
     private readonly quoteFormService: QuoteFormService,
     private readonly quoteService: QuoteService,
     private readonly loaderService: LoaderService,
-    private readonly toastr: ToastrService,
+    private readonly toastr: ToastrService
   ) {
     this.imgPath = this.imgPath = `${this.apiService.commonPath}/assets/`;
   }

@@ -83,6 +83,11 @@ export class FormFieldComponent implements OnInit {
       if (errorKeys.length > 0) {
         const firstErrorKey = errorKeys[0];
         const error = control.errors[firstErrorKey];
+
+        if (typeof error === 'string') {
+          return error;
+        }
+
         const errorMessageTemplate = this.field.errors?.[firstErrorKey];
 
         if (errorMessageTemplate) {
@@ -172,9 +177,9 @@ export class FormFieldComponent implements OnInit {
       finalPayload = originalPayload;
       finalPayload.fieldKey = this.fieldKey;
     } else {
-      finalPayload = { 
+      finalPayload = {
         target: { value: originalPayload },
-        fieldKey: this.fieldKey 
+        fieldKey: this.fieldKey
       };
     }
 

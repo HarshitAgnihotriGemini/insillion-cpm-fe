@@ -107,6 +107,19 @@ export class FormService {
     return control as FormGroup;
   }
 
+  setFieldError(
+    form: FormGroup,
+    fieldName: string,
+    errorKey: string,
+    errorMessage: string,
+  ) {
+    const control = form.get(fieldName);
+    if (control) {
+      control.setErrors({ [errorKey]: errorMessage });
+      control.markAsTouched();
+    }
+  }
+
   setupConditionalLogic(form: FormGroup, sections: any[]): void {
     const setupItemLogic = (item: any, isSubsection: boolean) => {
       if (!item) return;
