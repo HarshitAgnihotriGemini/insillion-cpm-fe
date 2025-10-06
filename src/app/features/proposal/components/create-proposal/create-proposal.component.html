@@ -1,1 +1,20 @@
-<p>create-proposal works!</p>
+<div class="page-layout">
+  <div class="page-content">
+    <div class="inner-content">
+      <div *ngIf="config">
+        <app-breadcrumb [items]="config.breadCrumbs"></app-breadcrumb>
+        <div class="page-title">{{ config.title }}</div>
+        <div *ngIf="form">
+          <form [formGroup]="form">
+            <app-section
+              *ngFor="let section of config.sections"
+              [section]="section"
+              [form]="form"
+            >
+            </app-section>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
