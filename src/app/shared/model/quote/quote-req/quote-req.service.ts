@@ -15,13 +15,9 @@ export class QuoteReqService implements Adapter<QuoteReq> {
       product_id: form?.productId,
       transaction_type: 'New', //
       pakage_code: 'EPM', //
-      imd_oa_broker_code: 'OA000177', //
-      imd_oa_agent: 'OA000177', //
       settings_user_type: 'External', //
       branch_state: 'Tamilnadu', //
       branch_id: 'T3', //
-      imd_channel: 'AAR', //
-      imd_subchannel: 'OEM', //
     };
 
     if (isFinalize) {
