@@ -1,16 +1,24 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  OnDestroy,
+} from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { EventHandlerDirective } from '../../directives/event-handler.directive';
 import { DynamicOptionsService } from '@app/shared/services/dynamic-options.service';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { NgxMaskDirective } from 'ngx-mask';
 import { MASKS } from '@app/shared/constants/constants';
 import moment from 'moment';
 import { ApiService } from '@app/shared/services/api.service';
 import { LoaderService } from '@app/shared/services/loader.service';
+import { DateValidationService } from '@app/shared/services/date-validation.service';
 
 @Component({
   selector: 'app-form-field',
@@ -25,24 +33,26 @@ import { LoaderService } from '@app/shared/services/loader.service';
   ],
   templateUrl: './form-field.component.html',
 })
-export class FormFieldComponent implements OnInit {
+export class FormFieldComponent implements OnInit, OnDestroy {
   @Input() field: any;
   @Input() form!: FormGroup;
   @Input() fieldKey!: string;
-  @Input() minDate?: Date;
-  @Input() maxDate?: Date;
   @Output() buttonClick = new EventEmitter<any>();
   @Output() fieldEvent = new EventEmitter<{ action: string; payload: any }>();
 
   options$!: Observable<any[]>;
   public readonly MASKS = MASKS;
+  minDate?: Date;
+  maxDate?: Date;
   loaderURL: string;
   loading$!: Observable<boolean>;
+  private dateValidationSub: Subscription = new Subscription();
 
   constructor(
     private readonly dynamicOptionsService: DynamicOptionsService,
     private readonly apiService: ApiService,
     private readonly loaderService: LoaderService,
+    private readonly dateValidationService: DateValidationService
   ) {
     this.loaderURL = `${this.apiService.commonPath}/assets/images/Loader_blue.svg`;
   }
@@ -50,14 +60,23 @@ export class FormFieldComponent implements OnInit {
   ngOnInit(): void {
     this.loading$ = this.loaderService.isLoading(this.fieldKey);
 
-    if (this.field.optionsKey) {
-      this.options$ = this.dynamicOptionsService.getOptions(
-        this.field.optionsKey,
-      );
-    } else {
-      this.options$ = of(this.field.options || []);
+    if (this.field.type === 'datepicker') {
+      const minDateSub = this.dateValidationService
+        .getMinDate$(this.field.name)
+        .subscribe(date => {
+          this.minDate = date;
+        });
+      const maxDateSub = this.dateValidationService
+        .getMaxDate$(this.field.name)
+        .subscribe(date => {
+          this.maxDate = date;
+        });
+
+      this.dateValidationSub.add(minDateSub);
+      this.dateValidationSub.add(maxDateSub);
     }
 
+    // Set initial values from JSON config if not dynamically provided
     if (this.minDate === undefined && this.field.validators?.minDate) {
       this.minDate = moment()
         .subtract(this.field.validators.minDate.daysAgo, 'days')
@@ -69,6 +88,18 @@ export class FormFieldComponent implements OnInit {
         .add(this.field.validators.maxDate.daysFuture, 'days')
         .toDate();
     }
+
+    if (this.field.optionsKey) {
+      this.options$ = this.dynamicOptionsService.getOptions(
+        this.field.optionsKey
+      );
+    } else {
+      this.options$ = of(this.field.options || []);
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.dateValidationSub.unsubscribe();
   }
 
   get isInvalid(): boolean {
@@ -94,13 +125,13 @@ export class FormFieldComponent implements OnInit {
           if (firstErrorKey === 'minLength' || firstErrorKey === 'maxLength') {
             return errorMessageTemplate.replace(
               '{requiredLength}',
-              error.requiredLength,
+              error.requiredLength
             );
           }
           if (firstErrorKey === 'minDate' || firstErrorKey === 'maxDate') {
             return errorMessageTemplate.replace(
               '{requiredDate}',
-              error.requiredDate,
+              error.requiredDate
             );
           }
           return errorMessageTemplate;
@@ -132,7 +163,7 @@ export class FormFieldComponent implements OnInit {
 
     if (this.field.events) {
       const changeEvent = this.field.events.find(
-        (e: any) => e.name === 'change',
+        (e: any) => e.name === 'change'
       );
       if (changeEvent) {
         const customEvent = {
@@ -152,7 +183,7 @@ export class FormFieldComponent implements OnInit {
   handleNgSelectChange(event: any): void {
     if (this.field.events) {
       const changeEvent = this.field.events.find(
-        (e: any) => e.name === 'change',
+        (e: any) => e.name === 'change'
       );
       if (changeEvent) {
         const customEvent = {
@@ -179,7 +210,7 @@ export class FormFieldComponent implements OnInit {
     } else {
       finalPayload = {
         target: { value: originalPayload },
-        fieldKey: this.fieldKey
+        fieldKey: this.fieldKey,
       };
     }
 

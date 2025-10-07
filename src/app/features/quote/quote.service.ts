@@ -14,6 +14,7 @@ import { PremiumCalcRes } from '@app/shared/model/premiumCalc/premiumCalc-res/pr
 import moment from 'moment';
 import { Validators } from '@angular/forms';
 import { UtilsService } from '@app/shared/utils/utils.service';
+import { DateValidationService } from '@app/shared/services/date-validation.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,8 +23,6 @@ export class QuoteService {
   private policyId = 'new';
   public quoteRes!: QuoteRes;
   public premiumCalcRes!: PremiumCalcRes;
-  public policyStartDateMin: Date | undefined = undefined;
-  public policyStartDateMax: Date | undefined = undefined;
 
   constructor(
     private readonly quoteFormService: QuoteFormService,
@@ -35,6 +34,7 @@ export class QuoteService {
     private readonly _location: Location,
     private readonly quoteResService: QuoteResService,
     private readonly formService: FormService,
+    private readonly dateValidationService: DateValidationService
   ) {}
 
   /*  Getter for policyId
@@ -278,38 +278,41 @@ export class QuoteService {
         this.formService.setFieldError(form, tag, 'apiError', res?.txt);
         throw new Error(`Error in premium calc: ${res?.txt}`);
       }
-      if (res?.data) {
+      if (res) {
         this.premiumCalcRes = this.premiumCalcResService.adapt(
           res
         );
-        const backDays = this.premiumCalcRes?.settings_backdays;
-        const futureDays =
-          this.premiumCalcRes?.settings_futuredays;
 
-        this.policyStartDateMin =
+        const backDays = this.premiumCalcRes?.settings_backdays;
+        const futureDays = this.premiumCalcRes?.settings_futuredays;
+
+        const minDate =
           backDays !== undefined && backDays !== null
             ? moment().subtract(Number(backDays), 'days').toDate()
             : undefined;
 
-        this.policyStartDateMax =
+        const maxDate =
           futureDays !== undefined && futureDays !== null
             ? moment().add(Number(futureDays), 'days').toDate()
             : undefined;
 
-        const policyStartDateControl =
-          this.quoteFormService.form.get('policy_start_date');
+        this.dateValidationService.updateLimits(
+          'policy_start_date',
+          minDate,
+          maxDate
+        );
+
+        const policyStartDateControl = this.quoteFormService.form.get(
+          'policy_start_date'
+        );
         if (policyStartDateControl) {
           const newValidators = [Validators.required];
 
-          if (this.policyStartDateMin) {
-            newValidators.push(
-              UtilsService.minDateDynamic(this.policyStartDateMin),
-            );
+          if (minDate) {
+            newValidators.push(UtilsService.minDateDynamic(minDate));
           }
-          if (this.policyStartDateMax) {
-            newValidators.push(
-              UtilsService.maxDateDynamic(this.policyStartDateMax),
-            );
+          if (maxDate) {
+            newValidators.push(UtilsService.maxDateDynamic(maxDate));
           }
 
           policyStartDateControl.setValidators(newValidators);

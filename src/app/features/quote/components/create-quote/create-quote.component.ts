@@ -80,7 +80,23 @@ export class CreateQuoteComponent implements OnInit {
 
   private populateForm(): void {
     if (this.quoteService.quoteRes.data) {
-      this.form.patchValue(this.quoteService.quoteRes.data);
+      const formData = { ...this.quoteService.quoteRes.data };
+
+      const dateFields = [
+        'policy_start_date',
+        'policy_end_date',
+        'existingPolicyExpiryDate',
+      ];
+      dateFields.forEach((fieldName) => {
+        const dateValue = formData[fieldName];
+        if (dateValue && typeof dateValue === 'string') {
+          formData[fieldName] = moment(dateValue, 'YYYY-MM-DD').format(
+            'DD/MM/YYYY',
+          );
+          console.log(formData[fieldName]);
+        }
+      });
+      this.form.patchValue(formData);
       this.form.updateValueAndValidity();
 
       this.config?.sections?.forEach((section: any) => {

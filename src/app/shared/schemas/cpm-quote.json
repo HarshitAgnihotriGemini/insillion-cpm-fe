@@ -257,6 +257,7 @@
               "name": "policy_end_date",
               "label": "Policy End Date",
               "placeholder": "Select policy end date",
+              "mask": "DATE",
               "errors": {
                 "required": "Proposer email is required.",
                 "pattern": "Please enter a valid email address."
