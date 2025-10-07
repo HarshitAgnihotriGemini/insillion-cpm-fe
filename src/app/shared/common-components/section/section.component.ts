@@ -26,6 +26,8 @@ import { ApiService } from '../../services/api.service';
 export class SectionComponent implements OnInit {
   @Input() section: any;
   @Input() form!: FormGroup;
+  @Input() minDate?: Date;
+  @Input() maxDate?: Date;
   @Output() buttonClick = new EventEmitter<any>();
   @Output() addFile = new EventEmitter<void>();
   @Output() removeFile = new EventEmitter<any>();

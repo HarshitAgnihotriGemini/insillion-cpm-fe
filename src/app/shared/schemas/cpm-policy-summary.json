@@ -65,7 +65,7 @@
           "fields": [
             { "label": "Branch", "name": "pol_serv_branch_name" },
             { "label": "Branch State", "name": "branch_state" },
-            { "label": "Branch GST No.", "name": "branch_gst_no" }
+            { "label": "Branch GST No.", "name": "branch_gstno" }
           ]
         }
       ]

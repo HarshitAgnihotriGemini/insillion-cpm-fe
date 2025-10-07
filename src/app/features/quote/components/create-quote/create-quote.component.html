@@ -8,6 +8,8 @@
           *ngFor="let section of config.sections"
           [section]="section"
           [form]="form"
+          [minDate]="quoteService.policyStartDateMin"
+          [maxDate]="quoteService.policyStartDateMax"
           (buttonClick)="handleButtonClick($event)"
           (fieldEvent)="handleFieldEvent($event)"
         >

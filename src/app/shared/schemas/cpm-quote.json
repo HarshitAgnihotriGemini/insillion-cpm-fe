@@ -241,9 +241,7 @@
               "placeholder": "Select policy start date",
               "mask": "DATE",
               "validators": {
-                "required": true,
-                "minDate": { "daysAgo": 1 },
-                "maxDate": { "daysFuture": 2 }
+                "required": true
               },
               "errors": {
                 "required": "Policy start date is required.",

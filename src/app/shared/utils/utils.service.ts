@@ -60,6 +60,52 @@ export class UtilsService {
     };
   }
 
+  static minDateDynamic(minDate: Date): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (!control.value) {
+        return null; // Handled by required validator
+      }
+      const controlDate = moment(control.value, 'DD/MM/YYYY');
+      const min = moment(minDate).startOf('day');
+
+      if (!controlDate.isValid()) {
+        return { bsDate: { invalid: control.value } };
+      }
+
+      return controlDate.isBefore(min)
+        ? {
+            minDate: {
+              requiredDate: min.format('DD/MM/YYYY'),
+              actual: control.value,
+            },
+          }
+        : null;
+    };
+  }
+
+  static maxDateDynamic(maxDate: Date): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (!control.value) {
+        return null; // Handled by required validator
+      }
+      const controlDate = moment(control.value, 'DD/MM/YYYY');
+      const max = moment(maxDate).endOf('day');
+
+      if (!controlDate.isValid()) {
+        return { bsDate: { invalid: control.value } };
+      }
+
+      return controlDate.isAfter(max)
+        ? {
+            maxDate: {
+              requiredDate: max.format('DD/MM/YYYY'),
+              actual: control.value,
+            },
+          }
+        : null;
+    };
+  }
+
   /**
    * FormGroup validator to check if a start date is not after an end date.
    * @param startDateControlName The name of the start date control.
@@ -69,20 +115,29 @@ export class UtilsService {
   static startDateNotAfterEndDate(
     startDateControlName: string,
     endDateControlName: string,
-    errorName: string
+    errorName: string,
   ): ValidatorFn {
     return (formGroup: AbstractControl): { [key: string]: any } | null => {
       const startControl = formGroup.get(startDateControlName);
       const endControl = formGroup.get(endDateControlName);
 
-      if (!startControl || !endControl || !startControl.value || !endControl.value) {
+      if (
+        !startControl ||
+        !endControl ||
+        !startControl.value ||
+        !endControl.value
+      ) {
         return null;
       }
 
       const startDate = moment(startControl.value, 'DD/MM/YYYY', true);
       const endDate = moment(endControl.value, 'DD/MM/YYYY', true);
 
-      if (startDate.isValid() && endDate.isValid() && startDate.isAfter(endDate)) {
+      if (
+        startDate.isValid() &&
+        endDate.isValid() &&
+        startDate.isAfter(endDate)
+      ) {
         endControl.setErrors({ ...endControl.errors, [errorName]: true });
       } else {
         if (endControl.hasError(errorName)) {
@@ -107,7 +162,7 @@ export class UtilsService {
     dateControlName: string,
     startDateControlName: string,
     endDateControlName: string,
-    errorName: string
+    errorName: string,
   ): ValidatorFn {
     return (formGroup: AbstractControl): { [key: string]: any } | null => {
       const dateControl = formGroup.get(dateControlName);

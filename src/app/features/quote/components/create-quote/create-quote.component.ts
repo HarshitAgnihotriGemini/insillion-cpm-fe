@@ -49,7 +49,7 @@ export class CreateQuoteComponent implements OnInit {
     private readonly _route: ActivatedRoute,
     private readonly apiService: ApiService,
     private readonly quoteFormService: QuoteFormService,
-    private readonly quoteService: QuoteService,
+    public readonly quoteService: QuoteService,
     private readonly loaderService: LoaderService,
     private readonly toastr: ToastrService,
     private readonly formService: FormService,
@@ -273,10 +273,14 @@ export class CreateQuoteComponent implements OnInit {
   onPolicyStartDateChange(date: string) {
     if (date) {
       const startDate = moment(date);
-      const endDate = startDate.add(1, 'year').subtract(1, 'day');
-      this.form.controls['policy_end_date'].setValue(
-        endDate.format('DD/MM/YYYY'),
-      );
+      if (this.form.controls['policy_start_date'].valid) {
+        const endDate = startDate.add(1, 'year').subtract(1, 'day');
+        this.form.controls['policy_end_date'].setValue(
+          endDate.format('DD/MM/YYYY'),
+        );
+      } else {
+        this.form.controls['policy_end_date'].setValue(null);
+      }
     }
   }
 

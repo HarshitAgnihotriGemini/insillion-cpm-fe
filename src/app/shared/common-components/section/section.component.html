@@ -115,6 +115,8 @@
                         [field]="field"
                         [form]="form"
                         [fieldKey]="field.name"
+                        [minDate]="field.name === 'policy_start_date' ? minDate : undefined"
+                        [maxDate]="field.name === 'policy_start_date' ? maxDate : undefined"
                         (buttonClick)="buttonClick.emit($event)"
                         (fieldEvent)="handleFieldEvent($event)"
                       >

@@ -9,6 +9,11 @@ import { QuoteResService } from '@app/shared/model/quote/quote-res/quote-res.ser
 import { CREATE_QUOTE } from '@app/shared/constants/routes';
 import { PremiumCalcReqService } from '@app/shared/model/premiumCalc/premiumCalc-req/premium-calc-req.service';
 import { FormService } from '@app/shared/services/form.service';
+import { PremiumCalcResService } from '@app/shared/model/premiumCalc/premiumCalc-res/premium-calc-res.service';
+import { PremiumCalcRes } from '@app/shared/model/premiumCalc/premiumCalc-res/premiumCalc-res.model';
+import moment from 'moment';
+import { Validators } from '@angular/forms';
+import { UtilsService } from '@app/shared/utils/utils.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +21,9 @@ import { FormService } from '@app/shared/services/form.service';
 export class QuoteService {
   private policyId = 'new';
   public quoteRes!: QuoteRes;
+  public premiumCalcRes!: PremiumCalcRes;
+  public policyStartDateMin: Date | undefined = undefined;
+  public policyStartDateMax: Date | undefined = undefined;
 
   constructor(
     private readonly quoteFormService: QuoteFormService,
@@ -23,6 +31,7 @@ export class QuoteService {
     private readonly dynamicOptionsService: DynamicOptionsService,
     private readonly quoteReqService: QuoteReqService,
     private readonly premiumCalcReqService: PremiumCalcReqService,
+    private readonly premiumCalcResService: PremiumCalcResService,
     private readonly _location: Location,
     private readonly quoteResService: QuoteResService,
     private readonly formService: FormService,
@@ -268,6 +277,46 @@ export class QuoteService {
       if ((res?.status == -102 || res?.status == -1) && tag) {
         this.formService.setFieldError(form, tag, 'apiError', res?.txt);
         throw new Error(`Error in premium calc: ${res?.txt}`);
+      }
+      if (res?.data) {
+        this.premiumCalcRes = this.premiumCalcResService.adapt(
+          res
+        );
+        const backDays = this.premiumCalcRes?.settings_backdays;
+        const futureDays =
+          this.premiumCalcRes?.settings_futuredays;
+
+        this.policyStartDateMin =
+          backDays !== undefined && backDays !== null
+            ? moment().subtract(Number(backDays), 'days').toDate()
+            : undefined;
+
+        this.policyStartDateMax =
+          futureDays !== undefined && futureDays !== null
+            ? moment().add(Number(futureDays), 'days').toDate()
+            : undefined;
+
+        const policyStartDateControl =
+          this.quoteFormService.form.get('policy_start_date');
+        if (policyStartDateControl) {
+          const newValidators = [Validators.required];
+
+          if (this.policyStartDateMin) {
+            newValidators.push(
+              UtilsService.minDateDynamic(this.policyStartDateMin),
+            );
+          }
+          if (this.policyStartDateMax) {
+            newValidators.push(
+              UtilsService.maxDateDynamic(this.policyStartDateMax),
+            );
+          }
+
+          policyStartDateControl.setValidators(newValidators);
+          policyStartDateControl.updateValueAndValidity();
+        }
+      } else {
+        throw new Error('Error in Premium Calc API!!!');
       }
       return res;
     } catch (error) {

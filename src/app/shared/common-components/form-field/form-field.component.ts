@@ -29,13 +29,13 @@ export class FormFieldComponent implements OnInit {
   @Input() field: any;
   @Input() form!: FormGroup;
   @Input() fieldKey!: string;
+  @Input() minDate?: Date;
+  @Input() maxDate?: Date;
   @Output() buttonClick = new EventEmitter<any>();
   @Output() fieldEvent = new EventEmitter<{ action: string; payload: any }>();
 
   options$!: Observable<any[]>;
   public readonly MASKS = MASKS;
-  minDate?: Date;
-  maxDate?: Date;
   loaderURL: string;
   loading$!: Observable<boolean>;
 
@@ -58,13 +58,13 @@ export class FormFieldComponent implements OnInit {
       this.options$ = of(this.field.options || []);
     }
 
-    if (this.field.validators?.minDate) {
+    if (this.minDate === undefined && this.field.validators?.minDate) {
       this.minDate = moment()
         .subtract(this.field.validators.minDate.daysAgo, 'days')
         .toDate();
     }
 
-    if (this.field.validators?.maxDate) {
+    if (this.maxDate === undefined && this.field.validators?.maxDate) {
       this.maxDate = moment()
         .add(this.field.validators.maxDate.daysFuture, 'days')
         .toDate();
