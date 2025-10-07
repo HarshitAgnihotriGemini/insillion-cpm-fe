@@ -84,7 +84,7 @@
             },
             {
               "label": "Project in Which Machinery is Operated",
-              "name": "projectInWhichMachineryIsOperated",
+              "name": "project",
               "visibleWhen": { "field": "floater", "value": "Yes" }
             }
           ]
@@ -123,6 +123,16 @@
             { "name": "voluntary_excess", "label": "Voluntary Excess" }
           ]
         },
+        {
+          "title": "Premium Detariff",
+          "fields": [
+            {
+              "label": "Less : De-Tariff Discount (%)",
+              "name": "less_detariff"
+            }
+          ]
+        },
+
         {
           "title": "Policy Addons",
           "fields": [

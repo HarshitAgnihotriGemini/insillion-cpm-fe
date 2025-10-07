@@ -8,6 +8,7 @@ import { QuoteRes } from '@app/shared/model/quote/quote-res/quote-res.model';
 import { QuoteResService } from '@app/shared/model/quote/quote-res/quote-res.service';
 import { CREATE_QUOTE } from '@app/shared/constants/routes';
 import { PremiumCalcReqService } from '@app/shared/model/premiumCalc/premiumCalc-req/premium-calc-req.service';
+import { FormService } from '@app/shared/services/form.service';
 
 @Injectable({
   providedIn: 'root',
@@ -24,6 +25,7 @@ export class QuoteService {
     private readonly premiumCalcReqService: PremiumCalcReqService,
     private readonly _location: Location,
     private readonly quoteResService: QuoteResService,
+    private readonly formService: FormService,
   ) {}
 
   /*  Getter for policyId
@@ -262,7 +264,11 @@ export class QuoteService {
         page_no: tag === 'imd_code' ? 0 : 1,
       });
       const res = await this.api.httpPostMethod(url, body);
-
+      const form = this.quoteFormService.form;
+      if ((res?.status == -102 || res?.status == -1) && tag) {
+        this.formService.setFieldError(form, tag, 'apiError', res?.txt);
+        throw new Error(`Error in premium calc: ${res?.txt}`);
+      }
       return res;
     } catch (error) {
       throw error;

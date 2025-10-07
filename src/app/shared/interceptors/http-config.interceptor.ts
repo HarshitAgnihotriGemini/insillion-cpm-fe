@@ -45,7 +45,11 @@ export class HttpConfigInterceptor implements HttpInterceptor {
             if (data.status) {
               if (data.status == -114 || data.status == -106) {
                 console.log('Session Expired logic');
-              } else if (data.status == 0 || data.status == -1) {
+              } else if (
+                data.status == 0 ||
+                data.status == -1 ||
+                data.status == -102
+              ) {
                 return event;
               } else {
                 console.log('API Error:', data[`txt`]);

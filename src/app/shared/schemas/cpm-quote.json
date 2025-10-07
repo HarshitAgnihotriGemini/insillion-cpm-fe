@@ -353,7 +353,7 @@
             },
             {
               "type": "select",
-              "name": "projectInWhichMachineryIsOperated",
+              "name": "project",
               "label": "Project in Which Machinery is Operated",
               "placeholder": "Select project in which machinery is operated",
               "visibleWhen": { "field": "floater", "value": "Yes" },

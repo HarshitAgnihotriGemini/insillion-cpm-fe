@@ -68,9 +68,7 @@ export class CreateQuoteComponent implements OnInit {
         this.quoteService.setPolicyId = params?.['id'];
         if (this.quoteService.getPolicyId !== 'new') {
           await this.quoteService.getDetailByPolicyId();
-
           this.populateForm();
-          console.log(this.quoteService.quoteRes.data);
           await this.validateIntermediary(this.form.controls['imd_code'].value);
         }
         this.fetchBranchListAsync();
@@ -84,29 +82,31 @@ export class CreateQuoteComponent implements OnInit {
     if (this.quoteService.quoteRes.data) {
       this.form.patchValue(this.quoteService.quoteRes.data);
       this.form.updateValueAndValidity();
-      const machineryData = this.quoteService.quoteRes.data.machinery;
-      if (
-        machineryData &&
-        Array.isArray(machineryData) &&
-        machineryData.length > 0
-      ) {
-        const machineryFormArray = this.form.get('machinery') as FormArray;
-        machineryFormArray.clear();
 
-        const machinerySubsection = this.config.sections
-          .flatMap((s: any) => s.subsections)
-          .find((ss: any) => ss.name === 'machinery');
+      this.config?.sections?.forEach((section: any) => {
+        section?.subsections?.forEach((subsection: any) => {
+          if (subsection.type === 'form-array') {
+            const formArrayName = subsection.name;
+            const formArrayData =
+              this.quoteService.quoteRes.data[formArrayName];
 
-        if (machinerySubsection) {
-          machineryData.forEach((machineryItem: any) => {
-            this.formService.addGroup(
-              this.form,
-              machinerySubsection,
-              machineryItem,
-            );
-          });
-        }
-      }
+            if (
+              formArrayData &&
+              Array.isArray(formArrayData) &&
+              formArrayData.length > 0
+            ) {
+              const formArray = this.form.get(formArrayName) as FormArray;
+              formArray.clear();
+
+              formArrayData.forEach((item: any) => {
+                this.formService.addGroup(this.form, subsection, item);
+              });
+
+              this.sectionState.set(section.title, true);
+            }
+          }
+        });
+      });
     }
   }
 
@@ -159,8 +159,8 @@ export class CreateQuoteComponent implements OnInit {
     const fieldKey = 'imd_code';
     this.loaderService.showLoader(fieldKey);
     try {
-      await this.quoteService.premiumCalc('imd_code');
       if (imdValue) {
+        await this.quoteService.premiumCalc('imd_code');
         const propositionRes =
           await this.quoteService.fetchPropositionData(imdValue);
 
