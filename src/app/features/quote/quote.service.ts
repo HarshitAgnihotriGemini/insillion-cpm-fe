@@ -7,6 +7,7 @@ import { Location } from '@angular/common';
 import { QuoteRes } from '@app/shared/model/quote/quote-res/quote-res.model';
 import { QuoteResService } from '@app/shared/model/quote/quote-res/quote-res.service';
 import { CREATE_QUOTE } from '@app/shared/constants/routes';
+import { PremiumCalcReqService } from '@app/shared/model/premiumCalc/premiumCalc-req/premium-calc-req.service';
 
 @Injectable({
   providedIn: 'root',
@@ -20,6 +21,7 @@ export class QuoteService {
     private readonly api: ApiService,
     private readonly dynamicOptionsService: DynamicOptionsService,
     private readonly quoteReqService: QuoteReqService,
+    private readonly premiumCalcReqService: PremiumCalcReqService,
     private readonly _location: Location,
     private readonly quoteResService: QuoteResService,
   ) {}
@@ -244,6 +246,24 @@ export class QuoteService {
       } else {
         throw new Error('Error in quote API!!!');
       }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async premiumCalc(tag?: string) {
+    try {
+      const url =
+        this.api.url +
+        `product/calc/${this.api.productId}?wf_id=32&type=premium_calc`;
+      const body = this.premiumCalcReqService.adapt({
+        formData: this.quoteFormService.form.value,
+        productId: this.api.productId,
+        page_no: tag === 'imd_code' ? 0 : 1,
+      });
+      const res = await this.api.httpPostMethod(url, body);
+
+      return res;
     } catch (error) {
       throw error;
     }

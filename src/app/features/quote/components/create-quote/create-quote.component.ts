@@ -159,6 +159,7 @@ export class CreateQuoteComponent implements OnInit {
     const fieldKey = 'imd_code';
     this.loaderService.showLoader(fieldKey);
     try {
+      await this.quoteService.premiumCalc('imd_code');
       if (imdValue) {
         const propositionRes =
           await this.quoteService.fetchPropositionData(imdValue);
