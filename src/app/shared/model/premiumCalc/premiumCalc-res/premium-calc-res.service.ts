@@ -9,10 +9,10 @@ export class PremiumCalcResService implements Adapter<PremiumCalcRes> {
   constructor() {}
 
   adapt(item: any): PremiumCalcRes {
-    const data = item?.premium_calculation?.data;
+    const data = item?.data;
     const premiumCalcRes: PremiumCalcRes = {
-          settings_backdays: data?.changed?.settings_backdays,
-          settings_futuredays: data?.changed?.settings_futuredays
+      settings_backdays: data?.changed?.settings_backdays,
+      settings_futuredays: data?.changed?.settings_futuredays,
     };
     return premiumCalcRes;
   }

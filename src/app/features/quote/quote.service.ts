@@ -278,11 +278,8 @@ export class QuoteService {
         this.formService.setFieldError(form, tag, 'apiError', res?.txt);
         throw new Error(`Error in premium calc: ${res?.txt}`);
       }
-      if (res) {
-        this.premiumCalcRes = this.premiumCalcResService.adapt(
-          res
-        );
-
+      if (res?.data && res?.status == 0) {
+        this.premiumCalcRes = this.premiumCalcResService.adapt(res);
         const backDays = this.premiumCalcRes?.settings_backdays;
         const futureDays = this.premiumCalcRes?.settings_futuredays;
 

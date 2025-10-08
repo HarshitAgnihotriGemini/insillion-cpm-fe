@@ -263,6 +263,7 @@ export class CreateQuoteComponent implements OnInit {
               transactionType,
             ),
           ),
+          from(this.quoteService.premiumCalc()),
         ]),
       );
     } catch (error) {
