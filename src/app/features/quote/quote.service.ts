@@ -323,6 +323,7 @@ export class QuoteService {
           }
 
           policyStartDateControl.setValidators(newValidators);
+          policyStartDateControl.markAsTouched();
           policyStartDateControl.updateValueAndValidity();
         }
       } else {

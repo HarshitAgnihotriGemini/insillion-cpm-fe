@@ -333,14 +333,6 @@ export class CreateQuoteComponent implements OnInit {
 
   async getQuote() {
     this.isGettingPremium = true;
-    const invalid = [];
-    const controls = this.form.controls;
-    for (const name in controls) {
-      if (controls[name].invalid) {
-        invalid.push(name);
-      }
-    }
-    console.log('Invalid Controls:', invalid);
     try {
       if (this.form.valid) {
         await this.quoteService.saveQuote();

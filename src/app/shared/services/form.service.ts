@@ -9,16 +9,56 @@ import {
 } from '@angular/forms';
 import { REGEX_PATTERNS } from '../constants/constants';
 import { UtilsService } from '../utils/utils.service';
+
 @Injectable({
   providedIn: 'root',
 })
 export class FormService {
+  private sections: any[] = [];
+  private form!: FormGroup;
+
   constructor(
     private readonly fb: FormBuilder,
     private readonly utilsService: UtilsService,
   ) {}
 
+  setFieldVisibility(fieldName: string, isVisible: boolean) {
+    this.sections.forEach(section => {
+      section.subsections?.forEach((subsection: any) => {
+        const fields = subsection.type === 'form-array'
+          ? subsection.formGroupTemplate
+          : subsection.fields || [];
+        const field = fields.find((f: any) => f.name === fieldName);
+        if (field) {
+          field._visible = isVisible;
+          const control = this.form.get(fieldName);
+          if (control) {
+            if (isVisible) {
+              control.enable();
+            } else {
+              control.disable();
+              control.reset();
+            }
+
+            if (field.validatorsWhen) {
+              const baseValidators = this.buildValidators(field.validators);
+              const conditionalValidators = isVisible
+                ? this.buildValidators(field.validatorsWhen)
+                : [];
+              control.setValidators([
+                ...baseValidators,
+                ...conditionalValidators,
+              ]);
+              control.updateValueAndValidity();
+            }
+          }
+        }
+      });
+    });
+  }
+
   createFormGroup(sections: any[]): FormGroup {
+    this.sections = sections;
     const group = this.fb.group({});
     sections.forEach((section) => {
       section.subsections?.forEach((subsection: any) => {
@@ -35,6 +75,7 @@ export class FormService {
         }
       });
     });
+    this.form = group;
     return group;
   }
 
