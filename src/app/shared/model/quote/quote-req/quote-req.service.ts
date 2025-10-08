@@ -24,8 +24,6 @@ export class QuoteReqService implements Adapter<QuoteReq> {
       quoteReq['_ready'] = '1';
       quoteReq['__finalize'] = 1;
     }
-
-    console.log('Adapted QuoteReq:', quoteReq);
     return quoteReq;
   }
 }

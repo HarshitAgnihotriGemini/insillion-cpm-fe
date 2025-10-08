@@ -12,12 +12,8 @@ export class PolicySummaryComponent {
   @Input() config: any; // In this context, config is a "section" object
   @Input() dataRes: any;
 
-  ngOnInit(): void {
-    console.log(this.dataRes);
-  }
-
   private getFieldValue(name: string): any {
-    if (!this.dataRes || !this.dataRes.data) {
+    if (!this.dataRes?.data) {
       return undefined;
     }
     return this.dataRes.data[name];
