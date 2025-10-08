@@ -1,6 +1,8 @@
 <section class="section-card bg-light">
   <div class="card-header-grey">
-    <div class="text-md font-semibold">Total Premium ₹ {{ config?.total }}</div>
+    <div class="text-md font-semibold">
+      Total Premium ₹ {{ quoteRes[config?.total] || 0 }}
+    </div>
   </div>
   <div class="review-section-wrapper">
     <div class="p-4 row g-4">
@@ -10,7 +12,7 @@
           {{ item.label }}
         </div>
         <div class="review-field-value">
-          {{ item.value }}
+          {{ quoteRes[item.tag] }}
         </div>
       </div>
     </div>

@@ -23,8 +23,8 @@ import { QuoteFormService } from '../../quote-form.service';
     BreadcrumbComponent,
     PolicySummaryComponent,
     AttachmentsReviewComponent,
-    ViewBreakupComponent
-],
+    ViewBreakupComponent,
+  ],
   templateUrl: './review-quote.component.html',
   styleUrl: './review-quote.component.scss',
 })
@@ -60,7 +60,6 @@ export class ReviewQuoteComponent implements OnInit {
         this.quoteService.setPolicyId = params?.['id'];
         if (this.quoteService.getPolicyId !== 'new') {
           await this.quoteService.getDetailByPolicyId();
-          console.log('111111', this.quoteService.quoteRes);
         }
       } catch (error) {
         console.log('Error in Create quote: ' + error);
@@ -90,19 +89,4 @@ export class ReviewQuoteComponent implements OnInit {
       this.openCKycOffcanvas();
     }
   }
-
-  async finalizeProposal() {
-    this.isFinalizing = true;
-    try {
-      await this.quoteService.saveQuote(true);
-      this.isFinalized = true;
-      this.toastr.success('The proposal has been submitted successfully');
-    } catch (error) {
-      console.error('Error finalizing proposal:', error);
-      this.toastr.error('Error finalizing proposal');
-    } finally {
-      this.isFinalizing = false;
-    }
-  }
-
 }

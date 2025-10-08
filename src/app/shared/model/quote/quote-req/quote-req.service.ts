@@ -11,7 +11,7 @@ export class QuoteReqService implements Adapter<QuoteReq> {
   adapt(form: any, isFinalize = false): QuoteReq {
     const quoteReq: QuoteReq = {
       ...form?.formData,
-      quote_id: '', //
+      quote_id: form?.quote_id || '',
       product_id: form?.productId,
       transaction_type: 'New', //
       pakage_code: 'EPM', //

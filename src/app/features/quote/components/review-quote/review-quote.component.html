@@ -63,19 +63,6 @@
       </button> -->
       <button
         class="btn btn-primary btn-md px-5 d-flex align-items-center gap-2"
-        *ngIf="!isFinalized"
-        [disabled]="isFinalizing"
-        (click)="finalizeProposal()"
-      >
-        <span
-          class="spinner-border spinner-border-sm"
-          aria-hidden="true"
-          *ngIf="isFinalizing"
-        ></span>
-        <span>Finalize Proposal</span>
-      </button>
-      <button
-        class="btn btn-primary btn-md px-5 d-flex align-items-center gap-2"
         *ngIf="isFinalized"
         (click)="redirect()"
       >

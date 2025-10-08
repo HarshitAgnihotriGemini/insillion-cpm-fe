@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BreadcrumbComponent } from '@app/shared/common-components/breadcrumb/breadcrumb.component';
@@ -13,7 +13,7 @@ import * as cpmQuote from '@app/shared/schemas/cpm-quote.json';
 import { QuoteFormService } from '../../quote-form.service';
 import { QuoteService } from '../../quote.service';
 import moment from 'moment';
-import { concatMap, firstValueFrom, forkJoin, from } from 'rxjs';
+import { concatMap, filter, firstValueFrom, forkJoin, from } from 'rxjs';
 import { LoaderService } from '@app/shared/services/loader.service';
 import { ViewBreakupComponent } from '@app/shared/common-components/view-breakup/view-breakup.component';
 import { REVIEW_QUOTE } from '@app/shared/constants/routes';
@@ -33,7 +33,7 @@ import { FormService } from '@app/shared/services/form.service';
   templateUrl: './create-quote.component.html',
   styleUrl: './create-quote.component.scss',
 })
-export class CreateQuoteComponent implements OnInit {
+export class CreateQuoteComponent implements OnInit, OnDestroy {
   bsModalRef?: BsModalRef;
   config: any;
   form!: FormGroup;
@@ -42,6 +42,7 @@ export class CreateQuoteComponent implements OnInit {
   imgPath: string;
   isBreakupVisible = false;
   isGettingPremium = false;
+  private postQuote$: any;
 
   constructor(
     private readonly modalService: BsModalService,
@@ -71,11 +72,27 @@ export class CreateQuoteComponent implements OnInit {
           this.populateForm();
           await this.validateIntermediary(this.form.controls['imd_code'].value);
         }
-        this.fetchBranchListAsync();
+        await this.fetchBranchListAsync();
+        this.postQuote$ = this.form?.valueChanges
+          .pipe(
+            filter(() => {
+              return this.isBreakupVisible === true;
+            }),
+          )
+          .subscribe(() => {
+            //Resetting variables
+            this.isBreakupVisible = false;
+          });
       } catch (error) {
         console.log('Error in Create quote: ' + error);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.postQuote$) {
+      this.postQuote$.unsubscribe();
+    }
   }
 
   private populateForm(): void {
@@ -335,6 +352,7 @@ export class CreateQuoteComponent implements OnInit {
     this.isGettingPremium = true;
     try {
       if (this.form.valid) {
+        await this.quoteService.premiumCalc();
         await this.quoteService.saveQuote();
         this.isBreakupVisible = true;
       } else {
@@ -345,6 +363,16 @@ export class CreateQuoteComponent implements OnInit {
       console.error('Error in get quote:', error);
     } finally {
       this.isGettingPremium = false;
+    }
+  }
+
+  async finalizeProposal() {
+    try {
+      await this.quoteService.saveQuote(true);
+      this.redirect();
+    } catch (error) {
+      console.error('Error finalizing proposal:', error);
+      this.toastr.error('Error finalizing proposal');
     }
   }
 

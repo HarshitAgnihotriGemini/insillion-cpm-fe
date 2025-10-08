@@ -252,6 +252,7 @@ export class QuoteService {
         {
           formData: this.quoteFormService.form.value,
           productId: this.api.productId,
+          quoteRes: this.quoteRes,
         },
         isFinalize,
       );

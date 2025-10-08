@@ -11,10 +11,9 @@ import { ApiService } from '@app/shared/services/api.service';
 })
 export class ViewBreakupComponent {
   @Input() config: any;
+  @Input() quoteRes: any;
   imgPath: string;
-  constructor(
-    private readonly apiService: ApiService,
-  ) {
+  constructor(private readonly apiService: ApiService) {
     this.imgPath = `${this.apiService.commonPath}/assets/`;
   }
 }
