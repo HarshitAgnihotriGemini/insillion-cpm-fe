@@ -562,6 +562,7 @@
               "validators": {
                 "required": true
               },
+              "events": [{ "name": "change", "action": "onDetariffChange" }],
               "errors": {
                 "required": "De-Tariff Discount is required."
               }

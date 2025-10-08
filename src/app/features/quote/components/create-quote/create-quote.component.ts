@@ -168,6 +168,8 @@ export class CreateQuoteComponent implements OnInit {
       this.onPolicyStartDateChange(value);
     } else if (event.action === 'fetchLocationDetails') {
       this.fetchLocationDetails(value, fieldKey);
+    } else if (event.action === 'onDetariffChange') {
+      this.onDetariffChange();
     }
   }
 
@@ -176,7 +178,7 @@ export class CreateQuoteComponent implements OnInit {
     this.loaderService.showLoader(fieldKey);
     try {
       if (imdValue) {
-        await this.quoteService.premiumCalc('imd_code');
+        await this.quoteService.premiumCalc(fieldKey);
         const propositionRes =
           await this.quoteService.fetchPropositionData(imdValue);
 
@@ -282,6 +284,18 @@ export class CreateQuoteComponent implements OnInit {
       }
     } catch (error) {
       console.error('Error fetching location details:', error);
+    } finally {
+      this.loaderService.hideLoader(fieldKey);
+    }
+  }
+
+  async onDetariffChange() {
+    const fieldKey = 'less_detariff';
+    this.loaderService.showLoader(fieldKey);
+    try {
+      await this.quoteService.premiumCalc(fieldKey);
+    } catch (error) {
+      console.error('Error in detariff change:', error);
     } finally {
       this.loaderService.hideLoader(fieldKey);
     }
