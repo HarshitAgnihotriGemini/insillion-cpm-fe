@@ -34,7 +34,7 @@ export class QuoteService {
     private readonly _location: Location,
     private readonly quoteResService: QuoteResService,
     private readonly formService: FormService,
-    private readonly dateValidationService: DateValidationService
+    private readonly dateValidationService: DateValidationService,
   ) {}
 
   /*  Getter for policyId
@@ -234,6 +234,17 @@ export class QuoteService {
     }
   }
 
+  async fetchStates() {
+    try {
+      const url = this.api.url + 'rater/lookup/floater_state';
+      const res = await this.api.httpGetMethod(url);
+      const options = res.data.map((item: any) => item?.state);
+      this.dynamicOptionsService.setOptions('stateOptions', options);
+    } catch (error: unknown) {
+      throw error;
+    }
+  }
+
   async saveQuote(isFinalize = false) {
     try {
       const url = this.api.url + 'quote';
@@ -296,12 +307,11 @@ export class QuoteService {
         this.dateValidationService.updateLimits(
           'policy_start_date',
           minDate,
-          maxDate
+          maxDate,
         );
 
-        const policyStartDateControl = this.quoteFormService.form.get(
-          'policy_start_date'
-        );
+        const policyStartDateControl =
+          this.quoteFormService.form.get('policy_start_date');
         if (policyStartDateControl) {
           const newValidators = [Validators.required];
 

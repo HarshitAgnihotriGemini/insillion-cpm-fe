@@ -93,7 +93,6 @@ export class CreateQuoteComponent implements OnInit {
           formData[fieldName] = moment(dateValue, 'YYYY-MM-DD').format(
             'DD/MM/YYYY',
           );
-          console.log(formData[fieldName]);
         }
       });
       this.form.patchValue(formData);
@@ -170,6 +169,8 @@ export class CreateQuoteComponent implements OnInit {
       this.fetchLocationDetails(value, fieldKey);
     } else if (event.action === 'onDetariffChange') {
       this.onDetariffChange();
+    } else if (event.action === 'onFloaterCoverageWithinChange') {
+      this.onFloaterCoverageWithinChange(value);
     }
   }
 
@@ -315,8 +316,31 @@ export class CreateQuoteComponent implements OnInit {
     }
   }
 
+  async onFloaterCoverageWithinChange(floaterCoverageWithin: string) {
+    const fieldKey = 'floater_coverage_in';
+    this.loaderService.showLoader(fieldKey);
+    try {
+      await this.quoteService.premiumCalc();
+      if (floaterCoverageWithin.toLowerCase() == 'state') {
+        await this.quoteService.fetchStates();
+      }
+    } catch (error) {
+      console.error('Error in get quote:', error);
+    } finally {
+      this.loaderService.hideLoader(fieldKey);
+    }
+  }
+
   async getQuote() {
     this.isGettingPremium = true;
+    const invalid = [];
+    const controls = this.form.controls;
+    for (const name in controls) {
+      if (controls[name].invalid) {
+        invalid.push(name);
+      }
+    }
+    console.log('Invalid Controls:', invalid);
     try {
       if (this.form.valid) {
         await this.quoteService.saveQuote();

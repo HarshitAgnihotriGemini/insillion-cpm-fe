@@ -279,13 +279,6 @@
               }
             },
             {
-              "type": "input",
-              "name": "leadCode",
-              "label": "Lead Code",
-              "placeholder": "Enter lead code",
-              "readonly": true
-            },
-            {
               "type": "select",
               "name": "product",
               "label": "Product",
@@ -348,15 +341,37 @@
               },
               "visibleWhen": { "field": "floater", "value": "Yes" },
               "validatorsWhen": { "required": true },
-              "optionsKey": "floaterCoverageOptions"
+              "optionsKey": "floaterCoverageOptions",
+              "events": [
+                { "name": "change", "action": "onFloaterCoverageWithinChange" }
+              ]
             },
             {
               "type": "select",
-              "name": "project",
-              "label": "Project in Which Machinery is Operated",
-              "placeholder": "Select project in which machinery is operated",
+              "name": "floater_state",
+              "label": "State",
+              "placeholder": "Select state",
+              "errors": {
+                "required": "State is required."
+              },
+              "visibleWhen": {
+                "field": "floater_coverage_in",
+                "value": "State"
+              },
+              "validatorsWhen": { "required": true },
+              "optionsKey": "stateOptions"
+            },
+            {
+              "type": "input",
+              "name": "eq_zone",
+              "label": "Earth quake zone",
+              "placeholder": "Enter earth quake zone",
+              "readonly": true,
               "visibleWhen": { "field": "floater", "value": "Yes" },
-              "options": ["Anywhere in India"]
+              "validatorsWhen": { "required": true },
+              "errors": {
+                "required": "Pincode is required."
+              }
             }
           ]
         },
