@@ -106,6 +106,32 @@ export class UtilsService {
     };
   }
 
+  static minDynamic(min: number): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (!control.value) {
+        return null;
+      }
+      const value = parseFloat(control.value);
+      if (isNaN(value)) {
+        return null;
+      }
+      return value < min ? { min: true } : null;
+    };
+  }
+
+  static maxDynamic(max: number): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (!control.value) {
+        return null;
+      }
+      const value = parseFloat(control.value);
+      if (isNaN(value)) {
+        return null;
+      }
+      return value > max ? { max: true } : null;
+    };
+  }
+
   /**
    * FormGroup validator to check if a start date is not after an end date.
    * @param startDateControlName The name of the start date control.

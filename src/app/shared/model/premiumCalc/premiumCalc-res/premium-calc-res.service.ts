@@ -13,6 +13,11 @@ export class PremiumCalcResService implements Adapter<PremiumCalcRes> {
     const premiumCalcRes: PremiumCalcRes = {
       settings_backdays: data?.changed?.settings_backdays,
       settings_futuredays: data?.changed?.settings_futuredays,
+      eq_zone: data?.changed?.eq_zone,
+      machinery: data?.cells?.machinery,
+      settings_user_type: data?.changed?.settings_user_type,
+      iscreater: data?.changed?.iscreater,
+      settings_terr_mandatory: data?.changed?.settings_terr_mandatory,
     };
     return premiumCalcRes;
   }

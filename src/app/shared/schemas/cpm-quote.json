@@ -47,9 +47,7 @@
               "placeholder": "Select proposition selection",
               "optionsKey": "propositionOptions",
 
-              "validators": {
-                "required": true
-              },
+              "validators": {},
               "errors": {
                 "required": "Proposition selection is required."
               },
@@ -526,6 +524,10 @@
               "name": "capacity",
               "label": "Capacity",
               "mask": "NUMERIC",
+              "visibleWhen": {
+                "field": "proposition",
+                "notValue": "Schwing Stetter"
+              },
               "placeholder": "Enter capacity"
             },
             {
@@ -553,7 +555,9 @@
                 "required": true
               },
               "errors": {
-                "required": "Cost of Machinery is required."
+                "required": "Cost of Machinery is required.",
+                "min": "Cost of Machinery cannot be less than {min}.",
+                "max": "Cost of Machinery cannot be more than {max}."
               }
             },
             {
@@ -599,9 +603,6 @@
               "name": "terrorism_req",
               "label": "Terrorism Cover",
               "placeholder": "Select terrorism cover",
-              "validators": {
-                "required": true
-              },
               "options": ["Yes", "No"],
               "errors": {
                 "required": "Terrorism Cover is required."

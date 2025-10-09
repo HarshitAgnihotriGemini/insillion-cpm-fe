@@ -12,9 +12,9 @@ import { FormService } from '@app/shared/services/form.service';
 import { PremiumCalcResService } from '@app/shared/model/premiumCalc/premiumCalc-res/premium-calc-res.service';
 import { PremiumCalcRes } from '@app/shared/model/premiumCalc/premiumCalc-res/premiumCalc-res.model';
 import moment from 'moment';
-import { Validators } from '@angular/forms';
+import { FormArray, FormGroup, Validators } from '@angular/forms';
 import { UtilsService } from '@app/shared/utils/utils.service';
-import { DateValidationService } from '@app/shared/services/date-validation.service';
+import { DynamicValidationService } from '@app/shared/services/dynamic-validation.service';
 
 @Injectable({
   providedIn: 'root',
@@ -34,7 +34,7 @@ export class QuoteService {
     private readonly _location: Location,
     private readonly quoteResService: QuoteResService,
     private readonly formService: FormService,
-    private readonly dateValidationService: DateValidationService,
+    private readonly dynamicValidationService: DynamicValidationService,
   ) {}
 
   /*  Getter for policyId
@@ -291,6 +291,53 @@ export class QuoteService {
       }
       if (res?.data && res?.status == 0) {
         this.premiumCalcRes = this.premiumCalcResService.adapt(res);
+        const propositionControl =
+          this.quoteFormService.form.controls['proposition'];
+        if (
+          propositionControl &&
+          this.premiumCalcRes.iscreater &&
+          this.premiumCalcRes.settings_user_type
+        ) {
+          this.dynamicValidationService.updateRequiredStatus(
+            'proposition',
+            this.premiumCalcRes.iscreater == 1 &&
+              this.premiumCalcRes.settings_user_type == 'Internal',
+          );
+
+          const newValidators = [];
+          if (
+            this.premiumCalcRes.iscreater == 1 &&
+            this.premiumCalcRes.settings_user_type == 'Internal'
+          ) {
+            newValidators.push(Validators.required);
+          }
+          propositionControl.setValidators(newValidators);
+          propositionControl.updateValueAndValidity();
+        }
+        const terrorismCoverControl =
+          this.quoteFormService.form.controls['terrorism_req'];
+        if (
+          terrorismCoverControl &&
+          this.premiumCalcRes.settings_terr_mandatory
+        ) {
+          this.dynamicValidationService.updateRequiredStatus(
+            'terrorism_req',
+            this.premiumCalcRes.settings_terr_mandatory.toLowerCase() == 'yes',
+          );
+
+          const newValidators = [];
+          if (
+            this.premiumCalcRes.settings_terr_mandatory.toLowerCase() == 'yes'
+          ) {
+            newValidators.push(Validators.required);
+          }
+          terrorismCoverControl.setValidators(newValidators);
+          terrorismCoverControl.updateValueAndValidity();
+        }
+
+        this.quoteFormService.form.controls['eq_zone'].setValue(
+          this.premiumCalcRes?.eq_zone,
+        );
         const backDays = this.premiumCalcRes?.settings_backdays;
         const futureDays = this.premiumCalcRes?.settings_futuredays;
 
@@ -304,11 +351,58 @@ export class QuoteService {
             ? moment().add(Number(futureDays), 'days').toDate()
             : undefined;
 
-        this.dateValidationService.updateLimits(
+        this.dynamicValidationService.updateDateLimits(
           'policy_start_date',
           minDate,
           maxDate,
         );
+
+        const machineryFormArray = this.quoteFormService.form.get(
+          'machinery',
+        ) as FormArray;
+        if (this.premiumCalcRes.machinery && machineryFormArray) {
+          this.premiumCalcRes.machinery.forEach(
+            (machineryData: any, index: number) => {
+              const machineryGroup = machineryFormArray.at(index) as FormGroup;
+              if (machineryGroup) {
+                const costControl = machineryGroup.get('cost_of_machinery_si');
+                if (costControl) {
+                  const newValidators = [Validators.required];
+                  const minSiCap = machineryData.min_si_cap;
+                  const maxSiCap = machineryData.max_si_cap;
+
+                  const fieldKey = `machinery.${index}.cost_of_machinery_si`;
+
+                  const min: number | undefined =
+                    minSiCap !== null && minSiCap !== ''
+                      ? Number(minSiCap)
+                      : undefined;
+                  const max: number | undefined =
+                    maxSiCap !== null && maxSiCap !== ''
+                      ? Number(maxSiCap)
+                      : undefined;
+
+                  this.dynamicValidationService.updateNumericLimits(
+                    fieldKey,
+                    min,
+                    max,
+                  );
+
+                  if (min !== undefined) {
+                    newValidators.push(UtilsService.minDynamic(min));
+                  }
+                  if (max !== undefined) {
+                    newValidators.push(UtilsService.maxDynamic(max));
+                  }
+
+                  costControl.setValidators(newValidators);
+                  costControl.updateValueAndValidity();
+                  costControl.markAsTouched();
+                }
+              }
+            },
+          );
+        }
 
         const policyStartDateControl =
           this.quoteFormService.form.get('policy_start_date');
@@ -317,13 +411,14 @@ export class QuoteService {
 
           if (minDate) {
             newValidators.push(UtilsService.minDateDynamic(minDate));
+            policyStartDateControl.markAsTouched();
           }
           if (maxDate) {
             newValidators.push(UtilsService.maxDateDynamic(maxDate));
+            policyStartDateControl.markAsTouched();
           }
 
           policyStartDateControl.setValidators(newValidators);
-          policyStartDateControl.markAsTouched();
           policyStartDateControl.updateValueAndValidity();
         }
       } else {
