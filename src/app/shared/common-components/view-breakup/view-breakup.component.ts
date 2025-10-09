@@ -16,4 +16,8 @@ export class ViewBreakupComponent {
   constructor(private readonly apiService: ApiService) {
     this.imgPath = `${this.apiService.commonPath}/assets/`;
   }
+
+  ngOnChanges() {
+    console.log('1111111111', this.quoteRes);
+  }
 }

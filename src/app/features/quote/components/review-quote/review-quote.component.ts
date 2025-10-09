@@ -67,7 +67,9 @@ export class ReviewQuoteComponent implements OnInit {
     });
   }
   redirect() {
-    this.router.navigate(['/proposal']);
+    this.router.navigate([
+      `/proposal/create-proposal/${this.quoteService.getPolicyId}`,
+    ]);
   }
   openCKycOffcanvas(): void {
     this.offcanvasService.open(CkycOffcanvasComponent, {

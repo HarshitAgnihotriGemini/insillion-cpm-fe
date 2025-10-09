@@ -376,7 +376,7 @@
         {
           "title": "Risk Location",
           "type": "form-array",
-          "name": "location_addon",
+          "name": "risk_location",
           "addButtonLabel": "Add Risk Details",
           "limit": 1,
           "visibleWhen": {

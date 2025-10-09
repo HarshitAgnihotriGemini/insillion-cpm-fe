@@ -12,7 +12,7 @@ export class QuoteReqService implements Adapter<QuoteReq> {
   adapt(form: any, isFinalize = false): QuoteReq {
     const quoteReq: QuoteReq = {
       ...form?.formData,
-      quote_id: form?.quoteRes?.quote_id || '',
+      quote_id: form?.quoteRes?.quoteId || '',
       product_id: form?.productId,
       transaction_type: form?.formData?.policy_transaction_type || '',
       pakage_code: 'EPM', //

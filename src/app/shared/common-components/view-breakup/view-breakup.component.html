@@ -24,7 +24,7 @@
       <div class="col-3 ps-0 text-sm" *ngFor="let item of config?.items">
         <div class="text-grey font-bold">{{ item?.label }}</div>
         <div class="review-field-value">
-          {{ quoteRes?.[item?.tag] || "-" }}
+          ₹ {{ quoteRes?.[item?.tag] || "-" }}
         </div>
       </div>
     </div>
