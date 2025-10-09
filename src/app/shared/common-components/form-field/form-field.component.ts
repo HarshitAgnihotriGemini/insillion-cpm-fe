@@ -1,11 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  OnDestroy,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, OnDestroy } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -18,7 +11,7 @@ import { MASKS } from '@app/shared/constants/constants';
 import moment from 'moment';
 import { ApiService } from '@app/shared/services/api.service';
 import { LoaderService } from '@app/shared/services/loader.service';
-import { DateValidationService } from '@app/shared/services/date-validation.service';
+import { DynamicValidationService } from '@app/shared/services/dynamic-validation.service';
 
 @Component({
   selector: 'app-form-field',
@@ -44,15 +37,19 @@ export class FormFieldComponent implements OnInit, OnDestroy {
   public readonly MASKS = MASKS;
   minDate?: Date;
   maxDate?: Date;
+  min?: number;
+  max?: number;
   loaderURL: string;
   loading$!: Observable<boolean>;
-  private dateValidationSub: Subscription = new Subscription();
+  private validationSub: Subscription = new Subscription();
+  isRequired = false;
 
   constructor(
     private readonly dynamicOptionsService: DynamicOptionsService,
     private readonly apiService: ApiService,
     private readonly loaderService: LoaderService,
-    private readonly dateValidationService: DateValidationService
+    private readonly dynamicValidationService: DynamicValidationService,
+    private readonly cdr: ChangeDetectorRef
   ) {
     this.loaderURL = `${this.apiService.commonPath}/assets/images/Loader_blue.svg`;
   }
@@ -61,22 +58,42 @@ export class FormFieldComponent implements OnInit, OnDestroy {
     this.loading$ = this.loaderService.isLoading(this.fieldKey);
 
     if (this.field.type === 'datepicker') {
-      const minDateSub = this.dateValidationService
-        .getMinDate$(this.field.name)
+      const minDateSub = this.dynamicValidationService
+        .getMinDate$(this.fieldKey)
         .subscribe(date => {
           this.minDate = date;
         });
-      const maxDateSub = this.dateValidationService
-        .getMaxDate$(this.field.name)
+      const maxDateSub = this.dynamicValidationService
+        .getMaxDate$(this.fieldKey)
         .subscribe(date => {
           this.maxDate = date;
         });
 
-      this.dateValidationSub.add(minDateSub);
-      this.dateValidationSub.add(maxDateSub);
+      this.validationSub.add(minDateSub);
+      this.validationSub.add(maxDateSub);
+    } else {
+      const minSub = this.dynamicValidationService
+        .getMin$(this.fieldKey)
+        .subscribe(min => {
+          this.min = min;
+        });
+      const maxSub = this.dynamicValidationService
+        .getMax$(this.fieldKey)
+        .subscribe(max => {
+          this.max = max;
+        });
+
+      this.validationSub.add(minSub);
+      this.validationSub.add(maxSub);
     }
 
-    // Set initial values from JSON config if not dynamically provided
+    this.validationSub.add(
+      this.dynamicValidationService.getRequiredStatus$(this.fieldKey).subscribe(isRequired => {
+        this.isRequired = isRequired;
+        this.cdr.markForCheck();
+      })
+    );
+
     if (this.minDate === undefined && this.field.validators?.minDate) {
       this.minDate = moment()
         .subtract(this.field.validators.minDate.daysAgo, 'days')
@@ -99,7 +116,7 @@ export class FormFieldComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.dateValidationSub.unsubscribe();
+    this.validationSub.unsubscribe();
   }
 
   get isInvalid(): boolean {
@@ -133,6 +150,12 @@ export class FormFieldComponent implements OnInit, OnDestroy {
               '{requiredDate}',
               error.requiredDate
             );
+          }
+          if (firstErrorKey === 'min') {
+            return errorMessageTemplate.replace('{min}', this.min?.toString());
+          }
+          if (firstErrorKey === 'max') {
+            return errorMessageTemplate.replace('{max}', this.max?.toString());
           }
           return errorMessageTemplate;
         }

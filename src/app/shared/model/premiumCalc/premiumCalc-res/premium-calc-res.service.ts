@@ -21,6 +21,11 @@ export class PremiumCalcResService implements Adapter<PremiumCalcRes> {
       total_tax: cells?.total_tax || 0,
       total_premium: cells?.total_premium || 0,
       clause_wordings: changed?.clause_wordings || [],
+      eq_zone: changed?.eq_zone,
+      machinery: data?.cells?.machinery,
+      settings_user_type: changed?.settings_user_type,
+      iscreater: changed?.iscreater,
+      settings_terr_mandatory: changed?.settings_terr_mandatory,
     };
     return premiumCalcRes;
   }

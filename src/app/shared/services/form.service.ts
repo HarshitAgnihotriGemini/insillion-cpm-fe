@@ -189,7 +189,12 @@ export class FormService {
           } else {
             const targetControl = form.get(item.visibleWhen.field);
             if (targetControl) {
-              isVisible = targetControl.value === item.visibleWhen.value;
+              if (item.visibleWhen.value) {
+                isVisible = targetControl.value === item.visibleWhen.value;
+              }
+              if (item.visibleWhen.notValue) {
+                isVisible = targetControl.value !== item.visibleWhen.notValue;
+              }
             }
           }
         }

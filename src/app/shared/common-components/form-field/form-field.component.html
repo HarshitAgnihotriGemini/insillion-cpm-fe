@@ -4,7 +4,7 @@
     class="form-label"
     *ngIf="field.type !== 'button' && field.type !== 'toggle'"
     [class.required]="
-      field.validators?.required || field.validatorsWhen?.required
+      field.validators?.required || field.validatorsWhen?.required || isRequired
     "
   >
     {{ field.label }}
@@ -28,6 +28,8 @@
           (onEvent)="handleEvent($event)"
           [ngClass]="{ readonly: field.readonly }"
           [mask]="maskPattern"
+          [min]="min"
+          [max]="max"
         />
         <span *ngIf="loading$ | async">
           <img [src]="loaderURL" alt="Loading..." class="spinner-icon" />
