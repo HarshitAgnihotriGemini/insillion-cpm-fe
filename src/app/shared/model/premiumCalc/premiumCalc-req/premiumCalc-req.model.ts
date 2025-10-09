@@ -11,6 +11,7 @@ export interface PremiumCalcReq {
     settings_user_type: string;
     branch_state: string;
     branch_id: string;
+    proposition_internal_user: string;
     _ready: string;
     __finalize: number;
   };

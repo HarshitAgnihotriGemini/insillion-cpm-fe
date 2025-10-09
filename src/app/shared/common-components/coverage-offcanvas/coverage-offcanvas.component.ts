@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -16,15 +16,15 @@ import { ApiService } from '@app/shared/services/api.service';
   imports: [CommonModule, ReactiveFormsModule, FormFieldComponent],
   templateUrl: './coverage-offcanvas.component.html',
 })
-export class CoverageOffcanvasComponent {
+export class CoverageOffcanvasComponent implements OnInit {
   @Input() title: string = 'Coverage Options';
   @Input() config: any;
   form!: FormGroup;
   offcanvasService = inject(NgbOffcanvas);
   imgPath: string;
   constructor(
-    private fb: FormBuilder,
-    private apiService: ApiService,
+    private readonly fb: FormBuilder,
+    private readonly apiService: ApiService,
   ) {
     this.imgPath = `${this.apiService.commonPath}/assets/`;
   }

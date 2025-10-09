@@ -177,7 +177,7 @@ export class QuoteService {
       //Hardcode values added
       const body = {
         proposition_name:
-          this.quoteFormService.form.controls['proposition'].value,
+          this.quoteFormService.form.controls['proposition_name'].value,
         biz_type:
           this.quoteFormService.form.controls['policy_transaction_type'].value,
         effective_from: '45931',
@@ -198,7 +198,8 @@ export class QuoteService {
       const url = this.api.url + 'cpm/voluntary_excess_tmpl';
       //Hardcode values added
       const body = {
-        proposition: this.quoteFormService.form.controls['proposition'].value,
+        proposition:
+          this.quoteFormService.form.controls['proposition_name'].value,
         policy_transaction_type:
           this.quoteFormService.form.controls['policy_transaction_type'].value,
         skip: '/v1/rater/',
@@ -252,6 +253,7 @@ export class QuoteService {
         {
           formData: this.quoteFormService.form.value,
           productId: this.api.productId,
+          premiumCalcRes: this.premiumCalcRes,
           quoteRes: this.quoteRes,
         },
         isFinalize,

@@ -202,4 +202,28 @@ export class UtilsService {
       return null;
     };
   }
+
+  createReq(sections: any, formData: any) {
+    const req: any = {};
+    sections.forEach((section: any) => {
+      section.subsections?.forEach((subsection: any) => {
+        if (subsection.type === 'form-array') {
+          req[subsection.name] = formData?.[subsection.name] || [];
+        } else {
+          subsection.fields?.forEach((field: any) => {
+            if (field?.mask === 'DATE') {
+              req[field.name] = formData?.[field.name]
+                ? moment(formData?.[field.name], 'DD/MM/YYYY').format(
+                    'YYYY-MM-DD',
+                  )
+                : '';
+            } else {
+              req[field.name] = formData?.[field.name] || '';
+            }
+          });
+        }
+      });
+    });
+    return req;
+  }
 }

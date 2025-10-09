@@ -148,7 +148,7 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
 
   openTermsModal() {
     const initialState = {
-      items: this.config.modals.termsAndConditions,
+      items: this.quoteService.quoteRes?.clause_wordings,
       title: 'Special Conditions, Warranties & Exclusions',
     };
     this.bsModalRef = this.modalService.show(TermsAndConditionsModalComponent, {
@@ -200,8 +200,12 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
         const propositionRes =
           await this.quoteService.fetchPropositionData(imdValue);
 
-        this.form.controls['proposition'].setValue(propositionRes?.data[0]);
-        await this.onPropositionChange(this.form.controls['proposition'].value);
+        this.form.controls['proposition_name'].setValue(
+          propositionRes?.data[0],
+        );
+        await this.onPropositionChange(
+          this.form.controls['proposition_name'].value,
+        );
       }
     } catch (error) {
       console.error('Error validating intermediary:', error);
@@ -230,11 +234,11 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
   async fetchProduct() {
     try {
       if (
-        this.form.controls['proposition'].value &&
+        this.form.controls['proposition_name'].value &&
         this.form.controls['policy_transaction_type'].value
       ) {
         const payload = {
-          proposition_name: this.form.controls['proposition'].value,
+          proposition_name: this.form.controls['proposition_name'].value,
           settings_name: 'product',
           biz_type: this.form.controls['policy_transaction_type'].value,
         };
@@ -251,7 +255,7 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
     try {
       if (this.form.controls['product'].value) {
         const payload = {
-          proposition: this.form.controls['proposition'].value,
+          proposition: this.form.controls['proposition_name'].value,
           product: this.form.controls['product'].value,
           policy_transaction_type:
             this.form.controls['policy_transaction_type'].value,
@@ -269,7 +273,7 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
     const fieldKey = 'policy_transaction_type';
     this.loaderService.showLoader(fieldKey);
     try {
-      const proposition = this.form.controls['proposition'].value;
+      const proposition = this.form.controls['proposition_name'].value;
       await firstValueFrom(
         forkJoin([
           from(this.fetchProduct()).pipe(

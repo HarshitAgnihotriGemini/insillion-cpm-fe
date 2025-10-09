@@ -23,11 +23,12 @@ export class FormService {
   ) {}
 
   setFieldVisibility(fieldName: string, isVisible: boolean) {
-    this.sections.forEach(section => {
+    this.sections.forEach((section) => {
       section.subsections?.forEach((subsection: any) => {
-        const fields = subsection.type === 'form-array'
-          ? subsection.formGroupTemplate
-          : subsection.fields || [];
+        const fields =
+          subsection.type === 'form-array'
+            ? subsection.formGroupTemplate
+            : subsection.fields || [];
         const field = fields.find((f: any) => f.name === fieldName);
         if (field) {
           field._visible = isVisible;
@@ -136,7 +137,9 @@ export class FormService {
 
     subsection.formGroupTemplate.forEach((field: any) => {
       const validators = this.buildValidators(field.validators);
-      const value = initialState ? initialState[field.name] : field.value ?? null;
+      const value = initialState
+        ? initialState[field.name]
+        : (field.value ?? null);
       group.addControl(field.name, this.fb.control(value, validators));
     });
 

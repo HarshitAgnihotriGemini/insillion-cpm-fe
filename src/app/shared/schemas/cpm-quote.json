@@ -38,11 +38,11 @@
               "events": [
                 { "name": "change", "action": "validateIntermediary" }
               ],
-              "resetsFields": ["proposition", "policy_transaction_type"]
+              "resetsFields": ["proposition_name", "policy_transaction_type"]
             },
             {
               "type": "select",
-              "name": "proposition",
+              "name": "proposition_name",
               "label": "Proposition Selection",
               "placeholder": "Select proposition selection",
               "optionsKey": "propositionOptions",
@@ -368,7 +368,7 @@
               "placeholder": "Enter earth quake zone",
               "readonly": true,
               "visibleWhen": { "field": "floater", "value": "Yes" },
-              "validatorsWhen": { "required": true },
+              "validatorsWhen": { "required": false },
               "errors": {
                 "required": "Pincode is required."
               }
@@ -378,7 +378,7 @@
         {
           "title": "Risk Location",
           "type": "form-array",
-          "name": "risk_location",
+          "name": "location_addon",
           "addButtonLabel": "Add Risk Details",
           "limit": 1,
           "visibleWhen": {
@@ -467,7 +467,7 @@
               "validators": {
                 "required": true
               },
-              "options": ["Anywhere in India"],
+              "options": ["Pan India"],
               "errors": {
                 "required": "Location is required."
               }

@@ -50,7 +50,10 @@
       </section>
     </div>
     <div class="mt-4">
-      <app-view-breakup [config]="config.viewBreakup"></app-view-breakup>
+      <app-view-breakup
+        [config]="config.viewBreakup"
+        [quoteRes]="quoteService.quoteRes"
+      ></app-view-breakup>
     </div>
 
     <div class="d-flex align-items-center justify-content-end gap-3 mt-4">
@@ -63,7 +66,6 @@
       </button> -->
       <button
         class="btn btn-primary btn-md px-5 d-flex align-items-center gap-2"
-        *ngIf="isFinalized"
         (click)="redirect()"
       >
         <span>Proceed To Proposal</span>

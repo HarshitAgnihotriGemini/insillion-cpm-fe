@@ -6,4 +6,5 @@ export interface PremiumCalcRes {
   premium_value: number;
   total_tax: number;
   total_premium: number;
+  clause_wordings: any;
 }

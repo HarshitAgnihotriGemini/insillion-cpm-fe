@@ -19,6 +19,9 @@ export class QuoteResService implements Adapter<QuoteRes> {
       premium_value: data?.premium_value || 0,
       total_tax: data?.total_tax || 0,
       total_premium: data?.total_premium || 0,
+      nstp_flag: data?.nstp_flag === 'Yes',
+      nstp_reason: data?.nstp_reason || '',
+      clause_wordings: data?.clause_wordings || [],
     };
     return quoteRes;
   }

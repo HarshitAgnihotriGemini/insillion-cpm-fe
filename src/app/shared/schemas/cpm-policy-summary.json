@@ -13,7 +13,7 @@
           "title": "Contractor Plant and Machinery Insurance",
           "fields": [
             { "label": "Intermediary", "name": "imd_code" },
-            { "label": "Proposition Selection", "name": "proposition" },
+            { "label": "Proposition Selection", "name": "proposition_name" },
             { "label": "Transaction Type", "name": "policy_transaction_type" },
             {
               "label": "Customer First Name",
@@ -56,7 +56,6 @@
               "name": "sezPrevilege",
               "value": "Apply-GST"
             },
-            { "label": "Lead Code", "name": "leadCode" },
             { "label": "Product", "name": "product" }
           ]
         },
