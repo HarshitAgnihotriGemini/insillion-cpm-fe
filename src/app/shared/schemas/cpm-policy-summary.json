@@ -13,7 +13,7 @@
           "title": "Contractor Plant and Machinery Insurance",
           "fields": [
             { "label": "Intermediary", "name": "imd_code" },
-            { "label": "Proposition Selection", "name": "proposition" },
+            { "label": "Proposition Selection", "name": "proposition_name" },
             { "label": "Transaction Type", "name": "policy_transaction_type" },
             {
               "label": "Customer First Name",
@@ -56,7 +56,6 @@
               "name": "sezPrevilege",
               "value": "Apply-GST"
             },
-            { "label": "Lead Code", "name": "leadCode" },
             { "label": "Product", "name": "product" }
           ]
         },
@@ -167,44 +166,21 @@
           ]
         }
       ]
-    },
-    {
-      "title": "Attachments",
-      "componentType": "attachments-review",
-      "data": []
     }
   ],
   "viewBreakup": {
     "title": "Premium Summary",
     "items": [
-      { "label": "Premium Excluding Terrorism", "value": "₹ 4,000.00" },
-      { "label": "Terrorism Premium", "value": "₹ 115.50" },
-      { "label": "Gross Premium", "value": "₹ 4,115.50" },
-      { "label": "IGST 18%:", "value": "₹ 740.79" }
+      { "label": "Premium Excluding Terrorism", "tag": "gross_temp" },
+      { "label": "Terrorism Premium", "tag": "terrorism_temp" },
+      { "label": "Gross Premium", "tag": "premium_value" },
+      { "label": "IGST 18%:", "tag": "total_tax" }
     ],
-    "total": "4,856.00"
-  },
-  "modals": {
-    "premiumSummary": {
-      "title": "Premium Summary",
-      "items": [
-        { "label": "Premium Excluding Terrorism" },
-        { "label": "Terrorism Premium" },
-        { "label": "Gross Premium" },
-        { "label": "IGST 18%:" }
-      ],
-      "total": {
-        "label": "Total Premium"
-      }
-    }
+    "total": "total_premium"
   },
   "ckycAction": {
     "label": "C-KYC Verification",
     "type": "outline",
     "action": "ckycOffCanvas"
-  },
-  "totalPremium": {
-    "label": "Total Premium",
-    "viewBreakupLabel": "View Breakup"
   }
 }

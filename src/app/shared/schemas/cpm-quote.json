@@ -38,11 +38,11 @@
               "events": [
                 { "name": "change", "action": "validateIntermediary" }
               ],
-              "resetsFields": ["proposition", "policy_transaction_type"]
+              "resetsFields": ["proposition_name", "policy_transaction_type"]
             },
             {
               "type": "select",
-              "name": "proposition",
+              "name": "proposition_name",
               "label": "Proposition Selection",
               "placeholder": "Select proposition selection",
               "optionsKey": "propositionOptions",
@@ -367,7 +367,7 @@
               "placeholder": "Enter earth quake zone",
               "readonly": true,
               "visibleWhen": { "field": "floater", "value": "Yes" },
-              "validatorsWhen": { "required": true },
+              "validatorsWhen": { "required": false },
               "errors": {
                 "required": "Pincode is required."
               }
@@ -467,7 +467,7 @@
               "validators": {
                 "required": true
               },
-              "options": ["Anywhere in India"],
+              "options": ["Pan India"],
               "errors": {
                 "required": "Location is required."
               }
@@ -728,24 +728,17 @@
           ]
         }
       ]
-    },
-    {
-      "title": "Attachments",
-      "isCollapsible": true,
-      "isExpandedByDefault": false,
-      "componentType": "attachments",
-      "addButtonLabel": "Add More"
     }
   ],
   "viewBreakup": {
     "title": "Premium Summary",
     "items": [
-      { "label": "Premium Excluding Terrorism", "value": "₹ 4,000.00" },
-      { "label": "Terrorism Premium", "value": "₹ 115.50" },
-      { "label": "Gross Premium", "value": "₹ 4,115.50" },
-      { "label": "IGST 18%:", "value": "₹ 740.79" }
+      { "label": "Premium Excluding Terrorism", "tag": "gross_temp" },
+      { "label": "Terrorism Premium", "tag": "terrorism_temp" },
+      { "label": "Gross Premium", "tag": "premium_value" },
+      { "label": "IGST 18%:", "tag": "total_tax" }
     ],
-    "total": "4,856.00"
+    "total": "total_premium"
   },
   "offCanvasConfigs": {
     "addCovers": {

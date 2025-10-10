@@ -10,10 +10,18 @@ export class PremiumCalcResService implements Adapter<PremiumCalcRes> {
 
   adapt(item: any): PremiumCalcRes {
     const data = item?.data;
+    const cells = data?.cells;
+    const changed = data?.changed;
     const premiumCalcRes: PremiumCalcRes = {
-      settings_backdays: data?.changed?.settings_backdays,
-      settings_futuredays: data?.changed?.settings_futuredays,
-      eq_zone: data?.changed?.eq_zone,
+      settings_backdays: changed?.settings_backdays,
+      settings_futuredays: changed?.settings_futuredays,
+      gross_temp: cells?.gross_temp || 0,
+      terrorism_temp: cells?.terrorism_temp || 0,
+      premium_value: cells?.premium_value || 0,
+      total_tax: cells?.total_tax || 0,
+      total_premium: cells?.total_premium || 0,
+      clause_wordings: changed?.clause_wordings || [],
+      eq_zone: changed?.eq_zone,
       machinery: data?.cells?.machinery,
       settings_user_type: data?.changed?.settings_user_type,
       iscreater: data?.changed?.iscreater,

@@ -1,16 +1,30 @@
 <section class="section-card bg-light">
   <div class="card-header-grey">
-    <div class="text-md font-semibold">Total Premium ₹ {{ config?.total }}</div>
+    <div class="text-md font-bold">
+      Total Premium:
+      <span class="font-semibold" *ngIf="quoteRes?.nstp_flag">Refer to UW</span>
+      <span class="font-semibold" *ngIf="!quoteRes?.nstp_flag"
+        >₹ {{ quoteRes?.[config?.total] || 0 }}</span
+      >
+    </div>
   </div>
+
   <div class="review-section-wrapper">
-    <div class="p-4 row g-4">
-      <div class="col-12 ps-0 font-semibold">{{ config.title }}</div>
-      <div class="col-3 ps-0 text-sm" *ngFor="let item of config.items">
-        <div class="text-grey font-bold">
-          {{ item.label }}
-        </div>
+    <!-- If NSTP Flag is true -->
+    <div class="p-4 row g-4" *ngIf="quoteRes?.nstp_flag">
+      <div class="col-12 ps-0 font-bold">
+        Referral Reason:
+        <span class="font-semibold">{{ quoteRes?.nstp_reason || "-" }}</span>
+      </div>
+    </div>
+
+    <!-- If NSTP Flag is false -->
+    <div class="p-4 row g-4" *ngIf="!quoteRes?.nstp_flag">
+      <div class="col-12 ps-0 font-semibold">{{ config?.title }}</div>
+      <div class="col-3 ps-0 text-sm" *ngFor="let item of config?.items">
+        <div class="text-grey font-bold">{{ item?.label }}</div>
         <div class="review-field-value">
-          {{ item.value }}
+          ₹ {{ quoteRes?.[item?.tag] || "-" }}
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BreadcrumbComponent } from '@app/shared/common-components/breadcrumb/breadcrumb.component';
@@ -13,7 +13,7 @@ import * as cpmQuote from '@app/shared/schemas/cpm-quote.json';
 import { QuoteFormService } from '../../quote-form.service';
 import { QuoteService } from '../../quote.service';
 import moment from 'moment';
-import { concatMap, firstValueFrom, forkJoin, from } from 'rxjs';
+import { concatMap, filter, firstValueFrom, forkJoin, from } from 'rxjs';
 import { LoaderService } from '@app/shared/services/loader.service';
 import { ViewBreakupComponent } from '@app/shared/common-components/view-breakup/view-breakup.component';
 import { REVIEW_QUOTE } from '@app/shared/constants/routes';
@@ -33,7 +33,7 @@ import { FormService } from '@app/shared/services/form.service';
   templateUrl: './create-quote.component.html',
   styleUrl: './create-quote.component.scss',
 })
-export class CreateQuoteComponent implements OnInit {
+export class CreateQuoteComponent implements OnInit, OnDestroy {
   bsModalRef?: BsModalRef;
   config: any;
   form!: FormGroup;
@@ -42,6 +42,7 @@ export class CreateQuoteComponent implements OnInit {
   imgPath: string;
   isBreakupVisible = false;
   isGettingPremium = false;
+  private postQuote$: any;
 
   constructor(
     private readonly modalService: BsModalService,
@@ -72,11 +73,27 @@ export class CreateQuoteComponent implements OnInit {
           this.onProductChange(this.form.controls['product'].value);
           await this.validateIntermediary(this.form.controls['imd_code'].value);
         }
-        this.fetchBranchListAsync();
+        await this.fetchBranchListAsync();
+        this.postQuote$ = this.form?.valueChanges
+          .pipe(
+            filter(() => {
+              return this.isBreakupVisible === true;
+            }),
+          )
+          .subscribe(() => {
+            //Resetting variables
+            this.isBreakupVisible = false;
+          });
       } catch (error) {
         console.log('Error in Create quote: ' + error);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.postQuote$) {
+      this.postQuote$.unsubscribe();
+    }
   }
 
   private populateForm(): void {
@@ -132,7 +149,7 @@ export class CreateQuoteComponent implements OnInit {
 
   openTermsModal() {
     const initialState = {
-      items: this.config.modals.termsAndConditions,
+      items: this.quoteService.quoteRes?.clause_wordings,
       title: 'Special Conditions, Warranties & Exclusions',
     };
     this.bsModalRef = this.modalService.show(TermsAndConditionsModalComponent, {
@@ -186,8 +203,12 @@ export class CreateQuoteComponent implements OnInit {
         const propositionRes =
           await this.quoteService.fetchPropositionData(imdValue);
 
-        this.form.controls['proposition'].setValue(propositionRes?.data[0]);
-        await this.onPropositionChange(this.form.controls['proposition'].value);
+        this.form.controls['proposition_name'].setValue(
+          propositionRes?.data[0],
+        );
+        await this.onPropositionChange(
+          this.form.controls['proposition_name'].value,
+        );
       }
     } catch (error) {
       console.error('Error validating intermediary:', error);
@@ -222,11 +243,11 @@ export class CreateQuoteComponent implements OnInit {
   async fetchProduct() {
     try {
       if (
-        this.form.controls['proposition'].value &&
+        this.form.controls['proposition_name'].value &&
         this.form.controls['policy_transaction_type'].value
       ) {
         const payload = {
-          proposition_name: this.form.controls['proposition'].value,
+          proposition_name: this.form.controls['proposition_name'].value,
           settings_name: 'product',
           biz_type: this.form.controls['policy_transaction_type'].value,
         };
@@ -251,7 +272,7 @@ export class CreateQuoteComponent implements OnInit {
     try {
       if (this.form.controls['product'].value) {
         const payload = {
-          proposition: this.form.controls['proposition'].value,
+          proposition: this.form.controls['proposition_name'].value,
           product: this.form.controls['product'].value,
           policy_transaction_type:
             this.form.controls['policy_transaction_type'].value,
@@ -269,7 +290,7 @@ export class CreateQuoteComponent implements OnInit {
     const fieldKey = 'policy_transaction_type';
     this.loaderService.showLoader(fieldKey);
     try {
-      const proposition = this.form.controls['proposition'].value;
+      const proposition = this.form.controls['proposition_name'].value;
       await firstValueFrom(
         forkJoin([
           from(this.fetchProduct()).pipe(
@@ -352,6 +373,7 @@ export class CreateQuoteComponent implements OnInit {
     this.isGettingPremium = true;
     try {
       if (this.form.valid) {
+        await this.quoteService.premiumCalc();
         await this.quoteService.saveQuote();
         this.isBreakupVisible = true;
       } else {
@@ -362,6 +384,16 @@ export class CreateQuoteComponent implements OnInit {
       console.error('Error in get quote:', error);
     } finally {
       this.isGettingPremium = false;
+    }
+  }
+
+  async finalizeProposal() {
+    try {
+      await this.quoteService.saveQuote(true);
+      this.redirect();
+    } catch (error) {
+      console.error('Error finalizing proposal:', error);
+      this.toastr.error('Error finalizing proposal');
     }
   }
 

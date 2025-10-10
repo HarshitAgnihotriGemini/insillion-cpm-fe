@@ -17,6 +17,7 @@
     <app-view-breakup
       *ngIf="isBreakupVisible"
       [config]="config.viewBreakup"
+      [quoteRes]="quoteService.quoteRes"
     ></app-view-breakup>
     <div class="d-flex align-items-center justify-content-end gap-3 mt-4">
       <div
@@ -29,7 +30,7 @@
       </div>
       <button
         class="btn btn-primary btn-md px-5 d-flex align-items-center gap-2"
-        (click)="redirect()"
+        (click)="finalizeProposal()"
         *ngIf="isBreakupVisible"
       >
         <span>Submit</span>
