@@ -6,4 +6,7 @@ export interface PremiumCalcRes {
   settings_user_type: string;
   iscreater: number;
   settings_terr_mandatory: string;
+  marine_required: string;
+  settings_gpa_required: string;
+  policy_addon: [{ addon_marine_premium: string }];
 }

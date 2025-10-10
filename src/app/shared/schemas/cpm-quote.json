@@ -285,6 +285,7 @@
               "validators": {
                 "required": true
               },
+              "events": [{ "name": "change", "action": "onProductChange" }],
               "errors": {
                 "required": "Product is required."
               }
@@ -456,6 +457,7 @@
           "name": "machinery",
           "addButtonLabel": "Add Machinery Details",
           "limit": 1,
+          "initialGroups": 1,
           "formGroupTemplate": [
             {
               "type": "select",
@@ -628,6 +630,72 @@
               "name": "addCoversBtn",
               "action": "addCovers",
               "iconPath": "https://harshitagnihotrigemini.github.io/insillion-common-styles-fe-harshit/assets/images/icon-add.svg"
+            }
+          ]
+        },
+        {
+          "title": "Addons/Covers",
+          "fields": [
+            {
+              "type": "toggle",
+              "name": "addon_marine",
+              "label": "Marine",
+              "visibleWhen": {
+                "field": "package_plan",
+                "value": "Marine"
+              },
+              "validatorsWhen": { "required": true },
+              "dependentFields": ["addon_marine_premium"]
+            },
+            {
+              "type": "select",
+              "name": "marine_selection",
+              "label": "Coverage Type",
+              "placeholder": "Select coverage type",
+              "options": ["All Risk", "Basic Cover"],
+              "value": "All Risk",
+              "clearWhenHidden": false,
+              "visibleWhen": {
+                "or": [
+                  {
+                    "and": [
+                      { "field": "addon_marine", "value": true },
+                      { "field": "proposition", "value": "SF" }
+                    ]
+                  },
+                  {
+                    "and": [
+                      { "field": "addon_marine", "value": true },
+                      { "field": "proposition", "value": "AAR" }
+                    ]
+                  },
+                  {
+                    "and": [
+                      { "field": "addon_marine", "value": true },
+                      { "field": "proposition", "value": "Xperitus" }
+                    ]
+                  }
+                ]
+              },
+              "validators": {
+                "required": true
+              },
+              "errors": {
+                "required": "Coverage Type is required."
+              }
+            },
+            {
+              "type": "static",
+              "name": "addon_marine_premium",
+              "value": "",
+              "hidden": true
+            },
+            {
+              "type": "toggle",
+              "name": "GPA",
+              "label": "GPA",
+              "validatorsWhen": { "required": true },
+              "hidden": true
             }
           ]
         },

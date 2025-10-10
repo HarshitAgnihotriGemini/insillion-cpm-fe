@@ -23,9 +23,9 @@
         <div *ngSwitchCase="'attachments'" class="form-section">
           <app-attachments [section]="section"> </app-attachments>
         </div>
-        <div>
-          <ng-container *ngFor="let subsection of section.subsections">
-            <div *ngIf="subsection._visible" class="form-section">
+        <div *ngSwitchDefault>
+          <ng-container *ngFor="let subsection of subsections">
+            <div *ngIf="subsection._visible && hasVisibleFields(subsection)" class="form-section">
               <ng-container
                 *ngIf="subsection.type === 'form-array'; else standardSection"
               >

@@ -101,4 +101,20 @@ export class SectionComponent implements OnInit {
   toFormGroup(group: any) {
     return group as FormGroup;
   }
+
+  hasVisibleFields(subsection: any): boolean {
+    if (subsection.fields) {
+      return subsection.fields.some((field: any) => field._visible);
+    }
+    return true;
+  }
+
+  get subsections() {
+    if (!this.section.subsections) {
+      return [];
+    }
+    return this.section.subsections.filter((sub: any) => {
+      return sub._visible && this.hasVisibleFields(sub);
+    });
+  }
 }

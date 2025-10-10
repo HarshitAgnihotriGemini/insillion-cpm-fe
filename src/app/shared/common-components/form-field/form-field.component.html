@@ -2,7 +2,7 @@
   <label
     [for]="field.name"
     class="form-label"
-    *ngIf="field.type !== 'button' && field.type !== 'toggle'"
+    *ngIf="field.type !== 'button' && field.type !== 'toggle' && field.type !== 'static'"
     [class.required]="
       field.validators?.required || field.validatorsWhen?.required || isRequired
     "
@@ -79,6 +79,21 @@
           <img [src]="loaderURL" alt="Loading..." class="spinner-icon" />
         </span>
       </div>
+
+      <div *ngSwitchCase="'toggle'" class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [id]="field.name"
+          [formControlName]="field.name"
+        />
+        <label class="text-sm" [for]="field.name">{{ field.label }}</label>
+      </div>
+
+      <div *ngSwitchCase="'static'">
+        <p class="form-control-static">{{ field.value }}</p>
+      </div>
+
       <button
         *ngSwitchCase="'button'"
         type="button"

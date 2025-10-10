@@ -69,6 +69,7 @@ export class CreateQuoteComponent implements OnInit {
         if (this.quoteService.getPolicyId !== 'new') {
           await this.quoteService.getDetailByPolicyId();
           this.populateForm();
+          this.onProductChange(this.form.controls['product'].value);
           await this.validateIntermediary(this.form.controls['imd_code'].value);
         }
         this.fetchBranchListAsync();
@@ -171,6 +172,8 @@ export class CreateQuoteComponent implements OnInit {
       this.onDetariffChange();
     } else if (event.action === 'onFloaterCoverageWithinChange') {
       this.onFloaterCoverageWithinChange(value);
+    } else if (event.action === 'onProductChange') {
+      this.onProductChange(value);
     }
   }
 
@@ -201,6 +204,12 @@ export class CreateQuoteComponent implements OnInit {
         this.form.controls['policy_transaction_type'].setValue(
           transactionTypeRes[0],
         );
+        this.formService.setFieldVisibility(
+          'marine_selection',
+          propositionName == 'SF' ||
+            propositionName == 'AAR' ||
+            propositionName == 'Xperitus',
+        );
         this.onTransactionTypeChange(
           this.form.controls['policy_transaction_type'].value,
         );
@@ -227,6 +236,14 @@ export class CreateQuoteComponent implements OnInit {
       }
     } catch (error) {
       console.error('Error fetching transaction types:', error);
+    }
+  }
+  onProductChange(product: string) {
+    if (product == 'CPM Comprehensive Cover') {
+      this.form.controls['GPA'].setValue(true);
+      this.form.controls['GPA'].disable();
+    } else {
+      this.form.controls['GPA'].enable();
     }
   }
 

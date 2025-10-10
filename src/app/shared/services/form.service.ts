@@ -23,13 +23,15 @@ export class FormService {
   ) {}
 
   setFieldVisibility(fieldName: string, isVisible: boolean) {
-    this.sections.forEach(section => {
+    this.sections.forEach((section) => {
       section.subsections?.forEach((subsection: any) => {
-        const fields = subsection.type === 'form-array'
-          ? subsection.formGroupTemplate
-          : subsection.fields || [];
+        const fields =
+          subsection.type === 'form-array'
+            ? subsection.formGroupTemplate
+            : subsection.fields || [];
         const field = fields.find((f: any) => f.name === fieldName);
         if (field) {
+          field.hidden = false;
           field._visible = isVisible;
           const control = this.form.get(fieldName);
           if (control) {
@@ -41,9 +43,12 @@ export class FormService {
             }
 
             if (field.validatorsWhen) {
-              const baseValidators = this.buildValidators(field.validators);
+              const baseValidators = this.buildValidators(
+                field.validators,
+                field,
+              );
               const conditionalValidators = isVisible
-                ? this.buildValidators(field.validatorsWhen)
+                ? this.buildValidators(field.validatorsWhen, field)
                 : [];
               control.setValidators([
                 ...baseValidators,
@@ -51,6 +56,11 @@ export class FormService {
               ]);
               control.updateValueAndValidity();
             }
+          }
+          if (field.dependentFields) {
+            field.dependentFields.forEach((dependentFieldName: string) => {
+              this.setFieldVisibility(dependentFieldName, isVisible);
+            });
           }
         }
       });
@@ -64,12 +74,23 @@ export class FormService {
       section.subsections?.forEach((subsection: any) => {
         if (subsection.type === 'form-array') {
           group.addControl(subsection.name, this.fb.array([]));
+          if (subsection.initialGroups) {
+            for (let i = 0; i < subsection.initialGroups; i++) {
+              this.addGroup(group, subsection);
+            }
+          }
         } else {
           subsection.fields?.forEach((field: any) => {
-            const validators = this.buildValidators(field.validators);
+            const validators = this.buildValidators(field.validators, field);
+            let value = field.value ?? null;
+            let disabled = false;
+            if (field.type === 'toggle' && field.validators?.required) {
+              value = true;
+              disabled = true;
+            }
             group.addControl(
               field.name,
-              this.fb.control(field.value ?? null, validators),
+              this.fb.control({ value, disabled }, validators),
             );
           });
         }
@@ -79,14 +100,20 @@ export class FormService {
     return group;
   }
 
-  buildValidators(validators: any): ValidatorFn[] {
+  buildValidators(validators: any, field: any): ValidatorFn[] {
     const validatorFns: ValidatorFn[] = [];
     if (validators) {
       for (const key in validators) {
         const value = validators[key];
         switch (key) {
           case 'required':
-            if (value) validatorFns.push(Validators.required);
+            if (value) {
+              if (field.type === 'toggle') {
+                validatorFns.push(Validators.requiredTrue);
+              } else {
+                validatorFns.push(Validators.required);
+              }
+            }
             break;
           case 'requiredTrue':
             if (value) validatorFns.push(Validators.requiredTrue);
@@ -135,8 +162,10 @@ export class FormService {
     const group = this.fb.group({});
 
     subsection.formGroupTemplate.forEach((field: any) => {
-      const validators = this.buildValidators(field.validators);
-      const value = initialState ? initialState[field.name] : field.value ?? null;
+      const validators = this.buildValidators(field.validators, field);
+      const value = initialState
+        ? initialState[field.name]
+        : (field.value ?? null);
       group.addControl(field.name, this.fb.control(value, validators));
     });
 
@@ -169,13 +198,49 @@ export class FormService {
       if (!item) return;
 
       const hasConditionalVisibility = !!item.visibleWhen;
-      item._visible = !hasConditionalVisibility;
+      if (item.hidden) {
+        item._visible = false;
+      } else {
+        item._visible = !hasConditionalVisibility;
+      }
 
       const applyLogic = () => {
+        if (item.hidden) return;
         let isVisible = true;
         if (hasConditionalVisibility) {
           isVisible = false;
-          if (item.visibleWhen.or) {
+          if (item.visibleWhen.and) {
+            let allConditionsMet = true;
+            for (const condition of item.visibleWhen.and) {
+              if (condition.or) {
+                let orConditionMet = false;
+                for (const orCondition of condition.or) {
+                  const targetControl = form.get(orCondition.field);
+                  if (
+                    targetControl &&
+                    targetControl.value === orCondition.value
+                  ) {
+                    orConditionMet = true;
+                    break;
+                  }
+                }
+                if (!orConditionMet) {
+                  allConditionsMet = false;
+                  break;
+                }
+              } else {
+                const targetControl = form.get(condition.field);
+                if (!targetControl || targetControl.value !== condition.value) {
+                  allConditionsMet = false;
+                  break;
+                }
+              }
+            }
+            if (allConditionsMet) {
+              isVisible = true;
+            }
+          } else if (item.visibleWhen.or) {
+            isVisible = false; // Assume false until a condition is met
             for (const condition of item.visibleWhen.or) {
               const targetControl = form.get(condition.field);
               if (targetControl && targetControl.value === condition.value) {
@@ -186,10 +251,10 @@ export class FormService {
           } else {
             const targetControl = form.get(item.visibleWhen.field);
             if (targetControl) {
-              if (item.visibleWhen.value) {
+              if (item.visibleWhen.value !== undefined) {
                 isVisible = targetControl.value === item.visibleWhen.value;
               }
-              if (item.visibleWhen.notValue) {
+              if (item.visibleWhen.notValue !== undefined) {
                 isVisible = targetControl.value !== item.visibleWhen.notValue;
               }
             }
@@ -238,17 +303,37 @@ export class FormService {
           }
         }
 
+        if (!isSubsection && item.dependentFields) {
+          item.dependentFields.forEach((dependentFieldName: string) => {
+            this.setFieldVisibility(dependentFieldName, item._visible);
+          });
+        }
+
         if (!isSubsection && item.validatorsWhen) {
           const control = form.get(item.name);
           if (control) {
-            const baseValidators = this.buildValidators(item.validators);
+            const baseValidators = this.buildValidators(item.validators, item);
             const conditionalValidators = item._visible
-              ? this.buildValidators(item.validatorsWhen)
+              ? this.buildValidators(item.validatorsWhen, item)
               : [];
             control.setValidators([
               ...baseValidators,
               ...conditionalValidators,
             ]);
+            if (
+              item.type === 'toggle' &&
+              item.validatorsWhen.required &&
+              item._visible
+            ) {
+              control.setValue(true);
+              control.disable();
+            } else if (
+              item.type === 'toggle' &&
+              item.validatorsWhen.required &&
+              !item._visible
+            ) {
+              control.enable();
+            }
             control.updateValueAndValidity();
           }
         }
@@ -256,7 +341,17 @@ export class FormService {
 
       const dependencies = new Set<string>();
       if (hasConditionalVisibility) {
-        if (item.visibleWhen.or) {
+        if (item.visibleWhen.and) {
+          item.visibleWhen.and.forEach((condition: any) => {
+            if (condition.or) {
+              condition.or.forEach((orCondition: any) => {
+                dependencies.add(orCondition.field);
+              });
+            } else {
+              dependencies.add(condition.field);
+            }
+          });
+        } else if (item.visibleWhen.or) {
           item.visibleWhen.or.forEach((condition: any) =>
             dependencies.add(condition.field),
           );
@@ -266,7 +361,17 @@ export class FormService {
       }
       if (!isSubsection && item.validatorsWhen) {
         if (item.visibleWhen) {
-          if (item.visibleWhen.or) {
+          if (item.visibleWhen.and) {
+            item.visibleWhen.and.forEach((condition: any) => {
+              if (condition.or) {
+                condition.or.forEach((orCondition: any) => {
+                  dependencies.add(orCondition.field);
+                });
+              } else {
+                dependencies.add(condition.field);
+              }
+            });
+          } else if (item.visibleWhen.or) {
             item.visibleWhen.or.forEach((condition: any) =>
               dependencies.add(condition.field),
             );
@@ -317,4 +422,5 @@ export class FormService {
       });
     });
   }
+
 }

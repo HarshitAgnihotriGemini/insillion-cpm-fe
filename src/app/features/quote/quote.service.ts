@@ -291,6 +291,25 @@ export class QuoteService {
       }
       if (res?.data && res?.status == 0) {
         this.premiumCalcRes = this.premiumCalcResService.adapt(res);
+
+        this.formService.setFieldVisibility(
+          'GPA',
+          this.premiumCalcRes?.settings_gpa_required?.toLowerCase() == 'yes',
+        );
+        if (this.premiumCalcRes?.policy_addon?.[0]?.addon_marine_premium) {
+          this.quoteFormService.form.controls['addon_marine_premium'].setValue(
+            this.premiumCalcRes?.policy_addon?.[0]?.addon_marine_premium,
+          );
+          this.formService.setFieldVisibility('addon_marine_premium', true);
+        }
+        this.formService.setFieldVisibility(
+          'Marine',
+          this.premiumCalcRes?.marine_required?.toLowerCase() == 'yes',
+        );
+        this.quoteFormService.form.controls['marine_selection'].setValue(
+          'All Risk',
+        );
+
         const propositionControl =
           this.quoteFormService.form.controls['proposition'];
         if (
