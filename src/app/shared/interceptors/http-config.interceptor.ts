@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   HttpRequest,
   HttpHandler,
@@ -9,9 +9,13 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ApiService } from '../services/api.service';
+import { ErrorPopupService } from '../services/error-popup.service';
 @Injectable()
 export class HttpConfigInterceptor implements HttpInterceptor {
   csmApiList = ['master_data/fetchchannel'];
+  readonly errorPopup = inject(ErrorPopupService);
+  readonly apiService = inject(ApiService)
   constructor() {}
 
   intercept(
@@ -44,6 +48,8 @@ export class HttpConfigInterceptor implements HttpInterceptor {
             // API error handling on status
             if (data.status) {
               if (data.status == -114 || data.status == -106) {
+                this.errorPopup.showProfileErrorPopup("Your access token is no longer valid. Please log in again.")
+                window.location.href = this.apiService.domainUrl + 'login'
                 console.log('Session Expired logic');
               } else if (
                 data.status == 0 ||

@@ -24,6 +24,7 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
+              "src/favicon.ico",
               {
                 "glob": "**/*",
                 "input": "public",
@@ -31,7 +32,7 @@
               },
               "src/assets"
             ],
-            "styles": ["src/styles.scss"],
+            "styles": ["node_modules/ngx-spinner/animations/ball-scale-multiple.css","src/styles.scss"],
             "sourceMap": true,
             "scripts": [],
             "allowedCommonJsDependencies": ["moment"]
@@ -149,12 +150,13 @@
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
+              "src/favicon.ico",
               {
                 "glob": "**/*",
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss"],
+            "styles": ["node_modules/ngx-spinner/animations/ball-scale-multiple.css","src/styles.scss"],
             "scripts": []
           }
         },

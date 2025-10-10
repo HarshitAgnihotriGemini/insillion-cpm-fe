@@ -43,9 +43,10 @@
       >
         <span
           *ngIf="isGettingPremium"
-          class="spinner-border spinner-border-sm"
           aria-hidden="true"
-        ></span>
+        >
+        <img [src]="this.imgPath + 'images/Loader.svg'" alt="Loading..." class="spinner-icon">
+        </span>
         <span>Get Premium</span>
       </button>
     </div>
