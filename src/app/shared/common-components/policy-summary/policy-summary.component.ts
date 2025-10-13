@@ -20,7 +20,7 @@ export class PolicySummaryComponent {
   }
 
   shouldShowField(field: any): boolean {
-    if (!field.visibleWhen) {
+    if (!field.visibleWhen ) {
       return true;
     }
 
@@ -46,6 +46,23 @@ export class PolicySummaryComponent {
     }
 
     return false; // Default to not showing if condition is present but not met
+  }
+
+  getVisibleAddons(addons: any[]): any[] {
+    if (!addons) {
+      return [];
+    }
+    return addons.filter(addon => addon.location_addon_opted === 'Yes');
+  }
+
+  shouldShowSubField(field: any, item: any): boolean {
+    if (!field.visibleWhen) {
+      return true;
+    }
+
+    const condition = field.visibleWhen;
+    const dependencyValue = item[condition.field];
+    return dependencyValue === condition.value;
   }
 
   public objectKeys(obj: any): string[] {

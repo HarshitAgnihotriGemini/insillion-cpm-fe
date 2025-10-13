@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AbstractControl, FormGroup, ValidatorFn } from '@angular/forms';
 import moment from 'moment';
+import * as cpmQuote from '@app/shared/schemas/cpm-quote.json';
 
 @Injectable({
   providedIn: 'root',
@@ -251,5 +252,35 @@ export class UtilsService {
       });
     });
     return req;
+  }
+
+  createLocationAddons(formData: any, machineryList: any[]): any[] {
+    const locationAddons: any[] = [];
+    const addonConfigs = cpmQuote.offCanvasConfigs.fields;
+
+    machineryList.forEach((machinery: any) => {
+      addonConfigs.forEach((addonConfig: any) => {
+        const isOpted = formData[addonConfig.name + '_checked'] || false;
+        const addonGroupData = formData[addonConfig.name] || {};
+
+        const addonPayload: { [key: string]: any } = {
+          location1: machinery.location,
+          type_machinery1: machinery.type_machinery,
+          location_addon_name: addonConfig.label,
+          location_addon_opted: isOpted ? 'Yes' : 'No',
+          puid: 'r]kXsj',
+        };
+
+        if (addonConfig.subFields) {
+          addonConfig.subFields.forEach((subField: any) => {
+            addonPayload[subField.name] = addonGroupData[subField.name] || '';
+          });
+        }
+
+        locationAddons.push(addonPayload);
+      });
+    });
+
+    return locationAddons;
   }
 }

@@ -12,44 +12,77 @@
         {{ subsection.title }}
       </p>
 
-      <ng-container
-        *ngIf="subsection.type === 'form-array'; else standardFields"
-      >
-        <ng-container *ngFor="let item of dataRes?.data?.[subsection.name]; let i = index">
-          <div class="subsection-review">
-            <p class="text-sm font-semibold mb-4">
-              {{ subsection.title }} {{ i + 1 }}
-            </p>
-            <div class="row g-4 mb-4">
-              <ng-container *ngFor="let field of subsection.formGroupTemplate">
-                <div class="col-3 ps-0 text-sm">
-                  <div class="text-grey font-bold">
-                    {{ field.label }}
+      <ng-container [ngSwitch]="subsection.type">
+        <ng-container *ngSwitchCase="'form-array'">
+          <ng-container
+            *ngFor="let item of dataRes?.data?.[subsection.name]; let i = index"
+          >
+            <div class="subsection-review">
+              <p class="text-sm font-semibold mb-4">
+                {{ subsection.title }} {{ i + 1 }}
+              </p>
+              <div class="row g-4 mb-4">
+                <ng-container
+                  *ngFor="let field of subsection.formGroupTemplate"
+                >
+                  <div class="col-3 ps-0 text-sm">
+                    <div class="text-grey font-bold">{{ field.label }}</div>
+                    <div class="review-field-value">
+                      {{ item[field.name] || "-" }}
+                    </div>
                   </div>
-                  <div class="review-field-value">
-                    {{ item[field.name] || "-" }}
-                  </div>
-                </div>
-              </ng-container>
-            </div>
-          </div>
-        </ng-container>
-      </ng-container>
-
-      <ng-template #standardFields>
-        <div class="row g-4 mb-4">
-          <ng-container *ngFor="let field of subsection.fields">
-            <div *ngIf="shouldShowField(field)" class="col-3 ps-0 text-sm">
-              <div class="text-grey font-bold">
-                {{ field.label }}
-              </div>
-              <div class="review-field-value">
-                {{ dataRes?.data?.[field.name] || field.value || "-" }}
+                </ng-container>
               </div>
             </div>
           </ng-container>
-        </div>
-      </ng-template>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'addon-array'">
+          <ng-container
+            *ngFor="
+              let item of getVisibleAddons(dataRes?.data?.[subsection.name]);
+              let i = index
+            "
+          >
+            <div class="subsection-review">
+              <p class="text-sm font-semibold mb-2">
+                {{ item.location_addon_name }}
+              </p>
+              <div class="row g-4 mb-2">
+                <ng-container
+                  *ngFor="let field of subsection.formGroupTemplate"
+                >
+                  <div
+                    *ngIf="
+                      shouldShowSubField(field, item) &&
+                      field.name !== 'location_addon_name'
+                    "
+                    class="col-3 ps-0 text-sm"
+                  >
+                    <div class="text-grey font-bold">{{ field.label }}</div>
+                    <div class="review-field-value">
+                      {{ item[field.name] || "-" }}
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+
+        <ng-container *ngSwitchDefault>
+          <div class="row g-4 mb-4">
+            <ng-container *ngFor="let field of subsection.fields">
+              <div *ngIf="shouldShowField(field)" class="col-3 ps-0 text-sm">
+                <div class="text-grey font-bold">{{ field.label }}</div>
+                <div class="review-field-value">
+                  {{ dataRes?.data?.[field.name] || field.value || "-" }}
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
+      </ng-container>
     </div>
   </ng-container>
 </div>

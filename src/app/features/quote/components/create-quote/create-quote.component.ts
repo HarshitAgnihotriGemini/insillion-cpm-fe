@@ -169,10 +169,10 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
   }
 
   openCoverageOffcanvas(): void {
-    const offCanvasConfig = this.config.offCanvasConfigs.addCovers;
+    const offCanvasConfig = this.config.offCanvasConfigs;
     const offcanvasRef = this.offcanvasService.open(
       CoverageOffcanvasComponent,
-      { position: 'end', panelClass: 'offcanvas-width-40' },
+      { position: 'end', panelClass: 'offcanvas-width-50' },
     );
     offcanvasRef.componentInstance.config = offCanvasConfig;
   }
@@ -203,6 +203,8 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
       this.onProductChange(value);
     } else if (event.action === 'onFloaterStateChange') {
       this.onFloaterStateChange(value);
+    } else if (event.action === 'onPackagePlanChange') {
+      this.onPackagePlanChange(value);
     }
   }
 
@@ -304,6 +306,10 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
     }
   }
 
+  onPackagePlanChange(value: string) {
+    this.formService.setFieldVisibility('addon_marine', value === 'Marine');
+  }
+
   async onTransactionTypeChange(transactionType: string) {
     if (!transactionType) return;
     const fieldKey = 'policy_transaction_type';
@@ -398,7 +404,7 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
   async getQuote() {
     this.isGettingPremium = true;
     try {
-      if (this.form.valid || true) {
+      if (this.form.valid) {
         await this.quoteService.premiumCalc();
         await this.quoteService.saveQuote();
         this.isBreakupVisible = true;

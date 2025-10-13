@@ -10,6 +10,8 @@ export class QuoteReqService implements Adapter<QuoteReq> {
   constructor(private readonly utilService: UtilsService) {}
 
   adapt(form: any, isFinalize = false): QuoteReq {
+    const formData = form?.formData || {};
+    const machineryList = formData.machinery || [];
     const quoteReq: QuoteReq = {
       ...form?.formData,
       quote_id: form?.quoteRes?.quoteId || '',
@@ -19,9 +21,13 @@ export class QuoteReqService implements Adapter<QuoteReq> {
       settings_user_type: sessionStorage.getItem('add_user_type') || '',
       branch_state: 'Tamilnadu', //
       branch_id: 'T3', //
-      proposition_internal_user: form?.formData?.proposition_name || '',
+      proposition_internal_user: form?.formData?.proposition_name || '', 
       clause_wordings: form?.premiumCalcRes?.clause_wordings || [],
       ...this.utilService.createReq(cpmQuote.sections, form?.formData),
+      location_addon: this.utilService.createLocationAddons(
+        formData,
+        machineryList,
+      ),
     };
 
     if (isFinalize) {

@@ -253,7 +253,7 @@ export class QuoteService {
       const url = this.api.url + 'quote';
       const body = this.quoteReqService.adapt(
         {
-          formData: this.quoteFormService.form.value,
+          formData: this.quoteFormService.form.getRawValue(),
           productId: this.api.productId,
           premiumCalcRes: this.premiumCalcRes,
           quoteRes: this.quoteRes,
@@ -284,7 +284,7 @@ export class QuoteService {
         this.api.url +
         `product/calc/${this.api.productId}?wf_id=32&type=premium_calc`;
       const body = this.premiumCalcReqService.adapt({
-        formData: this.quoteFormService.form.value,
+        formData: this.quoteFormService.form.getRawValue(),
         productId: this.api.productId,
         page_no: tag === 'imd_code' ? 0 : 1,
       });
@@ -308,13 +308,24 @@ export class QuoteService {
           this.formService.setFieldVisibility('addon_marine_premium', true);
         }
         this.formService.setFieldVisibility(
-          'Marine',
+          'addon_marine',
           this.premiumCalcRes?.marine_required?.toLowerCase() == 'yes',
         );
+        if (this.premiumCalcRes?.marine_required?.toLowerCase() == 'yes') {
+          this.quoteFormService.form.controls['addon_marine'].setValue(true);
+          this.quoteFormService.form.controls['addon_marine'].disable();
+        }
+        if (this.premiumCalcRes.iscreater == 0) {
+          this.quoteFormService.form.controls['marine_selection'].disable();
+        }
+
         this.quoteFormService.form.controls['marine_selection'].setValue(
           'All Risk',
         );
-
+        this.dynamicValidationService.updateRequiredStatus(
+          'marine_selection',
+          this.premiumCalcRes?.marine_required?.toLowerCase() == 'yes',
+        );
         const propositionControl =
           this.quoteFormService.form.controls['proposition'];
         if (

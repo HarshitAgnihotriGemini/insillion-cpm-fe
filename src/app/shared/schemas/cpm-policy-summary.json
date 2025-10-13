@@ -140,12 +140,64 @@
           ]
         },
         {
-          "title": "Coverage Options",
+          "title": "Addons/Covers",
           "fields": [
-            { "label": "Third Party Liability" },
-            { "label": "Customize SI" },
-            { "label": "Max SI Limit" },
-            { "label": "AOA ADY" }
+            {
+              "name": "addon_marine",
+              "label": "Marine"
+            },
+            {
+              "name": "marine_selection",
+              "label": "Coverage Type",
+              "visibleWhen": {
+                "or": [
+                  {
+                    "and": [
+                      { "field": "addon_marine", "value": true },
+                      { "field": "proposition", "value": "SF" }
+                    ]
+                  },
+                  {
+                    "and": [
+                      { "field": "addon_marine", "value": true },
+                      { "field": "proposition", "value": "AAR" }
+                    ]
+                  },
+                  {
+                    "and": [
+                      { "field": "addon_marine", "value": true },
+                      { "field": "proposition", "value": "Xperitus" }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "addon_marine_premium",
+              "label": "Addon Marine Premium"
+            },
+            {
+              "name": "GPA",
+              "label": "GPA"
+            }
+          ]
+        },
+        {
+          "title": "Coverage Options",
+          "type": "addon-array",
+          "name": "location_addon",
+          "formGroupTemplate": [
+            { "label": "Coverage Name", "name": "location_addon_name" },
+            { "label": "SI", "name": "addon_si" },
+            { "label": "Max SI Limit", "name": "maxSILimit" },
+            {
+              "label": "AOA ADY",
+              "name": "addon_aoaaoy",
+              "visibleWhen": {
+                "field": "location_addon_name",
+                "value": "Third Party Liability"
+              }
+            }
           ]
         },
         {

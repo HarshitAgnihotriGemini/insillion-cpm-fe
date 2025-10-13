@@ -621,7 +621,8 @@
               "name": "package_plan",
               "label": "Optional Cover",
               "optionsKey": "packagePlanOptions",
-              "placeholder": "Select optional cover"
+              "placeholder": "Select optional cover",
+              "events": [{ "name": "change", "action": "onPackagePlanChange" }]
             }
           ],
           "actions": [
@@ -695,7 +696,6 @@
               "type": "toggle",
               "name": "GPA",
               "label": "GPA",
-              "validatorsWhen": { "required": true },
               "hidden": true
             }
           ]
@@ -729,6 +729,13 @@
           ]
         }
       ]
+    },
+    {
+      "title": "Attachments",
+      "isCollapsible": true,
+      "isExpandedByDefault": false,
+      "componentType": "attachments",
+      "addButtonLabel": "Add More"
     }
   ],
   "viewBreakup": {
@@ -742,117 +749,253 @@
     "total": "total_premium"
   },
   "offCanvasConfigs": {
-    "addCovers": {
-      "title": "Add Covers",
-      "searchPlaceholder": "Search Covers",
-      "doneButtonLabel": "Done",
-      "items": [
-        {
-          "name": "thirdPartyLiability",
-          "label": "Third Party Liability",
-          "checked": true,
-          "dependentFields": [
-            {
-              "type": "input",
-              "inputType": "text",
-              "name": "addon_si",
-              "label": "Customize SI",
-              "value": "25,00,000",
-              "placeholder": "Enter customize SI",
-              "validators": {
-                "required": true
-              },
-              "errors": {
-                "required": "Customize SI is required."
-              }
-            },
-            {
-              "type": "input",
-              "inputType": "text",
-              "name": "maxSILimit",
-              "label": "Max SI limit",
-              "value": "50,00,000",
-              "placeholder": "Enter cmax SI limit",
-              "validators": {
-                "required": true
-              },
-              "errors": {
-                "required": "Max SI limit is required."
-              }
-            },
-            {
-              "type": "select",
-              "name": "aoaAdy",
-              "label": "AOA ADY",
-              "placeholder": "Enter AOA ADY",
-              "value": null,
-              "options": [
-                {
-                  "id": "1:2",
-                  "name": "1:2"
-                }
-              ],
-              "validators": {
-                "required": true
-              },
-              "errors": {
-                "required": "AOA ADY is required."
-              }
-            }
-          ]
-        },
-        {
-          "name": "ownersSurroundingProperty",
-          "label": "Owners Surrounding Property",
-          "checked": false
-        },
-        {
-          "name": "airFreight",
-          "label": "Air Freight",
-          "checked": false
-        },
-        {
-          "name": "escalation",
-          "label": "Escalation",
-          "checked": false
-        },
-        {
-          "name": "additionalCustomDuty",
-          "label": "Additional Custom Duty",
-          "checked": false
-        },
-        {
-          "name": "expeditingExpenses",
-          "label": "Expediting Expenses",
-          "checked": false
-        },
-        {
-          "name": "removalOfDebris",
-          "label": "Removal of Debris",
-          "checked": false
-        },
-        {
-          "name": "dismantlingCover",
-          "label": "Dismantling Cover",
-          "checked": false
-        },
-        {
-          "name": "transitRisk",
-          "label": "Transit Risk",
-          "checked": false
-        },
-        {
-          "name": "expressFreight",
-          "label": "Express Freight",
-          "checked": false
-        },
-        {
-          "name": "mbCover",
-          "label": "MB Cover",
-          "checked": false
-        }
-      ]
-    }
+    "title": "Add Covers",
+    "searchPlaceholder": "Search Covers",
+    "doneButtonLabel": "Done",
+    "fields": [
+      {
+        "name": "thirdPartyLiability",
+        "label": "Third Party Liability",
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "addon_si",
+            "label": "Customize SI",
+            "placeholder": "Enter customize SI"
+          },
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "derived_add_si",
+            "label": "Max SI limit",
+            "placeholder": "Enter cmax SI limit",
+            "readonly": true
+          },
+          {
+            "type": "select",
+            "name": "addon_aoaaoy",
+            "label": "AOA AOY",
+            "placeholder": "Enter AOA AOY",
+            "options": ["1:1", "1:2", "1:3", "1:4"],
+            "value": "1:4"
+          }
+        ]
+      },
+      {
+        "name": "ownersSurroundingProperty",
+        "label": "Owners Surrounding Property",
+        "checked": false,
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "addon_si",
+            "label": "Customize SI",
+            "placeholder": "Enter customize SI"
+          },
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "derived_add_si",
+            "label": "Max SI limit",
+            "placeholder": "Enter cmax SI limit",
+            "readonly": true
+          }
+        ]
+      },
+      {
+        "name": "airFreight",
+        "label": "Air Freight",
+        "checked": false,
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "addon_si",
+            "label": "Customize SI",
+            "placeholder": "Enter customize SI"
+          },
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "derived_add_si",
+            "label": "Max SI limit",
+            "placeholder": "Enter cmax SI limit",
+            "readonly": true
+          }
+        ]
+      },
+      {
+        "name": "escalation",
+        "label": "Escalation",
+        "checked": false,
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "addon_si",
+            "label": "Customize SI",
+            "placeholder": "Enter customize SI"
+          },
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "derived_add_si",
+            "label": "Max SI limit",
+            "placeholder": "Enter cmax SI limit",
+            "readonly": true
+          }
+        ]
+      },
+      {
+        "name": "additionalCustomDuty",
+        "label": "Additional Custom Duty",
+        "checked": false,
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "addon_si",
+            "label": "Customize SI",
+            "placeholder": "Enter customize SI"
+          },
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "derived_add_si",
+            "label": "Max SI limit",
+            "placeholder": "Enter cmax SI limit",
+            "readonly": true
+          }
+        ]
+      },
+      {
+        "name": "expeditingExpenses",
+        "label": "Expediting Expenses",
+        "checked": false,
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "addon_si",
+            "label": "Customize SI",
+            "placeholder": "Enter customize SI"
+          },
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "derived_add_si",
+            "label": "Max SI limit",
+            "placeholder": "Enter cmax SI limit",
+            "readonly": true
+          }
+        ]
+      },
+      {
+        "name": "removalOfDebris",
+        "label": "Removal of Debris",
+        "checked": false,
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "addon_si",
+            "label": "Customize SI",
+            "placeholder": "Enter customize SI"
+          },
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "derived_add_si",
+            "label": "Max SI limit",
+            "placeholder": "Enter cmax SI limit",
+            "readonly": true
+          }
+        ]
+      },
+      {
+        "name": "dismantlingCover",
+        "label": "Dismantling Cover",
+        "checked": false,
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "addon_si",
+            "label": "Customize SI",
+            "placeholder": "Enter customize SI"
+          },
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "derived_add_si",
+            "label": "Max SI limit",
+            "placeholder": "Enter cmax SI limit",
+            "readonly": true
+          }
+        ]
+      },
+      {
+        "name": "transitRisk",
+        "label": "Transit Risk",
+        "checked": false,
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "addon_si",
+            "label": "Customize SI",
+            "placeholder": "Enter customize SI"
+          },
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "derived_add_si",
+            "label": "Max SI limit",
+            "placeholder": "Enter cmax SI limit",
+            "readonly": true
+          }
+        ]
+      },
+      {
+        "name": "expressFreight",
+        "label": "Express Freight",
+        "checked": false,
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "addon_si",
+            "label": "Customize SI",
+            "placeholder": "Enter customize SI"
+          },
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "derived_add_si",
+            "label": "Max SI limit",
+            "placeholder": "Enter cmax SI limit",
+            "readonly": true
+          }
+        ]
+      },
+      {
+        "name": "mbCover",
+        "label": "MB Cover",
+        "checked": false,
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "derived_add_si",
+            "label": "Max SI limit",
+            "placeholder": "Enter cmax SI limit",
+            "readonly": true
+          }
+        ]
+      }
+    ]
   },
   "modals": {
     "termsAndConditions": [

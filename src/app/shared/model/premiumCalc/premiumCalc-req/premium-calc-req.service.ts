@@ -11,21 +11,24 @@ export class PremiumCalcReqService implements Adapter<PremiumCalcReq> {
   constructor(private readonly utilService: UtilsService) {}
 
   adapt(form: any): PremiumCalcReq {
+    const formData = form?.formData || {};
+    const machineryList = formData.machinery || [];
     const premReq: PremiumCalcReq = {
       inputs: {
         wf_id: '32',
         product_id: form?.productId,
         product_lob: 'Engineering',
-        imd_code: form?.formData?.imd_code || '',
         ...(form?.page_no !== 0
           ? {
-              ...this.utilService.createReq(cpmQuote.sections, form?.formData),
+              ...this.utilService.createReq(cpmQuote.sections, formData),
+              location_addon: this.utilService.createLocationAddons(
+                formData,
+                machineryList,
+              ),
               pakage_code: 'EPM',
               settings_user_type: sessionStorage.getItem('add_user_type') || '',
               branch_state: 'Tamilnadu',
               branch_id: 'T3',
-              transaction_type: form?.formData?.policy_transaction_type || '',
-              proposition_internal_user: form?.formData?.proposition_name,
             }
           : {}),
       },
