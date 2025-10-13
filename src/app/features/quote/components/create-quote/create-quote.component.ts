@@ -217,11 +217,14 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
         const propositionRes =
           await this.quoteService.fetchPropositionData(imdValue);
 
-        this.form.controls['proposition_name'].setValue(
-          propositionRes?.data[0],
-        );
+        if (!onLoad) {
+          this.form.controls['proposition_name'].setValue(
+            propositionRes?.data[0],
+          );
+        }
         await this.onPropositionChange(
           this.form.controls['proposition_name'].value,
+          onLoad,
         );
       }
     } catch (error) {
@@ -231,14 +234,16 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
     }
   }
 
-  async onPropositionChange(propositionName: string) {
+  async onPropositionChange(propositionName: string, onLoad: boolean = false) {
     try {
       if (propositionName) {
         const transactionTypeRes =
           await this.quoteService.getTransactionTypes(propositionName);
-        this.form.controls['policy_transaction_type'].setValue(
-          transactionTypeRes[0],
-        );
+        if (!onLoad) {
+          this.form.controls['policy_transaction_type'].setValue(
+            transactionTypeRes[0],
+          );
+        }
         this.formService.setFieldVisibility(
           'marine_selection',
           propositionName == 'SF' ||
