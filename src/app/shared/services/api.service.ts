@@ -100,4 +100,29 @@ export class ApiService {
       throw new Error(err?.error || 'Server error');
     }
   }
+
+  /****  Common HTTP PDF Download Method****/
+  async httpPdfDownload(
+    url: string,
+    payload?: Record<string, any>,
+    pdfName?: string,
+  ): Promise<any> {
+    try {
+      let params = new HttpParams();
+      if (payload) {
+        params = new HttpParams({ fromObject: payload });
+      }
+
+      const response: any = await firstValueFrom(
+        this.http.get(url, { observe: 'response', params }),
+      );
+      const blob = new Blob([response['body']], { type: 'application/pdf' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = pdfName + '.pdf';
+      link.click();
+    } catch (err: any) {
+      throw new Error(err?.error || 'Server error');
+    }
+  }
 }

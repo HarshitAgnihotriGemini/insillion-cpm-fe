@@ -16,22 +16,26 @@
             Policy Summary | Quotation ID: AEP68203763
           </div>
           <div class="d-flex gap-3 align-items-center">
-            <img
-              [src]="imgPath + 'images/icon-policy-cloning.svg'"
-              alt="icon-copy"
-              class="cursor-pointer"
-              *ngIf="!isProposal"
-            />
+            <span (click)="quoteClone()">
+              <img
+                [src]="imgPath + 'images/icon-policy-cloning.svg'"
+                alt="icon-copy"
+                class="cursor-pointer"
+                *ngIf="!isProposal"
+              />
+            </span>
             <img
               [src]="imgPath + 'images/icon-policy-share.svg'"
               alt="icon-share"
               class="cursor-pointer"
             />
-            <img
-              [src]="imgPath + 'images/icon-policy-download.svg'"
-              alt="icon-download"
-              class="cursor-pointer"
-            />
+            <span (click)="downloadQuote()">
+              <img
+                [src]="imgPath + 'images/icon-policy-download.svg'"
+                alt="icon-download"
+                class="cursor-pointer"
+              />
+            </span>
           </div>
         </div>
         <div
@@ -62,16 +66,17 @@
     </div>
 
     <div class="d-flex align-items-center justify-content-end gap-3 mt-4">
-      <!-- <button
-        [ngClass]="'btn-' + config.ckycAction.type"
-        class="btn btn-md"
-        (click)="handleButtonClick(config.ckycAction)"
+      <button
+        type="button"
+        class="btn btn-outline btn-md"
+        (click)="quoteVersioning()"
       >
-        {{ config.ckycAction.label }}
-      </button> -->
+        <span>Quote Versioning</span>
+      </button>
       <button
         class="btn btn-primary btn-md px-5 d-flex align-items-center gap-2"
         (click)="redirect()"
+        *ngIf="isProposalAllow"
       >
         <span>Proceed To Proposal</span>
       </button>

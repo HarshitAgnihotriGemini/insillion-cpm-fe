@@ -10,6 +10,7 @@ export class QuoteResService implements Adapter<QuoteRes> {
 
   adapt(item: any): QuoteRes {
     const data = item?.quote?.data;
+    const qnstp = item?.qnstp;
     const quoteRes: QuoteRes = {
       data: data,
       policyId: item?.policy_id,
@@ -22,6 +23,7 @@ export class QuoteResService implements Adapter<QuoteRes> {
       nstp_flag: data?.nstp_flag === 'Yes',
       nstp_reason: data?.nstp_reason || '',
       clause_wordings: data?.clause_wordings || [],
+      nstp_status: qnstp?.nstp_status || '',
     };
     return quoteRes;
   }

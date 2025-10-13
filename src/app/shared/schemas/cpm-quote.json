@@ -350,6 +350,7 @@
               "name": "floater_state",
               "label": "State",
               "placeholder": "Select state",
+              "readonly": true,
               "errors": {
                 "required": "State is required."
               },
@@ -358,7 +359,8 @@
                 "value": "State"
               },
               "validatorsWhen": { "required": true },
-              "optionsKey": "stateOptions"
+              "optionsKey": "stateOptions",
+              "events": [{ "name": "change", "action": "onFloaterStateChange" }]
             },
             {
               "type": "input",
@@ -460,14 +462,13 @@
           "initialGroups": 1,
           "formGroupTemplate": [
             {
-              "type": "select",
+              "type": "input",
               "name": "location",
               "label": "Location",
-              "placeholder": "Select location",
+              "placeholder": "Enter location",
               "validators": {
                 "required": true
               },
-              "options": ["Pan India"],
               "errors": {
                 "required": "Location is required."
               }

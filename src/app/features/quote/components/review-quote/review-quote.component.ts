@@ -15,6 +15,7 @@ import { QuoteService } from '../../quote.service';
 import { FormGroup } from '@angular/forms';
 import { QuoteFormService } from '../../quote-form.service';
 import { Location } from '@angular/common';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-review-quote',
@@ -46,7 +47,8 @@ export class ReviewQuoteComponent implements OnInit {
     private readonly _route: ActivatedRoute,
     public readonly quoteService: QuoteService,
     private readonly quoteFormService: QuoteFormService,
-    private readonly location: Location
+    private readonly location: Location,
+    private readonly spinner: NgxSpinnerService,
   ) {
     this.imgPath = this.imgPath = `${this.apiService.commonPath}/assets/`;
   }
@@ -59,15 +61,26 @@ export class ReviewQuoteComponent implements OnInit {
     this.form = this.quoteFormService.initializeForm();
     this._route.params?.subscribe(async (params) => {
       try {
+        this.spinner.show();
         this.quoteService.setPolicyId = params?.['id'];
         if (this.quoteService.getPolicyId !== 'new') {
           await this.quoteService.getDetailByPolicyId();
         }
       } catch (error) {
         console.log('Error in Create quote: ' + error);
+      } finally {
+        this.spinner.hide();
       }
     });
   }
+
+  get isProposalAllow() {
+    return (
+      this.quoteService.quoteRes?.nstp_status === '' ||
+      this.quoteService.quoteRes?.nstp_status?.toLowerCase() === 'approved'
+    );
+  }
+
   redirect() {
     this.router.navigate([
       `/proposal/create-proposal/${this.quoteService.getPolicyId}`,
@@ -94,6 +107,30 @@ export class ReviewQuoteComponent implements OnInit {
     }
   }
   goBack() {
-    this.location.back(); 
+    this.location.back();
+  }
+
+  downloadQuote() {
+    try {
+      this.quoteService.downloadQuote();
+    } catch (err) {
+      console.error('Error in Download Functionality');
+    }
+  }
+
+  async quoteVersioning() {
+    try {
+      await this.quoteService.clone(false);
+    } catch (error) {
+      console.error('Error in quote Versioning: ', error);
+    }
+  }
+
+  async quoteClone() {
+    try {
+      await this.quoteService.clone();
+    } catch (error) {
+      console.error('Error in quote Versioning: ', error);
+    }
   }
 }

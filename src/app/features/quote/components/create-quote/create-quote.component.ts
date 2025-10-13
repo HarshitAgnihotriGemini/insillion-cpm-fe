@@ -57,13 +57,12 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
     private readonly toastr: ToastrService,
     private readonly formService: FormService,
     private readonly location: Location,
-    private readonly spinner: NgxSpinnerService
+    private readonly spinner: NgxSpinnerService,
   ) {
     this.imgPath = this.imgPath = `${this.apiService.commonPath}/assets/`;
   }
 
   ngOnInit(): void {
-    // this.spinner.show();
     this.config = cpmQuote;
     this.form = this.quoteFormService.initializeForm();
     this.config?.sections?.forEach((section: any) => {
@@ -71,12 +70,16 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
     });
     this._route.params?.subscribe(async (params) => {
       try {
+        this.spinner.show();
         this.quoteService.setPolicyId = params?.['id'];
         if (this.quoteService.getPolicyId !== 'new') {
           await this.quoteService.getDetailByPolicyId();
           this.populateForm();
           this.onProductChange(this.form.controls['product'].value);
-          await this.validateIntermediary(this.form.controls['imd_code'].value);
+          await this.validateIntermediary(
+            this.form.controls['imd_code'].value,
+            true,
+          );
         }
         await this.fetchBranchListAsync();
         this.postQuote$ = this.form?.valueChanges
@@ -91,6 +94,8 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
           });
       } catch (error) {
         console.log('Error in Create quote: ' + error);
+      } finally {
+        this.spinner.hide();
       }
     });
   }
@@ -196,15 +201,19 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
       this.onFloaterCoverageWithinChange(value);
     } else if (event.action === 'onProductChange') {
       this.onProductChange(value);
+    } else if (event.action === 'onFloaterStateChange') {
+      this.onFloaterStateChange(value);
     }
   }
 
-  async validateIntermediary(imdValue: string) {
+  async validateIntermediary(imdValue: string, onLoad: boolean = false) {
     const fieldKey = 'imd_code';
     this.loaderService.showLoader(fieldKey);
     try {
       if (imdValue) {
-        await this.quoteService.premiumCalc(fieldKey);
+        if (!onLoad) {
+          await this.quoteService.premiumCalc(fieldKey);
+        }
         const propositionRes =
           await this.quoteService.fetchPropositionData(imdValue);
 
@@ -365,7 +374,14 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
     try {
       await this.quoteService.premiumCalc();
       if (floaterCoverageWithin.toLowerCase() == 'state') {
+        const machineryArray = this.form.get('machinery') as FormArray;
+        const firstItem = machineryArray.at(0) as FormGroup;
+        firstItem.get('location')?.setValue('');
         await this.quoteService.fetchStates();
+      } else {
+        const machineryArray = this.form.get('machinery') as FormArray;
+        const firstItem = machineryArray.at(0) as FormGroup;
+        firstItem.get('location')?.setValue('Pan India');
       }
     } catch (error) {
       console.error('Error in get quote:', error);
@@ -394,11 +410,14 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
 
   async finalizeProposal() {
     try {
+      this.spinner.show();
       await this.quoteService.saveQuote(true);
       this.redirect();
     } catch (error) {
       console.error('Error finalizing proposal:', error);
       this.toastr.error('Error finalizing proposal');
+    } finally {
+      this.spinner.hide();
     }
   }
 
@@ -411,6 +430,12 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
     );
   }
   goBack() {
-    this.location.back(); 
+    this.location.back();
+  }
+
+  onFloaterStateChange(val: string) {
+    const machineryArray = this.form.get('machinery') as FormArray;
+    const firstItem = machineryArray.at(0) as FormGroup;
+    firstItem.get('location')?.setValue(val);
   }
 }

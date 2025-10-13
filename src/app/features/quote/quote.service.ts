@@ -15,6 +15,7 @@ import moment from 'moment';
 import { FormArray, FormGroup, Validators } from '@angular/forms';
 import { UtilsService } from '@app/shared/utils/utils.service';
 import { DynamicValidationService } from '@app/shared/services/dynamic-validation.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -25,6 +26,7 @@ export class QuoteService {
   public premiumCalcRes!: PremiumCalcRes;
 
   constructor(
+    private readonly router: Router,
     private readonly quoteFormService: QuoteFormService,
     private readonly api: ApiService,
     private readonly dynamicOptionsService: DynamicOptionsService,
@@ -448,6 +450,39 @@ export class QuoteService {
       }
       return res;
     } catch (error) {
+      throw error;
+    }
+  }
+
+  async downloadQuote() {
+    try {
+      const url =
+        this.api.url +
+        `quote/data/${this.quoteRes?.quoteId}/quote.pdf/quote.pdf`;
+      await this.api.httpGetMethod(url, { download: 1 });
+    } catch (error) {
+      console.error('Error in Download API: ', error);
+    }
+  }
+
+  async clone(isClone: boolean = true) {
+    try {
+      const url = this.api.url + 'quote/clone';
+      const payload = {
+        quote_id: this.quoteRes?.quoteId || '',
+        no_version: isClone ? '1' : '',
+        master_policy_no: '',
+      };
+      const res = await this.api.httpPostMethod(url, payload);
+      if (res?.['data']?.[0]) {
+        this.quoteRes = this.quoteResService.adapt(res?.['data']?.[0]);
+        this.setPolicyId = this.quoteRes?.policyId;
+        this.router.navigate([`/quote/create-quote/${this.getPolicyId}`]);
+      } else {
+        throw new Error('Error in quote API!!!');
+      }
+    } catch (error) {
+      console.log('Error in Clone API');
       throw error;
     }
   }

@@ -10,4 +10,5 @@ export interface QuoteRes {
   nstp_flag: boolean;
   nstp_reason: string;
   clause_wordings: any;
+  nstp_status: string;
 }
