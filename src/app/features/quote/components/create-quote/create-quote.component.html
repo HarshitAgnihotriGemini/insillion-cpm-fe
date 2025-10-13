@@ -1,7 +1,12 @@
 <div class="page-layout" *ngIf="config">
   <div class="page-content">
     <app-breadcrumb [items]="config.breadCrumbs"></app-breadcrumb>
-    <div class="page-title">{{ config.title }}</div>
+    <div class="page-title">
+      <button class="icon-btn" (click)="goBack()">
+           <img class="icon" [src]="this.imgPath + 'icons/back-icon.png'" alt="Back" />
+      </button>
+      <span>{{ config.title }}</span>
+    </div>
     <div *ngIf="form">
       <form [formGroup]="form">
         <app-section

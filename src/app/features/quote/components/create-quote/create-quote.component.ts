@@ -19,6 +19,7 @@ import { ViewBreakupComponent } from '@app/shared/common-components/view-breakup
 import { REVIEW_QUOTE } from '@app/shared/constants/routes';
 import { ToastrService } from 'ngx-toastr';
 import { FormService } from '@app/shared/services/form.service';
+import { Location } from '@angular/common';
 
 @Component({
   standalone: true,
@@ -54,6 +55,7 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
     private readonly loaderService: LoaderService,
     private readonly toastr: ToastrService,
     private readonly formService: FormService,
+    private readonly location: Location
   ) {
     this.imgPath = this.imgPath = `${this.apiService.commonPath}/assets/`;
   }
@@ -372,7 +374,7 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
   async getQuote() {
     this.isGettingPremium = true;
     try {
-      if (this.form.valid) {
+      if (this.form.valid || true) {
         await this.quoteService.premiumCalc();
         await this.quoteService.saveQuote();
         this.isBreakupVisible = true;
@@ -404,5 +406,8 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
         state: { isProposal: false },
       },
     );
+  }
+  goBack() {
+    this.location.back(); 
   }
 }

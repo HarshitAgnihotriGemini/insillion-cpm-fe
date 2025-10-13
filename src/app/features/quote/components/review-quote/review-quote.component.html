@@ -2,7 +2,12 @@
   <div class="page-content">
     <div *ngIf="config">
       <app-breadcrumb [items]="config.breadCrumbs"></app-breadcrumb>
-      <div class="page-title mb-4">{{ config.title }}</div>
+      <div class="page-title mb-4">
+        <button class="icon-btn" (click)="goBack()">
+           <img class="icon" [src]="this.imgPath + 'icons/back-icon.png'" alt="Back" />
+        </button>
+        <span>{{ config.title }}</span>
+      </div>
       <section class="section-card bg-light">
         <div
           class="card-header-grey d-flex justify-content-between align-items-center"

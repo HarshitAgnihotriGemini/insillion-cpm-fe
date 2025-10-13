@@ -14,6 +14,7 @@ import { ApiService } from '@app/shared/services/api.service';
 import { QuoteService } from '../../quote.service';
 import { FormGroup } from '@angular/forms';
 import { QuoteFormService } from '../../quote-form.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-review-quote',
@@ -45,6 +46,7 @@ export class ReviewQuoteComponent implements OnInit {
     private readonly _route: ActivatedRoute,
     public readonly quoteService: QuoteService,
     private readonly quoteFormService: QuoteFormService,
+    private readonly location: Location
   ) {
     this.imgPath = this.imgPath = `${this.apiService.commonPath}/assets/`;
   }
@@ -90,5 +92,8 @@ export class ReviewQuoteComponent implements OnInit {
     if (field.action === 'ckycOffCanvas') {
       this.openCKycOffcanvas();
     }
+  }
+  goBack() {
+    this.location.back(); 
   }
 }

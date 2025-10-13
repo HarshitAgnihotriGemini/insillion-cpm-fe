@@ -8,6 +8,8 @@ import * as cpmProposal from '@app/shared/schemas/cpm-proposal.json';
 import { CommonModule } from '@angular/common';
 import { ProposalFormService } from '../../proposal-form.service';
 import { ProposalService } from '../../proposal.service';
+import { Location } from '@angular/common';
+import { ApiService } from '@app/shared/services/api.service';
 
 @Component({
   selector: 'app-create-proposal',
@@ -26,12 +28,17 @@ export class CreateProposalComponent implements OnInit {
   config: any;
   form!: FormGroup;
   sectionState = new Map<string, boolean>();
+  imgPath: string
 
   constructor(
     private readonly proposalFormService: ProposalFormService,
     private readonly proposalService: ProposalService,
     private readonly router: Router,
-  ) {}
+    private readonly location: Location,
+    private readonly apiService: ApiService
+  ) {
+    this.imgPath = this.imgPath = `${this.apiService.commonPath}/assets/`;
+  }
 
   ngOnInit(): void {
     this.config = cpmProposal;
@@ -45,5 +52,8 @@ export class CreateProposalComponent implements OnInit {
     this.router.navigate(['cpm-review'], {
       state: { isProposal: true },
     });
+  }
+  goBack() {
+    this.location.back(); 
   }
 }

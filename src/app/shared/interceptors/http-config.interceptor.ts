@@ -48,8 +48,7 @@ export class HttpConfigInterceptor implements HttpInterceptor {
             // API error handling on status
             if (data.status) {
               if (data.status == -114 || data.status == -106) {
-                this.errorPopup.showProfileErrorPopup("Your access token is no longer valid. Please log in again.")
-                window.location.href = this.apiService.domainUrl + 'login'
+                this.errorPopup.showErrorPopup("Your access token is no longer valid. Please log in again.")
                 console.log('Session Expired logic');
               } else if (
                 data.status == 0 ||

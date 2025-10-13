@@ -14,16 +14,15 @@ export class ErrorPopupService {
 
   private closeAndNavigateToLogin(): void {
     Swal.close();
-    this.router.navigate(['/login']);
+    window.location.href = this.apiservice.domain + 'login'
   }
 
-  public showProfileErrorPopup(message: string): void {
+  public showErrorPopup(message: string): void {
     const swalOptions: SweetAlertOptions = {
       html: `
         <div class="custom-popup">
           <div class="custom-popup-header">
             <span>Failed!</span>
-            <button class="close-btn" data-action="close">&times;</button> 
           </div>
           <div class="custom-popup-body">
             <img src=${this.imageUrl + '/assets/images/error_popup.svg'} class="error-icon" /> 
@@ -39,22 +38,15 @@ export class ErrorPopupService {
       customClass: {
         popup: 'no-padding-popup',
       },
-      // Logic to attach the click listener to the 'Okay' button in the popup
+      allowOutsideClick: () => {
+        this.closeAndNavigateToLogin();
+        return false;
+      },
       didOpen: (popup) => {
         popup
           .querySelector('.outline-btn')
           ?.addEventListener('click', () => this.closeAndNavigateToLogin());
-        
-        // Also ensure the custom close button works
-        popup
-          .querySelector('.close-btn')
-          ?.addEventListener('click', () => this.closeAndNavigateToLogin());
       },
-      // Logic for when the SweetAlert is closed by other means (e.g., escape key)
-      willClose: () => {
-        // Optional: you might want to navigate on any close, or only on button clicks
-        // this.closeAndNavigateToLogin();
-      }
     };
 
     Swal.fire(swalOptions);
