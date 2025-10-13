@@ -20,6 +20,7 @@ import { REVIEW_QUOTE } from '@app/shared/constants/routes';
 import { ToastrService } from 'ngx-toastr';
 import { FormService } from '@app/shared/services/form.service';
 import { Location } from '@angular/common';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   standalone: true,
@@ -55,12 +56,14 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
     private readonly loaderService: LoaderService,
     private readonly toastr: ToastrService,
     private readonly formService: FormService,
-    private readonly location: Location
+    private readonly location: Location,
+    private readonly spinner: NgxSpinnerService
   ) {
     this.imgPath = this.imgPath = `${this.apiService.commonPath}/assets/`;
   }
 
   ngOnInit(): void {
+    // this.spinner.show();
     this.config = cpmQuote;
     this.form = this.quoteFormService.initializeForm();
     this.config?.sections?.forEach((section: any) => {
