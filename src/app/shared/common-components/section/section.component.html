@@ -30,7 +30,7 @@
                 *ngIf="subsection.type === 'form-array'; else standardSection"
               >
                 <p
-                  class="text-base text-blue-secondary font-semibold mb-lg"
+                  class="text-base text-blue-secondary font-semibold mb-2"
                   *ngIf="subsection.title"
                 >
                   {{ subsection.title }}
@@ -102,7 +102,7 @@
               </ng-container>
               <ng-template #standardSection
                 ><p
-                  class="text-base text-blue-secondary font-semibold mb-lg"
+                  class="text-base text-blue-secondary font-semibold mb-4"
                   *ngIf="subsection.title"
                 >
                   {{ subsection.title }}

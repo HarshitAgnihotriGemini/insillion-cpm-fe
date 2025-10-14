@@ -168,17 +168,22 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
     });
   }
 
-  openCoverageOffcanvas(): void {
-    const offCanvasConfig = this.config.offCanvasConfigs;
-    const offcanvasRef = this.offcanvasService.open(
-      CoverageOffcanvasComponent,
-      { position: 'end', panelClass: 'offcanvas-width-50' },
-    );
-    offcanvasRef.componentInstance.config = offCanvasConfig;
+  async openCoverageOffcanvas(): Promise<void> {
+    try {
+      await this.quoteService.premiumCalc();
+      const offCanvasConfig = this.config.offCanvasConfigs;
+      const offcanvasRef = this.offcanvasService.open(
+        CoverageOffcanvasComponent,
+        { position: 'end', panelClass: 'offcanvas-width-50' },
+      );
+      offcanvasRef.componentInstance.config = offCanvasConfig;
+    } catch (error) {
+      this.toastr.error('Could not calculate premium. Please try again.');
+    }
   }
-  handleButtonClick(field: any): void {
+  async handleButtonClick(field: any): Promise<void> {
     if (field.action === 'addCovers') {
-      this.openCoverageOffcanvas();
+      await this.openCoverageOffcanvas();
     }
   }
 
@@ -252,6 +257,7 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
             propositionName == 'AAR' ||
             propositionName == 'Xperitus',
         );
+
         this.onTransactionTypeChange(
           this.form.controls['policy_transaction_type'].value,
         );
@@ -409,7 +415,30 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
         await this.quoteService.saveQuote();
         this.isBreakupVisible = true;
       } else {
-        this.toastr.error('Form is not valid');
+        const coverFieldNames = cpmQuote.offCanvasConfigs.fields.map(
+          (f: any) => f.name,
+        );
+        let isCoverInvalid = false;
+        for (const field of coverFieldNames) {
+          const control = this.form.get(field);
+          const checkedControl = this.form.get(field + '_checked');
+          if (
+            (control && control?.invalid) ||
+            (checkedControl && checkedControl?.invalid)
+          ) {
+            isCoverInvalid = true;
+            break;
+          }
+        }
+
+        if (isCoverInvalid) {
+          this.toastr.error(
+            'Please fill all mandatory details in the Covers section.',
+          );
+        } else {
+          this.toastr.error('Form is not valid');
+        }
+        this.form.markAllAsTouched();
         console.error('Form is invalid:', this.form);
       }
     } catch (error) {

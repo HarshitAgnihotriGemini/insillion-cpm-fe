@@ -350,7 +350,6 @@
               "name": "floater_state",
               "label": "State",
               "placeholder": "Select state",
-              "readonly": true,
               "errors": {
                 "required": "State is required."
               },
@@ -464,6 +463,7 @@
             {
               "type": "input",
               "name": "location",
+              "readonly": true,
               "label": "Location",
               "placeholder": "Enter location",
               "validators": {
@@ -631,7 +631,7 @@
               "label": "Add Covers",
               "name": "addCoversBtn",
               "action": "addCovers",
-              "iconPath": "https://harshitagnihotrigemini.github.io/insillion-common-styles-fe-harshit/assets/images/icon-add.svg"
+              "iconPath": "https://d2fciuteqrodiu.cloudfront.net/common-style/assets/images/icon-add.svg"
             }
           ]
         },
@@ -778,7 +778,10 @@
             "label": "AOA AOY",
             "placeholder": "Enter AOA AOY",
             "options": ["1:1", "1:2", "1:3", "1:4"],
-            "value": "1:4"
+            "value": "1:4",
+            "errors": {
+              "required": "AOA AOY is required."
+            }
           }
         ]
       },

@@ -17,6 +17,7 @@
         type="text"
         class="form-control"
         [placeholder]="config.searchPlaceholder"
+        (input)="searchCovers($event)"
       />
     </div>
     <div class="mt-3">
@@ -30,6 +31,7 @@
               [formControlName]="
                 item.subFields ? item.name + '_checked' : item.name
               "
+              (change)="onCoverageChange()"
             />
             <label class="text-sm" [for]="item.name">{{ item.label }}</label>
           </div>

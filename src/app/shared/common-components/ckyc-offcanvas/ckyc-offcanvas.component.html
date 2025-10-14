@@ -5,7 +5,7 @@
     <p>{{ config.title }}</p>
     <img
       class="cursor-pointer"
-      src="https://harshitagnihotrigemini.github.io/insillion-common-styles-fe-harshit/assets/images/icon-close.svg"
+      src="https://d2fciuteqrodiu.cloudfront.net/common-style/assets/images/icon-close.svg"
       alt="icon-close"
       (click)="offcanvasService.dismiss()"
     />
@@ -15,7 +15,7 @@
     <form [formGroup]="form">
       <div *ngFor="let section of config.sections" class="mb-4">
         <p
-          class="text-base text-blue-secondary font-semibold mb-lg"
+          class="text-base text-blue-secondary font-semibold mb-2"
           *ngIf="section.title"
         >
           {{ section.title }}
