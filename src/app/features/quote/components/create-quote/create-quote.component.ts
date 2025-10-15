@@ -214,6 +214,8 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
       this.onFloaterChange();
     } else if (event.action === 'onRiskLocationChange') {
       this.onRiskLocationChange(value);
+    } else if (event.action === 'onExistingPolicyNoChange') {
+      this.onExistingPolicyNoChange();
     }
   }
 
@@ -373,6 +375,18 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
       }
     } catch (error) {
       console.error('Error fetching location details:', error);
+    } finally {
+      this.loaderService.hideLoader(fieldKey);
+    }
+  }
+
+  async onExistingPolicyNoChange() {
+    const fieldKey = 'existing_policy';
+    this.loaderService.showLoader(fieldKey);
+    try {
+      await this.quoteService.premiumCalc(fieldKey);
+    } catch (error) {
+      console.error('Error in Existing Policy Number Change:', error);
     } finally {
       this.loaderService.hideLoader(fieldKey);
     }

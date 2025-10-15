@@ -22,7 +22,7 @@
             { "label": "Proposer Email", "name": "email" },
             {
               "label": "Existing Policy No",
-              "name": "existingPolicyNo",
+              "name": "existing_policy",
               "visibleWhen": {
                 "or": [
                   {
