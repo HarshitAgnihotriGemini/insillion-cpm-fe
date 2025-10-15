@@ -16,6 +16,7 @@ import { FormArray, FormGroup, Validators } from '@angular/forms';
 import { UtilsService } from '@app/shared/utils/utils.service';
 import { DynamicValidationService } from '@app/shared/services/dynamic-validation.service';
 import { Router } from '@angular/router';
+import { ErrorPopupService } from '@app/shared/services/error-popup.service';
 
 @Injectable({
   providedIn: 'root',
@@ -37,6 +38,7 @@ export class QuoteService {
     private readonly quoteResService: QuoteResService,
     private readonly formService: FormService,
     private readonly dynamicValidationService: DynamicValidationService,
+    private readonly errorPopup: ErrorPopupService,
   ) {}
 
   /*  Getter for policyId
@@ -51,6 +53,10 @@ export class QuoteService {
   */
   set setPolicyId(policyId: string) {
     this.policyId = policyId;
+  }
+
+  get settingsUserType() {
+    return sessionStorage.getItem('add_user_type') || '';
   }
 
   public async getDetailByPolicyId() {
@@ -76,7 +82,7 @@ export class QuoteService {
         imd_code: imdCode || '',
         channel: '',
         subchannel: '',
-        settings_user_type: 'Internal',
+        settings_user_type: this.settingsUserType,
         broker_name: '',
         branch: undefined,
         region: 'select',
@@ -130,7 +136,7 @@ export class QuoteService {
       const url = this.api.url + 'cpm/cpm_branches';
       //hardcode values added
       const body = {
-        settings_user_type: 'Internal',
+        settings_user_type: this.settingsUserType,
         region: 'select',
         skip: '/v1/rater/',
       };
@@ -239,6 +245,11 @@ export class QuoteService {
 
   async fetchStates() {
     try {
+      const currentOptions =
+        this.dynamicOptionsService.getCurrentOptions('stateOptions');
+      if (currentOptions && currentOptions.length > 0) {
+        return;
+      }
       const url = this.api.url + 'rater/lookup/floater_state';
       const res = await this.api.httpGetMethod(url);
       const options = res.data.map((item: any) => item?.state);
@@ -257,6 +268,7 @@ export class QuoteService {
           productId: this.api.productId,
           premiumCalcRes: this.premiumCalcRes,
           quoteRes: this.quoteRes,
+          settings_user_type: this.settingsUserType,
         },
         isFinalize,
       );
@@ -278,7 +290,7 @@ export class QuoteService {
     }
   }
 
-  async premiumCalc(tag?: string) {
+  async premiumCalc(tag?: string, isValidationCheck: boolean = false) {
     try {
       const url =
         this.api.url +
@@ -287,6 +299,7 @@ export class QuoteService {
         formData: this.quoteFormService.form.getRawValue(),
         productId: this.api.productId,
         page_no: tag === 'imd_code' ? 0 : 1,
+        settings_user_type: this.settingsUserType,
       });
       const res = await this.api.httpPostMethod(url, body);
       const form = this.quoteFormService.form;
@@ -296,6 +309,14 @@ export class QuoteService {
       }
       if (res?.data && res?.status == 0) {
         this.premiumCalcRes = this.premiumCalcResService.adapt(res);
+        if (isValidationCheck && this.premiumCalcRes?.errors?.length > 0) {
+          const errMsg = this.premiumCalcRes?.errors?.reduce(
+            (acc: string, curr: { msg: string }) => acc + (curr?.msg ?? ''),
+            '',
+          );
+          this.errorPopup.showErrorPopup(errMsg);
+          throw new Error('Validations in Premium Calc API: ', errMsg);
+        }
 
         this.formService.setFieldVisibility(
           'GPA',
@@ -494,6 +515,23 @@ export class QuoteService {
       }
     } catch (error) {
       console.log('Error in Clone API');
+      throw error;
+    }
+  }
+
+  async fetchExistingInsurers() {
+    try {
+      const currentOptions = this.dynamicOptionsService.getCurrentOptions(
+        'existingInsurerOptions',
+      );
+      if (currentOptions && currentOptions.length > 0) {
+        return;
+      }
+      const url = this.api.url + 'rater/lookup/prev_insurers';
+      const res = await this.api.httpGetMethod(url);
+      const options = res.data.map((item: any) => item?.insurer_name);
+      this.dynamicOptionsService.setOptions('existingInsurerOptions', options);
+    } catch (error: unknown) {
       throw error;
     }
   }

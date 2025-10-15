@@ -120,7 +120,7 @@
             {
               "type": "input",
               "inputType": "text",
-              "name": "existingPolicyNo",
+              "name": "existing_policy",
               "label": "Existing Policy No",
               "placeholder": "Enter existing policy number",
               "visibleWhen": {
@@ -135,7 +135,13 @@
                     "value": "Deviated Renewal"
                   }
                 ]
-              }
+              },
+              "errors": {
+                "required": "Existing Policy Number is required."
+              },
+              "events": [
+                { "name": "change", "action": "onExistingPolicyNoChange" }
+              ]
             },
             {
               "type": "select",
@@ -149,13 +155,18 @@
                     "value": "Market Renewal"
                   }
                 ]
+              },
+              "optionsKey": "existingInsurerOptions",
+              "errors": {
+                "required": "Existing Insurer is required"
               }
             },
             {
               "type": "select",
-              "name": "existingProduct",
+              "name": "existing_product",
               "label": "Existing Product",
               "placeholder": "CPM Base Cover",
+              "optionsKey": "productOptions",
               "visibleWhen": {
                 "or": [
                   {
@@ -164,6 +175,9 @@
                   },
                   { "field": "policy_transaction_type", "value": "RS Renewal" }
                 ]
+              },
+              "errors": {
+                "required": "Existing Product is required."
               }
             },
             {
@@ -180,7 +194,8 @@
                   },
                   { "field": "policy_transaction_type", "value": "RS Renewal" }
                 ]
-              }
+              },
+              "readonly": true
             },
             {
               "type": "input",
@@ -196,7 +211,8 @@
                   },
                   { "field": "policy_transaction_type", "value": "RS Renewal" }
                 ]
-              }
+              },
+              "readonly": true
             },
             {
               "type": "input",
@@ -212,7 +228,8 @@
                   },
                   { "field": "policy_transaction_type", "value": "RS Renewal" }
                 ]
-              }
+              },
+              "readonly": true
             },
             {
               "type": "datepicker",
@@ -232,7 +249,8 @@
                     "value": "Deviated Renewal"
                   }
                 ]
-              }
+              },
+              "readonly": true
             },
             {
               "type": "datepicker",
@@ -417,7 +435,8 @@
               "errors": {
                 "required": "Location is required."
               },
-              "optionsKey": "locationOptions"
+              "optionsKey": "locationOptions",
+              "events": [{ "name": "change", "action": "onRiskLocationChange" }]
             },
             {
               "type": "input",

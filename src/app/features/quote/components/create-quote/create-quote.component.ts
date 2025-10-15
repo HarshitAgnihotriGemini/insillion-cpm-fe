@@ -210,7 +210,25 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
       this.onFloaterStateChange(value);
     } else if (event.action === 'onPackagePlanChange') {
       this.onPackagePlanChange(value);
+    } else if (event.action === 'onFloaterChange') {
+      this.onFloaterChange();
+    } else if (event.action === 'onRiskLocationChange') {
+      this.onRiskLocationChange(value);
+    } else if (event.action === 'onExistingPolicyNoChange') {
+      this.onExistingPolicyNoChange();
     }
+  }
+
+  async onFloaterChange() {
+    const machineryArray = this.form.get('machinery') as FormArray;
+    const firstItem = machineryArray.at(0) as FormGroup;
+    firstItem.reset();
+  }
+
+  onRiskLocationChange(value: string) {
+    const machineryArray = this.form.get('machinery') as FormArray;
+    const firstItem = machineryArray.at(0) as FormGroup;
+    firstItem.get('location')?.setValue(value);
   }
 
   async validateIntermediary(imdValue: string, onLoad: boolean = false) {
@@ -336,6 +354,9 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
             ),
           ),
           from(this.quoteService.premiumCalc()),
+          ...(transactionType === 'Market Renewal'
+            ? [from(this.quoteService.fetchExistingInsurers())]
+            : []),
         ]),
       );
     } catch (error) {
@@ -354,6 +375,18 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
       }
     } catch (error) {
       console.error('Error fetching location details:', error);
+    } finally {
+      this.loaderService.hideLoader(fieldKey);
+    }
+  }
+
+  async onExistingPolicyNoChange() {
+    const fieldKey = 'existing_policy';
+    this.loaderService.showLoader(fieldKey);
+    try {
+      await this.quoteService.premiumCalc(fieldKey);
+    } catch (error) {
+      console.error('Error in Existing Policy Number Change:', error);
     } finally {
       this.loaderService.hideLoader(fieldKey);
     }
@@ -411,7 +444,7 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
     this.isGettingPremium = true;
     try {
       if (this.form.valid) {
-        await this.quoteService.premiumCalc();
+        await this.quoteService.premiumCalc(undefined, true);
         await this.quoteService.saveQuote();
         this.isBreakupVisible = true;
       } else {

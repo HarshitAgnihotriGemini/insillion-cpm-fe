@@ -26,4 +26,11 @@ export class DynamicOptionsService {
     }
     this.optionsSources[key].next(options);
   }
+
+  getCurrentOptions(key: string): any[] {
+    if (!this.optionsSources[key]) {
+      this.optionsSources[key] = new BehaviorSubject<any[]>([]);
+    }
+    return this.optionsSources[key].value;
+  }
 }

@@ -29,6 +29,7 @@ export class PremiumCalcResService implements Adapter<PremiumCalcRes> {
       marine_required: data?.cells?.marine_required,
       settings_gpa_required: data?.changed?.settings_gpa_required,
       policy_addon: data?.cells?.policy_addon,
+      errors: data?.errors || [],
     };
     return premiumCalcRes;
   }
