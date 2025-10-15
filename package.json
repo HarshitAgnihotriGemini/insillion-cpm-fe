@@ -4,11 +4,11 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 4202",
-    "build": "ng build --base-href",
-    "dev-build": "ng build --c dev",
-    "uat-build": "ng build --c uat",
-    "preprod-build": "ng build -c preprod",
-    "production-build": "ng build --c production",
+    "build": "ng build --base-href /cpm/",
+    "dev-build": "ng build --c dev --base-href /cpm/",
+    "uat-build": "ng build --c uat --base-href /cpm/",
+    "preprod-build": "ng build -c preprod --base-href /cpm/",
+    "production-build": "ng build --c production --base-href /cpm/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint"

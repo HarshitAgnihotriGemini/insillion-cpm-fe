@@ -37,16 +37,18 @@ export class ApiService {
   constructor(private readonly http: HttpClient) {
     const { host } = window.location;
 
-    if (host == 'localhost:4202') {
+    if (window.location.hostname == 'localhost') {
       this.environment = environment.environment;
-    } else if (host == 'ipds1.cloware.in') {
+    } else if (host == 'd2fciuteqrodiu.cloudfront.net') {
       this.environment = ENVIRONMENTS.DEV;
-    } else if (host == 'uatipds1.cloware.in') {
+    } else if (host == 'd2kdl49456fdj6.cloudfront.net') {
       this.environment = ENVIRONMENTS.UAT;
-    } else if (host == 'ipdsbeta1.tataaig.com') {
+    } else if (host == 'd2kdl49456fdj6.cloudfront.net') {
       this.environment = ENVIRONMENTS.PREPROD;
-    } else if (host == 'sellonline.tataaig.com') {
+    } else if (host == 'd2kdl49456fdj6.cloudfront.net') {
       this.environment = ENVIRONMENTS.PROD;
+    }else{
+      this.environment = environment.environment;
     }
 
     if (this.environment && this.configMap[this.environment]) {

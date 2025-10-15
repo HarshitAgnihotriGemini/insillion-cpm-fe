@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.scriptLoader.loadCommonElements(
       this.apiService.commonCssPath,
-      this.apiService.commonUtilityPath,
+      '',
     );
   }
 }

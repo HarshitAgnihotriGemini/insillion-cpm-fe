@@ -54,7 +54,12 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
+                  "maximumWarning": "30mb",
+                  "maximumError": "30mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "5mb",
                   "maximumError": "5mb"
                 }
               ]
@@ -71,7 +76,19 @@
               "outputHashing": "all",
               "sourceMap": false,
               "extractLicenses": true,
-              "namedChunks": false
+              "namedChunks": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "30mb",
+                  "maximumError": "30mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "5mb",
+                  "maximumError": "5mb"
+                }
+              ]
             },
             "uat": {
               "fileReplacements": [
@@ -83,6 +100,7 @@
               "outputHashing": "all",
               "namedChunks": false,
               "extractLicenses": true,
+              "sourceMap": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -106,6 +124,7 @@
               "outputHashing": "all",
               "namedChunks": false,
               "extractLicenses": true,
+              "sourceMap": true,
               "budgets": [
                 {
                   "type": "initial",
