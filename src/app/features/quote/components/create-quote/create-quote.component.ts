@@ -178,12 +178,12 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
       );
       offcanvasRef.componentInstance.config = offCanvasConfig;
     } catch (error) {
-      this.toastr.error('Could not calculate premium. Please try again.');
+      this.toastr.error('Could not calculate premium. Please try again.', 'Failure!');
     }
   }
   async handleButtonClick(field: any): Promise<void> {
     if (field.action === 'addCovers') {
-      await this.openCoverageOffcanvas();
+        await this.openCoverageOffcanvas();
     }
   }
 
@@ -467,9 +467,10 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
         if (isCoverInvalid) {
           this.toastr.error(
             'Please fill all mandatory details in the Covers section.',
+            'Failure!'
           );
         } else {
-          this.toastr.error('Form is not valid');
+          this.toastr.error('Form is not valid', 'Failure!');
         }
         this.form.markAllAsTouched();
         console.error('Form is invalid:', this.form);
@@ -488,7 +489,7 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
       this.redirect();
     } catch (error) {
       console.error('Error finalizing proposal:', error);
-      this.toastr.error('Error finalizing proposal');
+      this.toastr.error('Error finalizing proposal', 'Failure!');
     } finally {
       this.spinner.hide();
     }

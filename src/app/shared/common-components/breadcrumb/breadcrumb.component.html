@@ -1,8 +1,9 @@
 <nav class="breadcrumbs">
   <div class="breadcrumbs-item" *ngFor="let item of items">
     <a
-      [routerLink]="item.link"
+      (click)="redirect(item.link)"
       [ngClass]="{ current: item.isActive }"
+      [ngStyle]="{ 'cursor': item.isActive ? 'default' : 'pointer' }"
       class="crumb"
     >
       {{ item.title }}

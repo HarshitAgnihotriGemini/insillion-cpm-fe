@@ -1,8 +1,8 @@
 {
   "title": "Contractor Plant and Machinery",
   "breadCrumbs": [
-    { "title": "Dashboard", "link": "/dashboard" },
-    { "title": "Engineering", "link": "#" },
+    { "title": "Dashboard", "link": "/login/#/dashboard" },
+    { "title": "Engineering", "link": "/login/#/dashboard/engineering" },
     { "title": "New Quote", "link": "/cpm", "isActive": true }
   ],
   "sections": [

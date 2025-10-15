@@ -14,7 +14,7 @@ export class ErrorPopupService {
 
   private closeAndNavigateToLogin(): void {
     Swal.close();
-    window.location.href = this.apiservice.domain + 'login'
+    window.location.href = this.apiservice.domain + '/login'
   }
 
   public showErrorPopup(message: string): void {

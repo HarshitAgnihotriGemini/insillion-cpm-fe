@@ -1,7 +1,7 @@
 export const DEV_CONFIG = {
   url: 'https://commercial.royalsundaram.net/api/v1/',
   paymentUrl: '',
-  domain: 'https://d2fciuteqrodiu.cloudfront.net/',
+  domain: 'https://d2fciuteqrodiu.cloudfront.net',
   domainUrl: 'https://ipds1.cloware.in/api/v1/',
   productId: 'M000000000019',
   commonPath:
@@ -17,7 +17,7 @@ export const DEV_CONFIG = {
 export const UAT_CONFIG = {
   url: 'https://commercial.royalsundaram.net/api/v1/',
   paymentUrl: '',
-  domain: 'https://d2kdl49456fdj6.cloudfront.net/',
+  domain: 'https://d2kdl49456fdj6.cloudfront.net',
   domainUrl: 'https://uatipds1.cloware.in/api/v1/',
   productId: 'M000000000019',
   commonPath:
