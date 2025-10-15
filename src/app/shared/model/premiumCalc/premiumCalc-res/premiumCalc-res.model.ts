@@ -17,4 +17,5 @@ export interface PremiumCalcRes {
   marine_required: string;
   settings_gpa_required: string;
   policy_addon: [{ addon_marine_premium: string }];
+  errors: any;
 }

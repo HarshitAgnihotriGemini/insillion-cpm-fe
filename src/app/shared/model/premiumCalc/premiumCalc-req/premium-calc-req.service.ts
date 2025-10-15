@@ -26,7 +26,7 @@ export class PremiumCalcReqService implements Adapter<PremiumCalcReq> {
                 machineryList,
               ),
               pakage_code: 'EPM',
-              settings_user_type: sessionStorage.getItem('add_user_type') || '',
+              settings_user_type: form?.settings_user_type,
               branch_state: 'Tamilnadu',
               branch_id: 'T3',
             }

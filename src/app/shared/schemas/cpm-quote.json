@@ -413,7 +413,8 @@
               "errors": {
                 "required": "Location is required."
               },
-              "optionsKey": "locationOptions"
+              "optionsKey": "locationOptions",
+              "events": [{ "name": "change", "action": "onRiskLocationChange" }]
             },
             {
               "type": "input",

@@ -17,7 +17,7 @@ export class QuoteReqService implements Adapter<QuoteReq> {
       product_id: form?.productId,
       transaction_type: form?.formData?.policy_transaction_type || '',
       pakage_code: 'EPM', //
-      settings_user_type: sessionStorage.getItem('add_user_type') || '',
+      settings_user_type: form?.settings_user_type,
       branch_state: 'Tamilnadu', //
       branch_id: 'T3', //
       proposition_internal_user: form?.formData?.proposition_name || '',
