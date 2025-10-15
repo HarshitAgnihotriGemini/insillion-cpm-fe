@@ -352,6 +352,9 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
             ),
           ),
           from(this.quoteService.premiumCalc()),
+          ...(transactionType === 'Market Renewal'
+            ? [from(this.quoteService.fetchExistingInsurers())]
+            : []),
         ]),
       );
     } catch (error) {

@@ -518,4 +518,21 @@ export class QuoteService {
       throw error;
     }
   }
+
+  async fetchExistingInsurers() {
+    try {
+      const currentOptions = this.dynamicOptionsService.getCurrentOptions(
+        'existingInsurerOptions',
+      );
+      if (currentOptions && currentOptions.length > 0) {
+        return;
+      }
+      const url = this.api.url + 'rater/lookup/prev_insurers';
+      const res = await this.api.httpGetMethod(url);
+      const options = res.data.map((item: any) => item?.insurer_name);
+      this.dynamicOptionsService.setOptions('existingInsurerOptions', options);
+    } catch (error: unknown) {
+      throw error;
+    }
+  }
 }

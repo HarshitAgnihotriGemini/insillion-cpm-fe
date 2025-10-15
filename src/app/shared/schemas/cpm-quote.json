@@ -133,6 +133,9 @@
                     "value": "Deviated Renewal"
                   }
                 ]
+              },
+              "errors": {
+                "required": "Existing Policy Number is required."
               }
             },
             {
@@ -147,6 +150,10 @@
                     "value": "Market Renewal"
                   }
                 ]
+              },
+              "optionsKey": "existingInsurerOptions",
+              "errors": {
+                "required": "Existing Insurer is required"
               }
             },
             {
@@ -154,6 +161,7 @@
               "name": "existingProduct",
               "label": "Existing Product",
               "placeholder": "CPM Base Cover",
+              "optionsKey": "productOptions",
               "visibleWhen": {
                 "or": [
                   {
@@ -162,6 +170,9 @@
                   },
                   { "field": "policy_transaction_type", "value": "RS Renewal" }
                 ]
+              },
+              "errors": {
+                "required": "Existing Product is required."
               }
             },
             {
