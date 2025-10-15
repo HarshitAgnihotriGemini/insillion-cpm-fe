@@ -31,7 +31,6 @@ export class FormService {
             : subsection.fields || [];
         const field = fields.find((f: any) => f.name === fieldName);
         if (field) {
-          field.hidden = false;
           field._visible = isVisible;
           const control = this.form.get(fieldName);
           if (control) {
@@ -205,8 +204,7 @@ export class FormService {
       }
 
       const applyLogic = () => {
-        if (item.hidden) return;
-        let isVisible = true;
+        let isVisible = !item.hidden;
         if (hasConditionalVisibility) {
           isVisible = false;
           if (item.visibleWhen.and) {

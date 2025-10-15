@@ -10,7 +10,7 @@ import { ApiService } from '@app/shared/services/api.service';
 import { QuoteFormService } from '@app/features/quote/quote-form.service';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { QuoteService } from '@app/features/quote/quote.service';
-import { ErrorPopupService } from '@app/shared/services/error-popup.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-coverage-offcanvas',
@@ -29,7 +29,7 @@ export class CoverageOffcanvasComponent implements OnInit {
     private readonly apiService: ApiService,
     private readonly quoteFormService: QuoteFormService,
     private readonly quoteService: QuoteService,
-    private readonly errorPopupService: ErrorPopupService,
+    private readonly toastr: ToastrService,
   ) {
     this.imgPath = `${this.apiService.commonPath}/assets/`;
     this.form = this.quoteFormService.form;
@@ -47,7 +47,7 @@ export class CoverageOffcanvasComponent implements OnInit {
       await this.quoteService.premiumCalc();
       this.initPremiumCalcOnLoad();
     } catch (error: any) {
-      this.errorPopupService.showErrorPopup(error.message);
+      this.toastr.error('Could not calculate premium. Please try again.');
     }
   }
 

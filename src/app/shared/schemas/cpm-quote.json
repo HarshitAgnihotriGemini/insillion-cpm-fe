@@ -92,12 +92,14 @@
               "placeholder": "Enter customer contact number",
               "validators": {
                 "minLength": 10,
-                "maxLength": 10
+                "maxLength": 10,
+                "pattern": "MOBILE"
               },
               "mask": "PHONE",
               "errors": {
                 "minlength": "Invalid Customer Contact number",
-                "maxlength": "Invalid Customer Contact number"
+                "maxlength": "Invalid Customer Contact number",
+                "pattern": "Invalid Customer Contact number"
               }
             },
             {
@@ -379,6 +381,8 @@
           "title": "Risk Location",
           "type": "form-array",
           "name": "risk_location",
+          "isHideTitles": true,
+          "isHideRemoveButton": false,
           "addButtonLabel": "Add Risk Details",
           "limit": 1,
           "visibleWhen": {
@@ -458,6 +462,9 @@
           "name": "machinery",
           "addButtonLabel": "Add Machinery Details",
           "limit": 1,
+          "isHideAddButton": true,
+          "isHideTitles": true,
+          "isHideRemoveButton": true,
           "initialGroups": 1,
           "formGroupTemplate": [
             {
@@ -689,7 +696,6 @@
             {
               "type": "static",
               "name": "addon_marine_premium",
-              "value": "",
               "hidden": true
             },
             {
@@ -729,13 +735,6 @@
           ]
         }
       ]
-    },
-    {
-      "title": "Attachments",
-      "isCollapsible": true,
-      "isExpandedByDefault": false,
-      "componentType": "attachments",
-      "addButtonLabel": "Add More"
     }
   ],
   "viewBreakup": {
@@ -769,7 +768,7 @@
             "inputType": "text",
             "name": "derived_add_si",
             "label": "Max SI limit",
-            "placeholder": "Enter cmax SI limit",
+            "placeholder": "Enter Max SI limit",
             "readonly": true
           },
           {
@@ -802,7 +801,7 @@
             "inputType": "text",
             "name": "derived_add_si",
             "label": "Max SI limit",
-            "placeholder": "Enter cmax SI limit",
+            "placeholder": "Enter Max SI limit",
             "readonly": true
           }
         ]
@@ -824,7 +823,7 @@
             "inputType": "text",
             "name": "derived_add_si",
             "label": "Max SI limit",
-            "placeholder": "Enter cmax SI limit",
+            "placeholder": "Enter Max SI limit",
             "readonly": true
           }
         ]
@@ -846,7 +845,7 @@
             "inputType": "text",
             "name": "derived_add_si",
             "label": "Max SI limit",
-            "placeholder": "Enter cmax SI limit",
+            "placeholder": "Enter Max SI limit",
             "readonly": true
           }
         ]
@@ -868,7 +867,7 @@
             "inputType": "text",
             "name": "derived_add_si",
             "label": "Max SI limit",
-            "placeholder": "Enter cmax SI limit",
+            "placeholder": "Enter Max SI limit",
             "readonly": true
           }
         ]
@@ -890,7 +889,7 @@
             "inputType": "text",
             "name": "derived_add_si",
             "label": "Max SI limit",
-            "placeholder": "Enter cmax SI limit",
+            "placeholder": "Enter Max SI limit",
             "readonly": true
           }
         ]
@@ -912,7 +911,7 @@
             "inputType": "text",
             "name": "derived_add_si",
             "label": "Max SI limit",
-            "placeholder": "Enter cmax SI limit",
+            "placeholder": "Enter Max SI limit",
             "readonly": true
           }
         ]
@@ -934,7 +933,7 @@
             "inputType": "text",
             "name": "derived_add_si",
             "label": "Max SI limit",
-            "placeholder": "Enter cmax SI limit",
+            "placeholder": "Enter Max SI limit",
             "readonly": true
           }
         ]
@@ -956,7 +955,7 @@
             "inputType": "text",
             "name": "derived_add_si",
             "label": "Max SI limit",
-            "placeholder": "Enter cmax SI limit",
+            "placeholder": "Enter Max SI limit",
             "readonly": true
           }
         ]
@@ -978,7 +977,7 @@
             "inputType": "text",
             "name": "derived_add_si",
             "label": "Max SI limit",
-            "placeholder": "Enter cmax SI limit",
+            "placeholder": "Enter Max SI limit",
             "readonly": true
           }
         ]
@@ -993,7 +992,7 @@
             "inputType": "text",
             "name": "derived_add_si",
             "label": "Max SI limit",
-            "placeholder": "Enter cmax SI limit",
+            "placeholder": "Enter Max SI limit",
             "readonly": true
           }
         ]

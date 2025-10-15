@@ -25,7 +25,10 @@
         </div>
         <div *ngSwitchDefault>
           <ng-container *ngFor="let subsection of subsections">
-            <div *ngIf="subsection._visible && hasVisibleFields(subsection)" class="form-section">
+            <div
+              *ngIf="subsection._visible && hasVisibleFields(subsection)"
+              class="form-section"
+            >
               <ng-container
                 *ngIf="subsection.type === 'form-array'; else standardSection"
               >
@@ -45,17 +48,22 @@
                   >
                     <div [formGroup]="toFormGroup(group)" class="row gy-4 gx-5">
                       <div
-                        class="col-12 d-flex justify-content-between align-items-center p-0"
+                        class="col-12 d-flex justify-content-between align-items-center p-0 w-100"
+                        *ngIf="
+                          (subsection.title && !subsection.isHideTitles) ||
+                          !subsection.isHideRemoveButton
+                        "
                       >
                         <p
                           class="text-base text-primary font-semibold mb-md"
-                          *ngIf="subsection.title"
+                          *ngIf="subsection.title && !subsection.isHideTitles"
                         >
                           {{ subsection.title }} {{ i + 1 }}
                         </p>
                         <div
-                          class="d-inline-flex align-items-center text-red-200 text-base cursor-pointer"
+                          class="d-inline-flex align-items-center text-red-200 text-base cursor-pointer ms-auto"
                           (click)="removeGroup(subsection, i)"
+                          *ngIf="!subsection.isHideRemoveButton"
                         >
                           <img
                             [src]="imgPath + 'images/icon-remove.svg'"
@@ -71,7 +79,9 @@
                           <app-form-field
                             [field]="field"
                             [form]="toFormGroup(group)"
-                            [fieldKey]="subsection.name + '.' + i + '.' + field.name"
+                            [fieldKey]="
+                              subsection.name + '.' + i + '.' + field.name
+                            "
                             (buttonClick)="buttonClick.emit($event)"
                             (fieldEvent)="handleFieldEvent($event)"
                           >
@@ -81,14 +91,16 @@
                     </div>
                   </div>
                 </div>
-                <div class="mt-4 col-4 pe-4">
+                <div
+                  class="mt-4 col-4 pe-4"
+                  *ngIf="!subsection?.isHideAddButton"
+                >
                   <button
                     type="button"
                     class="btn btn-outline btn-md w-100"
                     (click)="addGroup(subsection)"
                     [disabled]="
-                      getFormArray(subsection.name).length >=
-                      subsection.limit
+                      getFormArray(subsection.name).length >= subsection.limit
                     "
                   >
                     <img
@@ -122,7 +134,7 @@
                     </div>
                   </ng-container>
                 </div>
-                <div *ngIf="subsection.actions" class="mt-4 row gx-5">
+                <div *ngIf="subsection.actions" class="row gx-5">
                   <div
                     *ngFor="let action of subsection.actions"
                     class="col-4 ps-0"
