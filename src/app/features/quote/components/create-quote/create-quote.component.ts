@@ -178,7 +178,10 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
       );
       offcanvasRef.componentInstance.config = offCanvasConfig;
     } catch (error) {
-      this.toastr.error('Could not calculate premium. Please try again.', 'Failure!');
+      this.toastr.error(
+        'Could not calculate premium. Please try again.',
+        'Failure!',
+      );
     }
   }
   async handleButtonClick(field: any): Promise<void> {
@@ -474,7 +477,7 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
         if (isCoverInvalid) {
           this.toastr.error(
             'Please fill all mandatory details in the Covers section.',
-            'Failure!'
+            'Failure!',
           );
         } else {
           this.toastr.error('Form is not valid', 'Failure!');
