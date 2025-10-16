@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiService } from '../services/api.service';
 import { ErrorPopupService } from '../services/error-popup.service';
+import Swal from 'sweetalert2';
 @Injectable()
 export class HttpConfigInterceptor implements HttpInterceptor {
   csmApiList = ['master_data/fetchchannel'];
@@ -48,7 +49,19 @@ export class HttpConfigInterceptor implements HttpInterceptor {
             // API error handling on status
             if (data.status) {
               if (data.status == -114 || data.status == -106) {
-                this.errorPopup.showErrorPopup("Your access token is no longer valid. Please log in again.")
+                Swal.fire({
+                  title: 'Failed!',
+                  text: 'Your access token is no longer valid. Please log in again.',
+                  imageUrl: `${this.apiService.commonPath}/assets/images/error_popup.svg`,
+                  confirmButtonColor: '#DC3545',
+                  confirmButtonText: 'OK',
+                  allowOutsideClick: false
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    console.log('OK clicked');
+                    window.location.href = this.apiService.domain + '/login'                  }
+                });
+
                 console.log('Session Expired logic');
               } else if (
                 data.status == 0 ||

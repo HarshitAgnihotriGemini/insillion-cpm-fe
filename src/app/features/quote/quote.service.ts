@@ -17,6 +17,7 @@ import { UtilsService } from '@app/shared/utils/utils.service';
 import { DynamicValidationService } from '@app/shared/services/dynamic-validation.service';
 import { Router } from '@angular/router';
 import { ErrorPopupService } from '@app/shared/services/error-popup.service';
+import Swal from 'sweetalert2';
 
 @Injectable({
   providedIn: 'root',
@@ -310,11 +311,21 @@ export class QuoteService {
       if (res?.data && res?.status == 0) {
         this.premiumCalcRes = this.premiumCalcResService.adapt(res);
         if (isValidationCheck && this.premiumCalcRes?.errors?.length > 0) {
-          const errMsg = this.premiumCalcRes?.errors?.reduce(
-            (acc: string, curr: { msg: string }) => acc + (curr?.msg ?? ''),
-            '',
-          );
-          this.errorPopup.showErrorPopup(errMsg);
+          const errors = this.premiumCalcRes?.errors ?? [];
+          const errMsg = errors
+                        ?.map((curr: { msg: string }) => `• ${curr?.msg ?? ''}`)
+                        .join('<br>');
+          const htmlContent = errors.length > 1
+                              ? `<div style="max-height: 7.8rem">${errMsg}</div>`
+                              : errMsg;
+          Swal.fire({
+            title: 'Failed!',
+            html: htmlContent,
+            imageUrl: `${this.api.commonPath}/assets/images/error_popup.svg`,
+            confirmButtonColor: '#DC3545',
+            confirmButtonText: 'OK',
+            allowOutsideClick: false
+          });
           throw new Error('Validations in Premium Calc API: ', errMsg);
         }
 
