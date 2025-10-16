@@ -175,7 +175,10 @@ export class FormFieldComponent implements OnInit, OnDestroy {
   }
 
   onButtonClick(): void {
-    this.buttonClick.emit(this.field);
+    this.buttonClick.emit({
+      ...this.field,
+      key: this.fieldKey,
+    });
   }
 
   handleDateChange(event: any): void {

@@ -182,8 +182,15 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
     }
   }
   async handleButtonClick(field: any): Promise<void> {
+    // The field object from form-field contains the fieldKey
+    const fieldKey = field.key;
     if (field.action === 'addCovers') {
+      this.loaderService.showLoader(fieldKey);
+      try {
         await this.openCoverageOffcanvas();
+      } finally {
+        this.loaderService.hideLoader(fieldKey);
+      }
     }
   }
 

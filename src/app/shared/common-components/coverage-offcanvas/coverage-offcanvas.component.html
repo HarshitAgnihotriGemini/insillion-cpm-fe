@@ -2,7 +2,15 @@
   <div
     class="bg-primary d-flex justify-content-between align-items-center text-white p-4 text-md"
   >
-    <p>{{ config.title }}</p>
+    <p>{{ config.title }}
+        <img 
+          *ngIf="showSpinner"
+          [src]="this.imgPath + 'images/Loader.svg'"  
+          alt="Loading..." 
+          style="position: static;"
+          class="spinner-icon"
+          >
+    </p>
     <img
       class="cursor-pointer"
       [src]="imgPath + 'images/icon-close.svg'"

@@ -24,6 +24,7 @@ export class CoverageOffcanvasComponent implements OnInit {
   form!: FormGroup;
   offcanvasService = inject(NgbOffcanvas);
   imgPath: string;
+  showSpinner: boolean = false
 
   constructor(
     private readonly apiService: ApiService,
@@ -44,10 +45,13 @@ export class CoverageOffcanvasComponent implements OnInit {
 
   async onCoverageChange() {
     try {
+      this.showSpinner = true;
       await this.quoteService.premiumCalc();
       this.initPremiumCalcOnLoad();
     } catch (error: any) {
       this.toastr.error('Could not calculate premium. Please try again.');
+    } finally{
+      this.showSpinner = false;
     }
   }
 
