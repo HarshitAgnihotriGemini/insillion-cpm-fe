@@ -46,7 +46,7 @@
                     "
                     class="form-array-group mb-lg"
                   >
-                    <div [formGroup]="toFormGroup(group)" class="row gy-4 gx-5">
+                    <div [formGroup]="toFormGroup(group)" class="row gx-5 gy-2">
                       <div
                         class="col-12 d-flex justify-content-between align-items-center p-0 w-100"
                         *ngIf="
@@ -87,6 +87,7 @@
                           >
                           </app-form-field>
                         </div>
+                        <div *ngIf="field.forceRow" class="w-100"></div>
                       </ng-container>
                     </div>
                   </div>
@@ -136,12 +137,13 @@
                       >
                       </app-form-field>
                     </div>
+                    <div *ngIf="field.forceRow" class="w-100"></div>
                   </ng-container>
                 </div>
                 <div *ngIf="subsection.actions" class="row gx-5">
                   <div
                     *ngFor="let action of subsection.actions"
-                    class="col-4 ps-0"
+                    class="ps-0 col-4"
                   >
                     <app-form-field
                       [field]="action"

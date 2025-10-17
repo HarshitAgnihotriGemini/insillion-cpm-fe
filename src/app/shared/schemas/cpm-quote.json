@@ -640,6 +640,144 @@
           ]
         },
         {
+          "title": "Claim Experience Details",
+          "fields": [
+            {
+              "type": "select",
+              "name": "claimExp",
+              "label": "Claim in past 48 months",
+              "placeholder": "Select claim in past 48 months",
+              "value": "No",
+              "options": ["Yes", "No"]
+            }
+          ]
+        },
+        {
+          "title": "Claim Exp",
+          "type": "form-array",
+          "name": "claim-exp",
+          "isHideTitles": true,
+          "isHideRemoveButton": false,
+          "addButtonLabel": "Add Claim Exp Details",
+          "limit": 1,
+          "visibleWhen": {
+            "field": "claimExp",
+            "value": "Yes"
+          },
+          "formGroupTemplate": [
+            {
+              "type": "select",
+              "name": "claimLocation",
+              "label": "Claim Location",
+              "forceRow": true,
+              "placeholder": "Select claim location",
+              "validators": {
+                "required": true
+              },
+              "errors": {
+                "required": "Claim location is required."
+              },
+              "optionsKey": "claimLocationOptions"
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "claim1Amount",
+              "label": "Claim 1 - amount",
+              "placeholder": "Enter claim 1 amount",
+              "mask": "NUMERIC"
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "year1",
+              "label": "Year 1",
+              "placeholder": "Enter year 1",
+              "mask": "YYYY"
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "claim1Premium",
+              "label": "Claim 1 - premium",
+              "placeholder": "Enter claim 1 premium",
+              "mask": "NUMERIC"
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "claim2Amount",
+              "label": "Claim 2 - amount",
+              "placeholder": "Enter claim 2 amount",
+              "mask": "NUMERIC"
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "year2",
+              "label": "Year 2",
+              "placeholder": "Enter year 2",
+              "mask": "YYYY"
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "claim2Premium",
+              "label": "Claim 2 - premium",
+              "placeholder": "Enter claim 2 premium",
+              "mask": "NUMERIC"
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "claim3Amount",
+              "label": "Claim 3 - amount",
+              "placeholder": "Enter claim 3 amount",
+              "mask": "NUMERIC"
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "year3",
+              "label": "Year 3",
+              "placeholder": "Enter year 3",
+              "mask": "YYYY"
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "claim3Premium",
+              "label": "Claim 3 - premium",
+              "placeholder": "Enter claim 3 premium",
+              "mask": "NUMERIC"
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "claim4Amount",
+              "label": "Claim 4 - amount",
+              "placeholder": "Enter claim 4 amount",
+              "mask": "NUMERIC"
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "year4",
+              "label": "Year 4",
+              "placeholder": "Enter year 4",
+              "mask": "YYYY"
+            },
+            {
+              "type": "input",
+              "inputType": "text",
+              "name": "claim4Premium",
+              "label": "Claim 4 - premium",
+              "placeholder": "Enter claim 4 premium",
+              "mask": "NUMERIC"
+            }
+          ]
+        },
+        {
           "title": "Coverage Options",
           "fields": [
             {

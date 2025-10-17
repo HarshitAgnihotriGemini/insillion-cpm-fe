@@ -37,12 +37,21 @@
 .form-control.loading {
   padding-right: 35px; /* Adjust based on loader width + spacing */
 }
-.icon-btn{
+.icon-btn {
   background: none;
   border: none;
   margin-left: -0.5rem;
 }
 
-.icon{
+.icon {
   height: 1.75rem;
+}
+
+ins-sidenav {
+  position: fixed !important;
+  z-index: 5;
+}
+
+.page-content {
+  margin-left: 5.55rem;
 }

@@ -85,14 +85,16 @@
 
       <div
         *ngSwitchCase="'datepicker'"
-        class="field-container input-icon icon-right icon-calendar"
+        class="field-container input-icon icon-right icon-calendar overflow-auto"
         [ngClass]="{ 'readonly-wrapper': field.readonly }"
+        [id]="field.name"
       >
         <input
           type="text"
           class="form-control"
           style="cursor: pointer"
           [class.loading]="loading$ | async"
+          [container]="field.name"
           [formControlName]="field.name"
           [placeholder]="field.placeholder || ''"
           bsDatepicker
