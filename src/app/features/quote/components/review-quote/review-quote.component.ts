@@ -12,10 +12,12 @@ import { ToastrService } from 'ngx-toastr';
 import * as cpmReview from '@app/shared/schemas/cpm-policy-summary.json';
 import { ApiService } from '@app/shared/services/api.service';
 import { QuoteService } from '../../quote.service';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { QuoteFormService } from '../../quote-form.service';
 import { Location } from '@angular/common';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { FormService } from '@app/shared/services/form.service';
+import { SectionComponent } from '@app/shared/common-components/section/section.component';
 
 @Component({
   selector: 'app-review-quote',
@@ -26,6 +28,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
     PolicySummaryComponent,
     AttachmentsReviewComponent,
     ViewBreakupComponent,
+    ReactiveFormsModule,
+    SectionComponent
   ],
   templateUrl: './review-quote.component.html',
   styleUrl: './review-quote.component.scss',
@@ -49,6 +53,7 @@ export class ReviewQuoteComponent implements OnInit {
     private readonly quoteFormService: QuoteFormService,
     private readonly location: Location,
     private readonly spinner: NgxSpinnerService,
+    private readonly formService: FormService,
   ) {
     this.imgPath = this.imgPath = `${this.apiService.commonPath}/assets/`;
   }
@@ -58,7 +63,9 @@ export class ReviewQuoteComponent implements OnInit {
       this.isProposal = true;
     }
     this.config = cpmReview;
-    this.form = this.quoteFormService.initializeForm();
+    // this.form = this.quoteFormService.initializeForm();
+    this.form = this.formService.createFormGroup(this.config.uw.sections);
+    this.formService.setupConditionalLogic(this.form, this.config.uw.sections);
     this._route.params?.subscribe(async (params) => {
       try {
         this.spinner.show();
@@ -132,5 +139,10 @@ export class ReviewQuoteComponent implements OnInit {
     } catch (error) {
       console.error('Error in quote Versioning: ', error);
     }
+  }
+
+  handleFieldEvent(event: { action: string; payload: any }) {
+    const { target, fieldKey } = event.payload;
+    const value = target.value;
   }
 }

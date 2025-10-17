@@ -230,6 +230,62 @@
     ],
     "total": "total_premium"
   },
+  "uw":{
+    "title": "Decision & Remarks",
+    "sections": [
+      {
+        "title": "Decision & Remarks",
+        "isCollapsible": false,
+        "isExpandedByDefault": true,
+        "subsections":[{
+          "title": "",
+          "fields": [
+            {
+              "type": "select",
+              "name": "uw_action",
+              "label": "UW Action",
+              "placeholder": "Select plan",
+              "options": ["Approve", "Rejected", "Send back to Sales", "Send back to group"],
+              "validators": {
+                "required": true
+              },
+              "errors": {
+                "required": "UW Action is required."
+              }
+            },
+            {
+              "type": "text-area",
+              "name": "uw_remarks",
+              "label": "UW Remarks",
+              "wrapperClass":"col-12",
+              "placeholder": "UW Remarks",
+              "validators": {
+                "required": true
+              },
+              "errors": {
+                "required": "UW Remarks is required."
+              }
+            }
+          ],
+          "actions": [
+            {
+              "type": "button",
+              "label": "Submit",
+              "name": "uwBtn"
+            }
+          ]
+        }
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "type": "button",
+        "label": "Submit",
+        "name": "uwBtn"
+      }
+    ]
+  },
   "ckycAction": {
     "label": "C-KYC Verification",
     "type": "outline",

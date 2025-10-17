@@ -41,6 +41,28 @@
       </div>
 
       <div
+        *ngSwitchCase="'text-area'"
+        class="field-container"
+        [ngClass]="{ 'readonly-wrapper': field.readonly }"
+      >
+        <textarea
+          [id]="field.name"
+          class="form-control"
+          [class.loading]="loading$ | async"
+          [formControlName]="field.name"
+          [placeholder]="field.placeholder || ''"
+          [class.error]="isInvalid"
+          [appEventHandler]="field"
+          (onEvent)="handleEvent($event)"
+          [ngClass]="{ readonly: field.readonly }"
+        ></textarea>
+
+        <span *ngIf="loading$ | async">
+          <img [src]="loaderURL" alt="Loading..." class="spinner-icon" />
+        </span>
+      </div>
+
+      <div
         *ngSwitchCase="'select'"
         class="field-container"
         [ngClass]="{ 'readonly-wrapper': field.readonly }"

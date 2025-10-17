@@ -122,7 +122,11 @@
 
                 <div class="row gy-4 gx-5">
                   <ng-container *ngFor="let field of subsection.fields">
-                    <div *ngIf="field._visible" class="col-4 ps-0">
+                    <div
+                      *ngIf="field._visible"
+                      class="ps-0"
+                      [ngClass]="field.wrapperClass ? field.wrapperClass : 'col-4' "
+                    >
                       <app-form-field
                         [field]="field"
                         [form]="form"

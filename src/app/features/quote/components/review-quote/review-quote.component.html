@@ -64,8 +64,31 @@
         [quoteRes]="quoteService.quoteRes"
       ></app-view-breakup>
     </div>
+    <div class="mt-4" *ngIf="config && form">
+      <form [formGroup]="form">
+        <app-section
+          *ngFor="let section of config.uw.sections"
+          [section]="section"
+          [form]="form"
+          (fieldEvent)="handleFieldEvent($event)"
+        >
+        </app-section>
+      </form>
+    </div>
 
     <div class="d-flex align-items-center justify-content-end gap-3 mt-4">
+      <button
+        type="button"
+        class="btn btn-outline btn-md"
+      >
+        <span>Back to Listing</span>
+      </button>
+      <button
+        class="btn btn-primary btn-md px-5 d-flex align-items-center gap-2"
+        (click)="redirect()"
+      >
+        <span>Take Over</span>
+      </button>
       <button
         type="button"
         class="btn btn-outline btn-md"
