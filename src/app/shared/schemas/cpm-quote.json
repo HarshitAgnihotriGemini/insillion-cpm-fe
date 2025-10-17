@@ -667,7 +667,7 @@
           "formGroupTemplate": [
             {
               "type": "select",
-              "name": "claimLocation",
+              "name": "claim_location",
               "label": "Claim Location",
               "forceRow": true,
               "placeholder": "Select claim location",
@@ -682,7 +682,7 @@
             {
               "type": "input",
               "inputType": "text",
-              "name": "claim1Amount",
+              "name": "claim_amount1",
               "label": "Claim 1 - amount",
               "placeholder": "Enter claim 1 amount",
               "mask": "NUMERIC"
@@ -690,7 +690,7 @@
             {
               "type": "input",
               "inputType": "text",
-              "name": "year1",
+              "name": "risk_year_1",
               "label": "Year 1",
               "placeholder": "Enter year 1",
               "mask": "YYYY"
@@ -698,7 +698,7 @@
             {
               "type": "input",
               "inputType": "text",
-              "name": "claim1Premium",
+              "name": "claim_premium1",
               "label": "Claim 1 - premium",
               "placeholder": "Enter claim 1 premium",
               "mask": "NUMERIC"
@@ -706,7 +706,7 @@
             {
               "type": "input",
               "inputType": "text",
-              "name": "claim2Amount",
+              "name": "claim_amount2",
               "label": "Claim 2 - amount",
               "placeholder": "Enter claim 2 amount",
               "mask": "NUMERIC"
@@ -714,7 +714,7 @@
             {
               "type": "input",
               "inputType": "text",
-              "name": "year2",
+              "name": "risk_year_2",
               "label": "Year 2",
               "placeholder": "Enter year 2",
               "mask": "YYYY"
@@ -722,7 +722,7 @@
             {
               "type": "input",
               "inputType": "text",
-              "name": "claim2Premium",
+              "name": "claim_premium2",
               "label": "Claim 2 - premium",
               "placeholder": "Enter claim 2 premium",
               "mask": "NUMERIC"
@@ -730,7 +730,7 @@
             {
               "type": "input",
               "inputType": "text",
-              "name": "claim3Amount",
+              "name": "claim_amount3",
               "label": "Claim 3 - amount",
               "placeholder": "Enter claim 3 amount",
               "mask": "NUMERIC"
@@ -738,7 +738,7 @@
             {
               "type": "input",
               "inputType": "text",
-              "name": "year3",
+              "name": "risk_year_3",
               "label": "Year 3",
               "placeholder": "Enter year 3",
               "mask": "YYYY"
@@ -746,7 +746,7 @@
             {
               "type": "input",
               "inputType": "text",
-              "name": "claim3Premium",
+              "name": "claim_premium3",
               "label": "Claim 3 - premium",
               "placeholder": "Enter claim 3 premium",
               "mask": "NUMERIC"
@@ -754,7 +754,7 @@
             {
               "type": "input",
               "inputType": "text",
-              "name": "claim4Amount",
+              "name": "claim_amount4",
               "label": "Claim 4 - amount",
               "placeholder": "Enter claim 4 amount",
               "mask": "NUMERIC"
@@ -762,7 +762,7 @@
             {
               "type": "input",
               "inputType": "text",
-              "name": "year4",
+              "name": "risk_year_4",
               "label": "Year 4",
               "placeholder": "Enter year 4",
               "mask": "YYYY"
@@ -770,7 +770,7 @@
             {
               "type": "input",
               "inputType": "text",
-              "name": "claim4Premium",
+              "name": "claim_premium4",
               "label": "Claim 4 - premium",
               "placeholder": "Enter claim 4 premium",
               "mask": "NUMERIC"
