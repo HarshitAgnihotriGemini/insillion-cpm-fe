@@ -57,11 +57,11 @@
                     [formControlName]="field.name"
                   />
                   <div
-                    *ngIf="
+                    class="error-msg"
+                    [class.show]="
                       getControl(item.name)[field.name].invalid &&
                       getControl(item.name)[field.name].touched
                     "
-                    class="invalid-feedback d-block"
                   >
                     {{ field.errors?.required }}
                   </div>
