@@ -99,6 +99,7 @@
                   <button
                     type="button"
                     class="btn btn-outline btn-md w-100"
+                    [ngClass]="subsection.wrapperClass || '' "
                     (click)="addGroup(subsection)"
                     [disabled]="
                       getFormArray(subsection.name).length >= subsection.limit

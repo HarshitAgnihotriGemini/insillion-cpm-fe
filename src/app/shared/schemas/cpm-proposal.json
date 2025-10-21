@@ -60,16 +60,47 @@
           "fields": [
             {
               "type": "select",
-              "name": "hypothecation",
+              "name": "financier_bank_opted",
               "label": "Hypothecation",
               "placeholder": "Select Hypothecation",
-              "wrapperClass": "col-12",
-              "options": [
-                { "key": "yes", "name": "Yes" },
-                { "key": "no", "name": "No" }
-              ]
+              "wrapperClass": "col-4",
+              "options": ["Yes","No"]
             }
           ]
+        },
+        {
+            "title": "Financier Details",
+            "type": "form-array",
+            "name": "financier_details",
+            "wrapperClass":"mb-4", 
+            "isHideRemoveButton": false,
+            "addButtonLabel": "Add Financiers",
+            "limit": 5,
+            "initialGroups": 1,
+            "visibleWhen": { "field": "financier_bank_opted", "value": "Yes" },
+            "formGroupTemplate": [
+              {
+              "type": "input",
+              "name": "bank_name",
+              "label": "Bank Name",
+              "placeholder": "Select Bank Name",
+              "wrapperClass": "col-4"
+            },
+            {
+              "type": "input",
+              "name": "ifsc",
+              "label": "IFSC",
+              "placeholder": "Select IFSC",
+              "wrapperClass": "col-4"
+            },
+            {
+              "type": "input",
+              "name": "bank_address",
+              "label": "Bank Address",
+              "placeholder": "Select Bank Address",
+              "wrapperClass": "col-4"
+            }
+            ]
         }
       ]
     },
@@ -85,15 +116,134 @@
           "fields": [
             {
               "type": "select",
-              "name": "ksgLeaderMember",
-              "label": "KSG Leader / Member",
+              "name": "coinsurance_type",
+              "label": "RSGI Leader / Member",
               "placeholder": "Select KSG Leader / Member",
-              "options": [
-                { "key": "leader", "name": "Leader" },
-                { "key": "member", "name": "Member" }
-              ]
+              "resetsFields":["add_coinsurer"],
+              "options": ["No Co-Insurance", "Leader", "Member"]
+            },
+            {
+              "type": "input",
+              "name": "sum_insured",
+              "label": "Total Sum Insured",
+              "placeholder": "Total Sum Insured",
+              "visibleWhen": {
+                "or": [
+                  {
+                    "field": "coinsurance_type",
+                    "value": "Leader"
+                  },
+                  {
+                    "field": "coinsurance_type",
+                    "value": "Member"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "input",
+              "name": "urn_no",
+              "label": "URN Number",
+              "placeholder": "URN Number",
+              "visibleWhen": {
+                "or": [
+                  {
+                    "field": "coinsurance_type",
+                    "value": "Leader"
+                  },
+                  {
+                    "field": "coinsurance_type",
+                    "value": "Member"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "select",
+              "name": "commision",
+              "label": "Commission On",
+              "placeholder": "Commission On",
+              "options": ["No Commission", "Our share Premium"],
+              "visibleWhen": {
+                "or": [
+                  {
+                    "field": "coinsurance_type",
+                    "value": "Leader"
+                  },
+                  {
+                    "field": "coinsurance_type",
+                    "value": "Member"
+                  }
+                ]
+              }
             }
           ]
+        },
+        {
+            "title": "",
+            "type": "form-array",
+            "name": "add_coinsurer",
+            "isHideTitles": true,
+            "isHideRemoveButton": false,
+            "addButtonLabel": "Add Coinsurer",
+            "limit": 1,
+            "visibleWhen": {
+                "or": [
+                  {
+                    "field": "coinsurance_type",
+                    "value": "Leader"
+                  },
+                  {
+                    "field": "coinsurance_type",
+                    "value": "Member"
+                  }
+                ]
+              },
+            "formGroupTemplate": [
+              {
+                "type": "select",
+                "name": "type",
+                "label": "Type",
+                "placeholder": "Enter type",
+                "mask": ""
+              },
+              {
+                "type": "input",
+                "name": "search_code",
+                "label": "Participant Code",
+                "placeholder": "Select code"
+              },
+              {
+                "type": "select",
+                "name": "insurer",
+                "label": "Participant Name",
+                "placeholder": "Enter name"
+              },
+              {
+                "type": "input",
+                "name": "office_code",
+                "label": "Participant Office Code",
+                "placeholder": "Enter code"
+              },
+              {
+                "type": "input",
+                "name": "address",
+                "label": "Address",
+                "placeholder": "Select address"
+              },
+              {
+                "type": "input",
+                "name": "share",
+                "label": "Share",
+                "placeholder": "Share"
+              },
+              {
+                "type": "input",
+                "name": "expiring_policyno",
+                "label": "Previous Policy Number",
+                "placeholder": "NA"
+              }
+            ]
         },
         {
           "title": "Broker Details",
