@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BsModalRef } from 'ngx-bootstrap/modal';
@@ -10,6 +10,8 @@ import { ProposalFormService } from '../../proposal-form.service';
 import { ProposalService } from '../../proposal.service';
 import { Location } from '@angular/common';
 import { ApiService } from '@app/shared/services/api.service';
+import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { ProposalQuestionnaireOffcanvasComponent } from '@app/shared/common-components/proposal-questionnaire-offcanvas/proposal-questionnaire-offcanvas.component';
 
 @Component({
   selector: 'app-create-proposal',
@@ -28,14 +30,15 @@ export class CreateProposalComponent implements OnInit {
   config: any;
   form!: FormGroup;
   sectionState = new Map<string, boolean>();
-  imgPath: string
+  imgPath: string;
+  private readonly offcanvasService = inject(NgbOffcanvas);
 
   constructor(
     private readonly proposalFormService: ProposalFormService,
     private readonly proposalService: ProposalService,
     private readonly router: Router,
     private readonly location: Location,
-    private readonly apiService: ApiService
+    private readonly apiService: ApiService,
   ) {
     this.imgPath = this.imgPath = `${this.apiService.commonPath}/assets/`;
   }
@@ -48,12 +51,28 @@ export class CreateProposalComponent implements OnInit {
     });
   }
 
+  async handleButtonClick(field: any): Promise<void> {
+    if (field.action === 'openProposalQuestionnaireOffcanvas') {
+      this.openProposalQuestionnaireOffcanvas();
+    }
+  }
+
+  openProposalQuestionnaireOffcanvas(): void {
+    const offCanvasConfig = this.config.offCanvasConfigs;
+    const offcanvasRef = this.offcanvasService.open(
+      ProposalQuestionnaireOffcanvasComponent,
+      { position: 'end', panelClass: 'offcanvas-width-50' },
+    );
+    offcanvasRef.componentInstance.config = offCanvasConfig;
+    offcanvasRef.componentInstance.form = this.form;
+  }
+
   redirect() {
     this.router.navigate(['cpm-review'], {
       state: { isProposal: true },
     });
   }
   goBack() {
-    this.location.back(); 
+    this.location.back();
   }
 }

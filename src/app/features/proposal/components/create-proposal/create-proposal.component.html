@@ -15,6 +15,7 @@
               *ngFor="let section of config.sections"
               [section]="section"
               [form]="form"
+              (buttonClick)="handleButtonClick($event)"
             >
             </app-section>
           </form>

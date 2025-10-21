@@ -40,18 +40,15 @@
           ]
         },
         {
-          "title": "Proposal Questionnaire",
-          "fields": [
+          "title": "Proposal Questionaire",
+          "actions": [
             {
-              "type": "select",
-              "name": "proposalQuestionnaire",
-              "label": "Do you want to answer the proposal questionnaire?",
-              "placeholder": "Select Yes/No",
-              "wrapperClass": "col-12",
-              "options": [
-                { "key": "yes", "name": "Yes" },
-                { "key": "no", "name": "No" }
-              ]
+              "type": "button",
+              "label": "Proposal Questionaire",
+              "wrapperClass": "mt-4",
+              "name": "addDetailsBtn",
+              "action": "openProposalQuestionnaireOffcanvas",
+              "iconPath": "https://d2fciuteqrodiu.cloudfront.net/common-style/assets/images/icon-add.svg"
             }
           ]
         },
@@ -63,7 +60,6 @@
               "name": "hypothecation",
               "label": "Hypothecation",
               "placeholder": "Select Hypothecation",
-              "wrapperClass": "col-12",
               "options": [
                 { "key": "yes", "name": "Yes" },
                 { "key": "no", "name": "No" }
@@ -281,5 +277,396 @@
     "label": "Total Premium",
     "viewBreakupLabel": "View Breakup",
     "amount": "₹ 4,856.00"
+  },
+  "offCanvasConfigs": {
+    "title": "Proposal Questionnaire",
+    "searchPlaceholder": "Search Questions",
+    "doneButtonLabel": "Done",
+    "fields": [
+      {
+        "name": "proposal_q1_opt",
+        "label": "Do the items listed represent the entire machinery or plant owned/used by you",
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "proposal_q1_remarks",
+            "label": "If yes, specify the details",
+            "placeholder": "Enter details",
+            "errors": {
+              "required": "This field is required."
+            }
+          }
+        ]
+      },
+      {
+        "name": "proposal_q2_opt",
+        "label": "Are you at present insured",
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "proposal_q2_remarks",
+            "label": "If so, with whom?",
+            "placeholder": "Enter details",
+            "errors": {
+              "required": "This field is required."
+            }
+          }
+        ]
+      },
+      {
+        "name": "proposal_q3_opt",
+        "label": "Has any Company declined to insure any of the Machinery now proposed",
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "proposal_q3_remarks",
+            "label": "If yes, specify the details",
+            "placeholder": "Enter details",
+            "errors": {
+              "required": "This field is required."
+            }
+          }
+        ]
+      },
+      {
+        "name": "proposal_q4_opt",
+        "label": "Has any Company required an increased premium or imposed special condition ?",
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "proposal_q4_remarks",
+            "label": "If yes, specify the details",
+            "placeholder": "Enter details",
+            "errors": {
+              "required": "This field is required."
+            }
+          }
+        ]
+      },
+      {
+        "name": "proposal_q5_opt",
+        "label": "Has any Company made special stipulations for risk improvement ?",
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "proposal_q5_remarks",
+            "label": "If yes, specify the details",
+            "placeholder": "Enter details",
+            "errors": {
+              "required": "This field is required."
+            }
+          }
+        ]
+      },
+      {
+        "name": "proposal_q6_opt",
+        "label": "Are you aware of any defects or damage in the equipment proposed?",
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "proposal_q6_remarks",
+            "label": "If yes, specify the details",
+            "placeholder": "Enter details",
+            "errors": {
+              "required": "This field is required."
+            }
+          }
+        ]
+      },
+      {
+        "name": "proposal_q7_opt",
+        "label": "Do you own or use any equipment other than that described above working on the same site?",
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "proposal_q7_remarks",
+            "label": "If yes, specify the details",
+            "placeholder": "Enter details",
+            "errors": {
+              "required": "This field is required."
+            }
+          }
+        ]
+      },
+      {
+        "name": "proposal_q8_opt",
+        "label": "Is any of the equipment now proposed licensed for road use ?",
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "proposal_q8_remarks",
+            "label": "If yes, specify the details",
+            "placeholder": "Enter details",
+            "errors": {
+              "required": "This field is required."
+            }
+          }
+        ]
+      },
+      {
+        "name": "proposal_q9_opt",
+        "label": "Is any of the equipment now proposed covered by any other insurance?",
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "proposal_q9_remarks",
+            "label": "If yes, specify the details",
+            "placeholder": "Enter details",
+            "errors": {
+              "required": "This field is required."
+            }
+          }
+        ]
+      },
+      {
+        "name": "proposal_q10_opt",
+        "label": "Are you the owner of the proposed equipment?",
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "proposal_q10_remarks",
+            "label": "If yes, will you be hiring out?",
+            "placeholder": "Enter details",
+            "errors": {
+              "required": "This field is required."
+            }
+          }
+        ]
+      },
+      {
+        "name": "proposal_q11_opt",
+        "label": "If the equipment is hired, is insurance your responsibility?",
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "proposal_q11_remarks",
+            "label": "If yes, specify the details",
+            "placeholder": "Enter details",
+            "errors": {
+              "required": "This field is required."
+            }
+          }
+        ]
+      },
+      {
+        "name": "proposal_q12_opt",
+        "label": "If the equipment is hired, is maintenance and operation your responsibility ?",
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "proposal_q12_remarks",
+            "label": "If yes, specify the details",
+            "placeholder": "Enter details",
+            "errors": {
+              "required": "This field is required."
+            }
+          }
+        ]
+      },
+      {
+        "name": "proposal_q13_opt",
+        "label": "Are the premises where the equipment operates well guarded ?",
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "proposal_q13_remarks",
+            "label": "If yes, specify the details",
+            "placeholder": "Enter details",
+            "errors": {
+              "required": "This field is required."
+            }
+          }
+        ]
+      },
+      {
+        "name": "proposal_q14_opt",
+        "label": "Is the equipment likely to be used on reclaimed or soft ground ?",
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "proposal_q14_remarks",
+            "label": "If yes, specify the details",
+            "placeholder": "Enter details",
+            "errors": {
+              "required": "This field is required."
+            }
+          }
+        ]
+      },
+      {
+        "name": "proposal_q15_opt",
+        "label": "Is the equipment likely to be used under ground ?",
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "proposal_q15_remarks",
+            "label": "If yes, specify the details",
+            "placeholder": "Enter details",
+            "errors": {
+              "required": "This field is required."
+            }
+          }
+        ]
+      },
+      {
+        "name": "proposal_q16_opt",
+        "label": "Are ground condition such that equipment are exposed to the risk of toppling over ?",
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "proposal_q16_remarks",
+            "label": "If yes, specify the details",
+            "placeholder": "Enter details",
+            "errors": {
+              "required": "This field is required."
+            }
+          }
+        ]
+      },
+      {
+        "name": "proposal_q17_opt",
+        "label": "Is the site of work susceptible to flood or storm, cyclone or other natural calamities?",
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "proposal_q17_remarks",
+            "label": "If yes, give detail and safety precautions taken",
+            "placeholder": "Enter details",
+            "errors": {
+              "required": "This field is required."
+            }
+          }
+        ]
+      },
+      {
+        "name": "proposal_q18_opt",
+        "label": "Do you have trained and qualified operators?",
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "proposal_q18_remarks",
+            "label": "If Yes, specify the details",
+            "placeholder": "Enter details",
+            "errors": {
+              "required": "This field is required."
+            }
+          }
+        ]
+      },
+      {
+        "name": "proposal_q19_opt",
+        "label": "Has your equipment sustained any damage during last 3 years ?",
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "proposal_q19_remarks",
+            "label": "If Yes, give details of damage and repair cost",
+            "placeholder": "Enter details",
+            "errors": {
+              "required": "This field is required."
+            }
+          }
+        ]
+      },
+      {
+        "name": "proposal_20_ef_opt",
+        "label": "Express Freight (excluding Airfreight), labour Overtime",
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "proposal_20_ef",
+            "label": "limit of liability",
+            "placeholder": "Enter details",
+            "errors": {
+              "required": "This field is required."
+            }
+          }
+        ]
+      },
+      {
+        "name": "proposal_20_af_opt",
+        "label": "Air Freight",
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "proposal_20_af",
+            "label": "limit of liability",
+            "placeholder": "Enter details",
+            "errors": {
+              "required": "This field is required."
+            }
+          }
+        ]
+      },
+      {
+        "name": "proposal_20_osp_opt",
+        "label": "Damage to surrounding property",
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "proposal_20_osp",
+            "label": "limit of liability",
+            "placeholder": "Enter details",
+            "errors": {
+              "required": "This field is required."
+            }
+          }
+        ]
+      },
+      {
+        "name": "proposal_20_rod_opt",
+        "label": "Clearance & Removal of Debris costs",
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "proposal_20_rod",
+            "label": "limit of liability",
+            "placeholder": "Enter details",
+            "errors": {
+              "required": "This field is required."
+            }
+          }
+        ]
+      },
+      {
+        "name": "proposal_20_acd_opt",
+        "label": "Additional Customs Duty",
+        "subFields": [
+          {
+            "type": "input",
+            "inputType": "text",
+            "name": "proposal_20_acd",
+            "label": "limit of liability",
+            "placeholder": "Enter details",
+            "errors": {
+              "required": "This field is required."
+            }
+          }
+        ]
+      }
+    ]
   }
 }
