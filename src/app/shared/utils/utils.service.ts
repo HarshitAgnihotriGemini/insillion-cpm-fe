@@ -236,6 +236,16 @@ export class UtilsService {
       section.subsections?.forEach((subsection: any) => {
         if (subsection.type === 'form-array') {
           req[subsection.name] = formData?.[subsection.name] || [];
+          if(subsection.name == 'machinery'){
+            req[subsection.name] = (formData?.[subsection.name] || []).map((item: any) => ({
+            ...item,
+            prop_name: "",
+            amc: "",
+            zero_premium: 0,
+            ratingmethod: "",
+            uid: "r]kXsj"
+          }));
+          }
         } else {
           subsection.fields?.forEach((field: any) => {
             if (field?.mask === 'DATE') {

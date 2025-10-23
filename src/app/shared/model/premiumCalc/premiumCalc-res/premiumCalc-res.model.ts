@@ -17,5 +17,9 @@ export interface PremiumCalcRes {
   marine_required: string;
   settings_gpa_required: string;
   policy_addon: [{ addon_marine_premium: string }];
+  imd_oa_broker_code: string;
+  imd_oa_agent: string;
+  imd_channel: string;
+  imd_subchannel: string;
   errors: any;
 }

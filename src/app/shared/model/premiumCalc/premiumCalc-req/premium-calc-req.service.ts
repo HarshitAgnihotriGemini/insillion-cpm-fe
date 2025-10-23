@@ -1,14 +1,24 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { Adapter } from '@app/shared/interfaces/adapter';
 import { PremiumCalcReq } from './premiumCalc-req.model';
 import * as cpmQuote from '@app/shared/schemas/cpm-quote.json';
 import { UtilsService } from '@app/shared/utils/utils.service';
+import { QuoteService } from '@app/features/quote/quote.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PremiumCalcReqService implements Adapter<PremiumCalcReq> {
-  constructor(private readonly utilService: UtilsService) {}
+  private _quoteService!: QuoteService;
+
+  constructor(private readonly utilService: UtilsService, private readonly injector: Injector) {}
+
+  private get quoteService(): QuoteService {
+    if (!this._quoteService) {
+      this._quoteService = this.injector.get(QuoteService);
+    }
+    return this._quoteService;
+  }
 
   adapt(form: any): PremiumCalcReq {
     const formData = form?.formData || {};
@@ -18,6 +28,7 @@ export class PremiumCalcReqService implements Adapter<PremiumCalcReq> {
         wf_id: '32',
         product_id: form?.productId,
         product_lob: 'Engineering',
+        imd_code: formData?.imd_code,
         ...(form?.page_no !== 0
           ? {
               ...this.utilService.createReq(cpmQuote.sections, formData),
@@ -29,6 +40,12 @@ export class PremiumCalcReqService implements Adapter<PremiumCalcReq> {
               settings_user_type: form?.settings_user_type,
               branch_state: 'Tamilnadu',
               branch_id: 'T3',
+              transaction_type: formData?.policy_transaction_type || '',
+              proposition_internal_user: sessionStorage.getItem('add_user_type')?.toLowerCase() === 'internal' ? formData?.proposition_name || '' : '',
+              imd_oa_broker_code: this.quoteService?.premiumCalcRes?.imd_oa_broker_code || "",
+              imd_oa_agent: this.quoteService?.premiumCalcRes?.imd_oa_agent || "",
+              imd_channel: this.quoteService?.premiumCalcRes?.imd_channel || "",
+              imd_subchannel: this.quoteService?.premiumCalcRes?.imd_subchannel || "",
             }
           : {}),
       },

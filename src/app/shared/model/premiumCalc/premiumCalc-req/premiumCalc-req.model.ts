@@ -12,6 +12,10 @@ export interface PremiumCalcReq {
     branch_state: string;
     branch_id: string;
     proposition_internal_user: string;
+    imd_oa_broker_code: string;
+    imd_subchannel: string;
+    imd_channel: string;
+    imd_oa_agent: string;
     _ready: string;
     __finalize: number;
   };

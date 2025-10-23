@@ -410,7 +410,7 @@
           "formGroupTemplate": [
             {
               "type": "input",
-              "name": "pincode",
+              "name": "risk_pincode",
               "label": "Pincode",
               "placeholder": "Enter pincode",
               "mask": "PINCODE",
@@ -426,7 +426,7 @@
             },
             {
               "type": "select",
-              "name": "location",
+              "name": "risk_locations",
               "label": "Location",
               "placeholder": "Select location",
               "validators": {
@@ -440,7 +440,7 @@
             },
             {
               "type": "input",
-              "name": "address_1",
+              "name": "risk_add1",
               "label": "Address 1",
               "placeholder": "Enter address 1",
               "validators": {
@@ -454,7 +454,7 @@
             },
             {
               "type": "input",
-              "name": "address_2",
+              "name": "risk_add2",
               "label": "Address 2",
               "placeholder": "Enter address 2",
               "validators": {
@@ -468,7 +468,7 @@
             },
             {
               "type": "input",
-              "name": "ed_zone",
+              "name": "eqzone",
               "label": "EQ Zone",
               "placeholder": "Enter EQ zone",
               "readonly": true

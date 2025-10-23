@@ -23,13 +23,17 @@ export class PremiumCalcResService implements Adapter<PremiumCalcRes> {
       clause_wordings: changed?.clause_wordings || [],
       eq_zone: changed?.eq_zone,
       machinery: data?.cells?.machinery,
-      settings_user_type: data?.changed?.settings_user_type,
-      iscreater: data?.changed?.iscreater,
-      settings_terr_mandatory: data?.changed?.settings_terr_mandatory,
+      settings_user_type: changed?.settings_user_type,
+      iscreater: changed?.iscreater,
+      settings_terr_mandatory: changed?.settings_terr_mandatory,
       marine_required: data?.cells?.marine_required,
-      settings_gpa_required: data?.changed?.settings_gpa_required,
+      settings_gpa_required: changed?.settings_gpa_required,
       policy_addon: data?.cells?.policy_addon,
       errors: data?.errors || [],
+      imd_oa_broker_code: changed?.imd_oa_broker_code,
+      imd_oa_agent: changed?.imd_oa_agent,
+      imd_channel: changed?.imd_channel,
+      imd_subchannel: changed?.imd_subchannel,
     };
     return premiumCalcRes;
   }
