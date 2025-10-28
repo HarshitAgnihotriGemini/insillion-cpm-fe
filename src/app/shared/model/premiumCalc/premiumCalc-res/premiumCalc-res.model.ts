@@ -21,5 +21,6 @@ export interface PremiumCalcRes {
   imd_oa_agent: string;
   imd_channel: string;
   imd_subchannel: string;
+  location_addon: [];
   errors: any;
 }

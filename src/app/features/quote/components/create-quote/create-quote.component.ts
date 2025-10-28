@@ -113,7 +113,7 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
       const dateFields = [
         'policy_start_date',
         'policy_end_date',
-        'existingPolicyExpiryDate',
+        'existing_policy_expiry_date',
       ];
       dateFields.forEach((fieldName) => {
         const dateValue = formData[fieldName];
@@ -309,6 +309,14 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
         const productNameRes =
           await this.quoteService.fetchProductName(payload);
         this.form.controls['product'].setValue(productNameRes[0]);
+        if(this.form.controls['policy_transaction_type'].value == 'Deviated Renewal' || this.form.controls['policy_transaction_type'].value == 'RS Renewal'){
+          if(productNameRes.length == 1){
+            this.form.controls['existing_product'].setValue(productNameRes[0]);
+          }
+        }
+        else{
+          this.form.controls['existing_product'].setValue('');
+        }
       }
     } catch (error) {
       console.error('Error fetching transaction types:', error);

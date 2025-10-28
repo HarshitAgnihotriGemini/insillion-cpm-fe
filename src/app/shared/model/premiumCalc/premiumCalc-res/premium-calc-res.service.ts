@@ -34,6 +34,7 @@ export class PremiumCalcResService implements Adapter<PremiumCalcRes> {
       imd_oa_agent: changed?.imd_oa_agent,
       imd_channel: changed?.imd_channel,
       imd_subchannel: changed?.imd_subchannel,
+      location_addon: cells?.location_addon || []
     };
     return premiumCalcRes;
   }

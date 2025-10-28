@@ -183,7 +183,7 @@
             {
               "type": "input",
               "inputType": "text",
-              "name": "partyId",
+              "name": "party_id",
               "label": "Party Id",
               "placeholder": "Enter Party Id",
               "visibleWhen": {
@@ -217,7 +217,7 @@
             {
               "type": "input",
               "inputType": "text",
-              "name": "endtNo",
+              "name": "endt_no",
               "label": "Endt No",
               "placeholder": "Enter Endt No",
               "visibleWhen": {
@@ -233,7 +233,7 @@
             },
             {
               "type": "datepicker",
-              "name": "existingPolicyExpiryDate",
+              "name": "existing_policy_expiry_date",
               "label": "Existing Policy Expiry Date",
               "placeholder": "Select expiry date",
               "mask": "DATE",
@@ -655,7 +655,7 @@
         {
           "title": "Claim Exp",
           "type": "form-array",
-          "name": "claim-exp",
+          "name": "claim_exp",
           "isHideTitles": true,
           "isHideRemoveButton": false,
           "addButtonLabel": "Add Claim Exp Details",

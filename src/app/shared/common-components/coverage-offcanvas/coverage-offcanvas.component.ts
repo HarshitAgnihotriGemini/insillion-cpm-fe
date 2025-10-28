@@ -87,10 +87,51 @@ export class CoverageOffcanvasComponent implements OnInit {
           }
         });
       }
+      this.setAddonValues(res);
     } catch (error) {
       console.error('Error processing premium calculation result:', error);
     }
   }
+
+  setAddonValues(res: any) {
+    const fields = this.config.fields || this.config;
+
+    const optedAddons = res.location_addon
+      ?.filter((addon: any) => addon.location_addon_opted === 'Yes')
+      .map((addon: any) => ({
+        label: addon.location_addon_name,
+        value: addon.derived_add_si
+      })) || [];
+
+
+    optedAddons.forEach((apiAddon: any) => {
+      const matchedField = fields.find(
+        (field: any) =>
+          field.label?.trim().toLowerCase() === apiAddon.label?.trim().toLowerCase()
+      );
+
+      if (matchedField) {
+        const parentControlName = matchedField.name;
+        const parentGroup = this.form.get(parentControlName);
+
+        if (parentGroup) {
+          const derivedField = matchedField.subFields?.find(
+            (sub: any) => sub.name === 'derived_add_si'
+          );
+
+          if (derivedField && parentGroup.get(derivedField.name)) {
+            parentGroup.get(derivedField.name)?.setValue(apiAddon.value);
+          }
+
+          const checkedControl = this.form.get(`${parentControlName}_checked`);
+          if (checkedControl) {
+            checkedControl.setValue(true);
+          }
+        }
+      }
+    });
+  }
+
 
   getFormGroup(control: AbstractControl | null) {
     return control as FormGroup;
