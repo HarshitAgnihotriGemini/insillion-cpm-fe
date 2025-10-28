@@ -40,6 +40,7 @@ export class PremiumCalcReqService implements Adapter<PremiumCalcReq> {
               settings_user_type: form?.settings_user_type,
               branch_state: 'Tamilnadu',
               branch_id: 'T3',
+              ...(formData?.policy_transaction_type?.toLowerCase()?.includes('renewal') && { renew_YN: 'No' }),
               transaction_type: formData?.policy_transaction_type || '',
               proposition_internal_user: sessionStorage.getItem('add_user_type')?.toLowerCase() === 'internal' ? formData?.proposition_name || '' : '',
               imd_oa_broker_code: this.quoteService?.premiumCalcRes?.imd_oa_broker_code || "",

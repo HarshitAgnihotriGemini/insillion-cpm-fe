@@ -34,7 +34,22 @@ export class PremiumCalcResService implements Adapter<PremiumCalcRes> {
       imd_oa_agent: changed?.imd_oa_agent,
       imd_channel: changed?.imd_channel,
       imd_subchannel: changed?.imd_subchannel,
-      location_addon: cells?.location_addon || []
+      location_addon: cells?.location_addon || [],
+      party_id: changed?.party_id,
+      endt_no: changed?.endt_no,
+      claim: changed?.claim,
+      existing_policy_expiry_date: changed?.existing_policy_expiry_date,
+      proposer_name_primary_insured : changed?.proposer_name_primary_insured,
+      mobile_no: changed?.mobile_no,
+      email: changed?.email,
+      pol_serv_branch_name: changed?.pol_serv_branch_name,
+      less_detariff: changed?.less_detariff,
+      earthquake_req: changed?.earthquake_req,
+      terrorism_req: changed?.terrorism_req,
+      package_plan: changed?.package_plan,
+      floater_coverage_in: changed?.floater_coverage_in,
+      policy_start_date: changed?.policy_start_date,
+      policy_end_date: changed?.policy_end_date,
     };
     return premiumCalcRes;
   }

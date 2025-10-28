@@ -877,7 +877,7 @@
             {
               "type": "input",
               "inputType": "text",
-              "name": "underwriterRemarks",
+              "name": "manual_refferal_remarks",
               "label": "Underwriter Remarks",
               "placeholder": "Enter remarks",
               "visibleWhen": {

@@ -339,6 +339,9 @@ export class QuoteService {
           );
           this.formService.setFieldVisibility('addon_marine_premium', true);
         }
+        if(this.quoteFormService.form.controls['existing_policy'].value){
+          this.populateForm();
+        }
         this.formService.setFieldVisibility(
           'addon_marine',
           this.premiumCalcRes?.marine_required?.toLowerCase() == 'yes',
@@ -494,6 +497,26 @@ export class QuoteService {
       return res;
     } catch (error) {
       throw error;
+    }
+  }
+
+  private populateForm(): void {
+    if (this.premiumCalcRes) {
+      const formData = { ...this.premiumCalcRes };
+
+      const dateFields = [
+        'policy_start_date',
+        'policy_end_date'
+      ];
+      (dateFields as (keyof typeof formData)[]).forEach((fieldName) => {
+      const key = fieldName as keyof typeof formData;
+      const dateValue = formData[key];
+      if (dateValue && typeof dateValue === 'string') {
+        (formData as any)[key] = moment(dateValue, 'YYYY-MM-DD').format('DD/MM/YYYY') as any;
+      }
+      });
+      this.quoteFormService.form.patchValue(formData);
+      this.quoteFormService.form.updateValueAndValidity();
     }
   }
 

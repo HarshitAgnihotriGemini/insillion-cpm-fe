@@ -22,5 +22,20 @@ export interface PremiumCalcRes {
   imd_channel: string;
   imd_subchannel: string;
   location_addon: [];
+  party_id: string;
+  endt_no: string;
+  claim: string;
+  existing_policy_expiry_date: string;
+  proposer_name_primary_insured: string;
+  mobile_no: string;
+  email: string;
+  pol_serv_branch_name: string;
+  less_detariff: string;
+  earthquake_req: string;
+  terrorism_req: string;
+  package_plan: string;
+  floater_coverage_in: string;
+  policy_start_date: string;
+  policy_end_date: string;
   errors: any;
 }

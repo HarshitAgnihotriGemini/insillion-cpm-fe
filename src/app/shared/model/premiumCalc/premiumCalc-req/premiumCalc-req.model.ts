@@ -16,6 +16,7 @@ export interface PremiumCalcReq {
     imd_subchannel: string;
     imd_channel: string;
     imd_oa_agent: string;
+    renew_YN: string;
     _ready: string;
     __finalize: number;
   };

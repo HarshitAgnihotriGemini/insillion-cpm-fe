@@ -209,7 +209,7 @@
             },
             {
               "label": "Underwriter Remarks",
-              "name": "underwriterRemarks",
+              "name": "manual_refferal_remarks",
               "visibleWhen": {
                 "field": "manual_referral",
                 "value": "yes"
