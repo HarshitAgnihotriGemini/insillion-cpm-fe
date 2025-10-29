@@ -48,7 +48,7 @@ export class PremiumCalcReqService implements Adapter<PremiumCalcReq> {
               proposition_internal_user:
                 sessionStorage.getItem('add_user_type')?.toLowerCase() ===
                 'internal'
-                  ? formData?.proposition_name || ''
+                  ? formData?.proposition_internal_user || ''
                   : '',
               imd_oa_broker_code:
                 this.quoteService?.premiumCalcRes?.imd_oa_broker_code || '',

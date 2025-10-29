@@ -106,9 +106,10 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
     }
   }
 
-  private populateForm(): void {
-    if (this.quoteService.quoteRes.data) {
-      const formData = { ...this.quoteService.quoteRes.data };
+  private populateForm(premiumCalc?: any ): void {
+    if (premiumCalc || this.quoteService.quoteRes.data) {
+      
+      const formData =  premiumCalc ? { ...premiumCalc } :  { ...this.quoteService.quoteRes.data };
 
       const dateFields = [
         'policy_start_date',
@@ -126,30 +127,32 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
       this.form.patchValue(formData);
       this.form.updateValueAndValidity();
 
-      this.config?.sections?.forEach((section: any) => {
-        section?.subsections?.forEach((subsection: any) => {
-          if (subsection.type === 'form-array') {
-            const formArrayName = subsection.name;
-            const formArrayData =
-              this.quoteService.quoteRes.data[formArrayName];
+      if(formData){
+        this.config?.sections?.forEach((section: any) => {
+          section?.subsections?.forEach((subsection: any) => {
+            if (subsection.type === 'form-array') {
+              const formArrayName = subsection.name;
+              const formArrayData =
+                formData[formArrayName];
 
-            if (
-              formArrayData &&
-              Array.isArray(formArrayData) &&
-              formArrayData.length > 0
-            ) {
-              const formArray = this.form.get(formArrayName) as FormArray;
-              formArray.clear();
+              if (
+                formArrayData &&
+                Array.isArray(formArrayData) &&
+                formArrayData.length > 0
+              ) {
+                const formArray = this.form.get(formArrayName) as FormArray;
+                formArray.clear();
 
-              formArrayData.forEach((item: any) => {
-                this.formService.addGroup(this.form, subsection, item);
-              });
+                formArrayData.forEach((item: any) => {
+                  this.formService.addGroup(this.form, subsection, item);
+                });
 
-              this.sectionState.set(section.title, true);
+                this.sectionState.set(section.title, true);
+              }
             }
-          }
-        });
+          });
       });
+      }
     }
   }
 
@@ -226,6 +229,8 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
       this.onRiskLocationChange(value);
     } else if (event.action === 'onExistingPolicyNoChange') {
       this.onExistingPolicyNoChange();
+    } else if (event.action === 'onExistingProductTypeChange') {
+      this.onExistingProductTypeChange();
     }
   }
 
@@ -253,12 +258,12 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
           await this.quoteService.fetchPropositionData(imdValue);
 
         if (!onLoad) {
-          this.form.controls['proposition_name'].setValue(
+          this.form.controls['proposition_internal_user'].setValue(
             propositionRes?.data[0],
           );
         }
         await this.onPropositionChange(
-          this.form.controls['proposition_name'].value,
+          this.form.controls['proposition_internal_user'].value,
           onLoad,
         );
       }
@@ -298,11 +303,11 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
   async fetchProduct() {
     try {
       if (
-        this.form.controls['proposition_name'].value &&
+        this.form.controls['proposition_internal_user'].value &&
         this.form.controls['policy_transaction_type'].value
       ) {
         const payload = {
-          proposition_name: this.form.controls['proposition_name'].value,
+          proposition_name: this.form.controls['proposition_internal_user'].value,
           settings_name: 'product',
           biz_type: this.form.controls['policy_transaction_type'].value,
         };
@@ -335,7 +340,7 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
     try {
       if (this.form.controls['product'].value) {
         const payload = {
-          proposition: this.form.controls['proposition_name'].value,
+          proposition: this.form.controls['proposition_internal_user'].value,
           product: this.form.controls['product'].value,
           policy_transaction_type:
             this.form.controls['policy_transaction_type'].value,
@@ -357,7 +362,7 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
     const fieldKey = 'policy_transaction_type';
     this.loaderService.showLoader(fieldKey);
     try {
-      const proposition = this.form.controls['proposition_name'].value;
+      const proposition = this.form.controls['proposition_internal_user'].value;
       await firstValueFrom(
         forkJoin([
           from(this.fetchProduct()).pipe(
@@ -398,11 +403,28 @@ export class CreateQuoteComponent implements OnInit, OnDestroy {
     }
   }
 
+  async onExistingProductTypeChange() {
+    const fieldKey = 'existing_product';
+    this.loaderService.showLoader(fieldKey);
+    try {
+      await this.quoteService.premiumCalc();
+      // this.populateForm(true);
+    } catch (error) {
+      console.error('Error in Existing Policy Number Change:', error);
+    } finally {
+      this.loaderService.hideLoader(fieldKey);
+    }
+  }
+
   async onExistingPolicyNoChange() {
     const fieldKey = 'existing_policy';
     this.loaderService.showLoader(fieldKey);
     try {
-      await this.quoteService.premiumCalc(fieldKey);
+      let value = this.form.get("existing_policy")?.value
+      const data = await this.quoteService.premiumCalc();
+      this.populateForm(data?.data?.changed);
+      this.form.get("existing_policy")?.setValue(value);
+      await this.validateIntermediary(this.form.controls['imd_code'].value,true,);
     } catch (error) {
       console.error('Error in Existing Policy Number Change:', error);
     } finally {

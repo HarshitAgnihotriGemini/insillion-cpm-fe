@@ -186,7 +186,7 @@ export class QuoteService {
       //Hardcode values added
       const body = {
         proposition_name:
-          this.quoteFormService.form.controls['proposition_name'].value,
+          this.quoteFormService.form.controls['proposition_internal_user'].value,
         biz_type:
           this.quoteFormService.form.controls['policy_transaction_type'].value,
         effective_from: '45931',
@@ -208,7 +208,7 @@ export class QuoteService {
       //Hardcode values added
       const body = {
         proposition:
-          this.quoteFormService.form.controls['proposition_name'].value,
+          this.quoteFormService.form.controls['proposition_internal_user'].value,
         policy_transaction_type:
           this.quoteFormService.form.controls['policy_transaction_type'].value,
         skip: '/v1/rater/',
@@ -356,9 +356,6 @@ export class QuoteService {
               this.premiumCalcRes?.policy_addon?.[0]?.addon_marine_premium,
             );
             this.formService.setFieldVisibility('addon_marine_premium', true);
-          }
-          if (this.quoteFormService.form.controls['existing_policy'].value) {
-            this.populateForm();
           }
           this.formService.setFieldVisibility(
             'addon_marine',
@@ -731,24 +728,6 @@ export class QuoteService {
     }
   }
 
-  private populateForm(): void {
-    if (this.premiumCalcRes) {
-      const formData = { ...this.premiumCalcRes };
-
-      const dateFields = ['policy_start_date', 'policy_end_date'];
-      (dateFields as (keyof typeof formData)[]).forEach((fieldName) => {
-        const key = fieldName as keyof typeof formData;
-        const dateValue = formData[key];
-        if (dateValue && typeof dateValue === 'string') {
-          (formData as any)[key] = moment(dateValue, 'YYYY-MM-DD').format(
-            'DD/MM/YYYY',
-          ) as any;
-        }
-      });
-      this.quoteFormService.form.patchValue(formData);
-      this.quoteFormService.form.updateValueAndValidity();
-    }
-  }
 
   async downloadQuote() {
     try {

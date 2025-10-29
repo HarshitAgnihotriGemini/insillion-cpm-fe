@@ -32,7 +32,7 @@ export class QuoteFormService {
     this.initializeCoverControls(cpmQuote.offCanvasConfigs);
 
     this.form
-      .get('proposition_name')
+      .get('proposition_internal_user')
       ?.valueChanges.subscribe((propositionName) => {
         this.setFieldRequired(
           'thirdPartyLiability',
@@ -212,7 +212,7 @@ export class QuoteFormService {
   }
 
   public shouldShowField(fieldName: string): boolean {
-    const proposition = this.form.get('proposition_name')?.value;
+    const proposition = this.form.get('proposition_internal_user')?.value;
     const product = this.form.get('product')?.value;
 
     if (fieldName === 'airFreight' || fieldName === 'expressFreight') {
@@ -275,7 +275,7 @@ export class QuoteFormService {
   }
 
   private shouldShowAddonSi(fieldName: string): boolean {
-    const proposition = this.form.get('proposition_name')?.value;
+    const proposition = this.form.get('proposition_internal_user')?.value;
     if (
       fieldName === 'ownersSurroundingProperty' ||
       fieldName === 'thirdPartyLiability' ||

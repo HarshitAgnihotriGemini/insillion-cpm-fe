@@ -13,7 +13,7 @@
           "title": "Contractor Plant and Machinery Insurance",
           "fields": [
             { "label": "Intermediary", "name": "imd_code" },
-            { "label": "Proposition Selection", "name": "proposition_name" },
+            { "label": "Proposition Selection", "name": "proposition_internal_user" },
             { "label": "Transaction Type", "name": "policy_transaction_type" },
             {
               "label": "Customer First Name",

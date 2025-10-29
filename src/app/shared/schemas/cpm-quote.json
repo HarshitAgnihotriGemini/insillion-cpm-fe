@@ -38,11 +38,11 @@
               "events": [
                 { "name": "change", "action": "validateIntermediary" }
               ],
-              "resetsFields": ["proposition_name", "policy_transaction_type"]
+              "resetsFields": ["proposition_internal_user", "policy_transaction_type"]
             },
             {
               "type": "select",
-              "name": "proposition_name",
+              "name": "proposition_internal_user",
               "label": "Proposition Selection",
               "placeholder": "Select proposition selection",
               "optionsKey": "propositionOptions",
@@ -178,7 +178,10 @@
               },
               "errors": {
                 "required": "Existing Product is required."
-              }
+              },
+              "events": [
+                { "name": "change", "action": "onExistingProductTypeChange" }
+              ]
             },
             {
               "type": "input",

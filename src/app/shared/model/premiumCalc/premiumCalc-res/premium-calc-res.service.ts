@@ -50,6 +50,9 @@ export class PremiumCalcResService implements Adapter<PremiumCalcRes> {
       floater_coverage_in: changed?.floater_coverage_in,
       policy_start_date: changed?.policy_start_date,
       policy_end_date: changed?.policy_end_date,
+      imd_code: changed?.imd_code,
+      policy_transaction_type: changed?.policy_transaction_type,
+      proposition_internal_user: changed?.proposition_internal_user
     };
     return premiumCalcRes;
   }

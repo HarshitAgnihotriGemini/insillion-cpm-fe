@@ -30,7 +30,7 @@ export class QuoteReqService implements Adapter<QuoteReq> {
       settings_user_type: form?.settings_user_type,
       branch_state: 'Tamilnadu', //
       branch_id: 'T3', //
-      proposition_internal_user: sessionStorage.getItem('add_user_type')?.toLowerCase() === 'internal' ? form?.formData?.proposition_name || '' : '',
+      proposition_internal_user: sessionStorage.getItem('add_user_type')?.toLowerCase() === 'internal' ? form?.formData?.proposition_internal_user || '' : '',
       imd_oa_broker_code: this.quoteService?.premiumCalcRes?.imd_oa_broker_code || "",
       imd_oa_agent: this.quoteService?.premiumCalcRes?.imd_oa_agent || "",
       imd_channel: this.quoteService?.premiumCalcRes?.imd_channel || "",

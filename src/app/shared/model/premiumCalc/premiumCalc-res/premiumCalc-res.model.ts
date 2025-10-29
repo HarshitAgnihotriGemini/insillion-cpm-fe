@@ -37,5 +37,8 @@ export interface PremiumCalcRes {
   floater_coverage_in: string;
   policy_start_date: string;
   policy_end_date: string;
+  imd_code: string;
+  policy_transaction_type: string;
+  proposition_internal_user: string;
   errors: any;
 }
