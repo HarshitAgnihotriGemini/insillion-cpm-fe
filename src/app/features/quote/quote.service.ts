@@ -291,211 +291,442 @@ export class QuoteService {
     }
   }
 
-  async premiumCalc(tag?: string, isValidationCheck: boolean = false) {
+  async premiumCalc(
+    tag?: string,
+    isValidationCheck: boolean = false,
+    quoteData?: any,
+  ) {
     try {
       const url =
         this.api.url +
         `product/calc/${this.api.productId}?wf_id=32&type=premium_calc`;
-      const body = this.premiumCalcReqService.adapt({
-        formData: this.quoteFormService.form.getRawValue(),
-        productId: this.api.productId,
-        page_no: tag === 'imd_code' ? 0 : 1,
-        settings_user_type: this.settingsUserType,
-      });
-      const res = await this.api.httpPostMethod(url, body);
-      const form = this.quoteFormService.form;
-      if ((res?.status == -102 || res?.status == -1) && tag) {
-        this.formService.setFieldError(form, tag, 'apiError', res?.txt);
-        throw new Error(`Error in premium calc: ${res?.txt}`);
-      }
-      if (res?.data && res?.status == 0) {
-        this.premiumCalcRes = this.premiumCalcResService.adapt(res);
-        if (isValidationCheck && this.premiumCalcRes?.errors?.length > 0) {
-          const errors = this.premiumCalcRes?.errors ?? [];
-          const errMsg = errors
-                        ?.map((curr: { msg: string }) => `• ${curr?.msg ?? ''}`)
-                        .join('<br>');
-          const htmlContent = errors.length > 1
-                              ? `<div style="max-height: 7.8rem">${errMsg}</div>`
-                              : errMsg;
-          Swal.fire({
-            title: 'Failed!',
-            html: htmlContent,
-            imageUrl: `${this.api.commonPath}/assets/images/error_popup.svg`,
-            confirmButtonColor: '#DC3545',
-            confirmButtonText: 'OK',
-            allowOutsideClick: false
-          });
-          throw new Error('Validations in Premium Calc API: ', errMsg);
-        }
-
-        this.formService.setFieldVisibility(
-          'GPA',
-          this.premiumCalcRes?.settings_gpa_required?.toLowerCase() == 'yes',
-        );
-        if (this.premiumCalcRes?.policy_addon?.[0]?.addon_marine_premium) {
-          this.quoteFormService.form.controls['addon_marine_premium'].setValue(
-            this.premiumCalcRes?.policy_addon?.[0]?.addon_marine_premium,
-          );
-          this.formService.setFieldVisibility('addon_marine_premium', true);
-        }
-        if(this.quoteFormService.form.controls['existing_policy'].value){
-          this.populateForm();
-        }
-        this.formService.setFieldVisibility(
-          'addon_marine',
-          this.premiumCalcRes?.marine_required?.toLowerCase() == 'yes',
-        );
-        if (this.premiumCalcRes?.marine_required?.toLowerCase() == 'yes') {
-          this.quoteFormService.form.controls['addon_marine'].setValue(true);
-          this.quoteFormService.form.controls['addon_marine'].disable();
-        }
-        if (this.premiumCalcRes.iscreater == 0) {
-          this.quoteFormService.form.controls['marine_selection'].disable();
-        }
-
-        this.quoteFormService.form.controls['marine_selection'].setValue(
-          'All Risk',
-        );
-        this.dynamicValidationService.updateRequiredStatus(
-          'marine_selection',
-          this.premiumCalcRes?.marine_required?.toLowerCase() == 'yes',
-        );
-        const propositionControl =
-          this.quoteFormService.form.controls['proposition'];
-        if (
-          propositionControl &&
-          this.premiumCalcRes.iscreater &&
-          this.premiumCalcRes.settings_user_type
-        ) {
-          this.dynamicValidationService.updateRequiredStatus(
-            'proposition',
-            this.premiumCalcRes.iscreater == 1 &&
-              this.premiumCalcRes.settings_user_type == 'Internal',
-          );
-
-          const newValidators = [];
-          if (
-            this.premiumCalcRes.iscreater == 1 &&
-            this.premiumCalcRes.settings_user_type == 'Internal'
-          ) {
-            newValidators.push(Validators.required);
-          }
-          propositionControl.setValidators(newValidators);
-          propositionControl.updateValueAndValidity();
-        }
-        const terrorismCoverControl =
-          this.quoteFormService.form.controls['terrorism_req'];
-        if (
-          terrorismCoverControl &&
-          this.premiumCalcRes.settings_terr_mandatory
-        ) {
-          this.dynamicValidationService.updateRequiredStatus(
-            'terrorism_req',
-            this.premiumCalcRes.settings_terr_mandatory.toLowerCase() == 'yes',
-          );
-
-          const newValidators = [];
-          if (
-            this.premiumCalcRes.settings_terr_mandatory.toLowerCase() == 'yes'
-          ) {
-            newValidators.push(Validators.required);
-          }
-          terrorismCoverControl.setValidators(newValidators);
-          terrorismCoverControl.updateValueAndValidity();
-        }
-
-        this.quoteFormService.form.controls['eq_zone'].setValue(
-          this.premiumCalcRes?.eq_zone,
-        );
-        const backDays = this.premiumCalcRes?.settings_backdays;
-        const futureDays = this.premiumCalcRes?.settings_futuredays;
-
-        const minDate =
-          backDays !== undefined && backDays !== null
-            ? moment().subtract(Number(backDays), 'days').toDate()
-            : undefined;
-
-        const maxDate =
-          futureDays !== undefined && futureDays !== null
-            ? moment().add(Number(futureDays), 'days').toDate()
-            : undefined;
-
-        this.dynamicValidationService.updateDateLimits(
-          'policy_start_date',
-          minDate,
-          maxDate,
-        );
-
-        const machineryFormArray = this.quoteFormService.form.get(
-          'machinery',
-        ) as FormArray;
-        if (this.premiumCalcRes.machinery && machineryFormArray) {
-          this.premiumCalcRes.machinery.forEach(
-            (machineryData: any, index: number) => {
-              const machineryGroup = machineryFormArray.at(index) as FormGroup;
-              if (machineryGroup) {
-                const costControl = machineryGroup.get('cost_of_machinery_si');
-                if (costControl) {
-                  const newValidators = [Validators.required];
-                  const minSiCap = machineryData.min_si_cap;
-                  const maxSiCap = machineryData.max_si_cap;
-
-                  const fieldKey = `machinery.${index}.cost_of_machinery_si`;
-
-                  const min: number | undefined =
-                    minSiCap !== null && minSiCap !== ''
-                      ? Number(minSiCap)
-                      : undefined;
-                  const max: number | undefined =
-                    maxSiCap !== null && maxSiCap !== ''
-                      ? Number(maxSiCap)
-                      : undefined;
-
-                  this.dynamicValidationService.updateNumericLimits(
-                    fieldKey,
-                    min,
-                    max,
-                  );
-
-                  if (min !== undefined) {
-                    newValidators.push(UtilsService.minDynamic(min));
-                  }
-                  if (max !== undefined) {
-                    newValidators.push(UtilsService.maxDynamic(max));
-                  }
-
-                  costControl.setValidators(newValidators);
-                  costControl.updateValueAndValidity();
-                  costControl.markAsTouched();
-                }
-              }
-            },
-          );
-        }
-
-        const policyStartDateControl =
-          this.quoteFormService.form.get('policy_start_date');
-        if (policyStartDateControl) {
-          const newValidators = [Validators.required];
-
-          if (minDate) {
-            newValidators.push(UtilsService.minDateDynamic(minDate));
-            policyStartDateControl.markAsTouched();
-          }
-          if (maxDate) {
-            newValidators.push(UtilsService.maxDateDynamic(maxDate));
-            policyStartDateControl.markAsTouched();
-          }
-
-          policyStartDateControl.setValidators(newValidators);
-          policyStartDateControl.updateValueAndValidity();
-        }
+      let body;
+      let res;
+      if (quoteData) {
+        body = this.premiumCalcReqService.adapt({
+          formData: quoteData,
+          productId: this.api.productId,
+          page_no: 1,
+          settings_user_type: this.settingsUserType,
+        });
+        res = await this.api.httpPostMethod(url, body);
       } else {
-        throw new Error('Error in Premium Calc API!!!');
+        body = this.premiumCalcReqService.adapt({
+          formData: this.quoteFormService.form.getRawValue(),
+          productId: this.api.productId,
+          page_no: tag === 'imd_code' ? 0 : 1,
+          settings_user_type: this.settingsUserType,
+        });
+        res = await this.api.httpPostMethod(url, body);
+        const form = this.quoteFormService.form;
+        if ((res?.status == -102 || res?.status == -1) && tag) {
+          this.formService.setFieldError(form, tag, 'apiError', res?.txt);
+          throw new Error(`Error in premium calc: ${res?.txt}`);
+        }
+        if (res?.data && res?.status == 0) {
+          this.premiumCalcRes = this.premiumCalcResService.adapt(res);
+          if (isValidationCheck && this.premiumCalcRes?.errors?.length > 0) {
+            const errors = this.premiumCalcRes?.errors ?? [];
+            const errMsg = errors
+              ?.map((curr: { msg: string }) => `• ${curr?.msg ?? ''}`)
+              .join('<br>');
+            const htmlContent =
+              errors.length > 1
+                ? `<div style="max-height: 7.8rem">${errMsg}</div>`
+                : errMsg;
+            Swal.fire({
+              title: 'Failed!',
+              html: htmlContent,
+              imageUrl: `${this.api.commonPath}/assets/images/error_popup.svg`,
+              confirmButtonColor: '#DC3545',
+              confirmButtonText: 'OK',
+              allowOutsideClick: false,
+            });
+            throw new Error('Validations in Premium Calc API: ', errMsg);
+          }
+
+          this.formService.setFieldVisibility(
+            'GPA',
+            this.premiumCalcRes?.settings_gpa_required?.toLowerCase() == 'yes',
+          );
+          if (this.premiumCalcRes?.policy_addon?.[0]?.addon_marine_premium) {
+            this.quoteFormService.form.controls[
+              'addon_marine_premium'
+            ].setValue(
+              this.premiumCalcRes?.policy_addon?.[0]?.addon_marine_premium,
+            );
+            this.formService.setFieldVisibility('addon_marine_premium', true);
+          }
+          if (this.quoteFormService.form.controls['existing_policy'].value) {
+            this.populateForm();
+          }
+          this.formService.setFieldVisibility(
+            'addon_marine',
+            this.premiumCalcRes?.marine_required?.toLowerCase() == 'yes',
+          );
+          if (this.premiumCalcRes?.marine_required?.toLowerCase() == 'yes') {
+            this.quoteFormService.form.controls['addon_marine'].setValue(true);
+            this.quoteFormService.form.controls['addon_marine'].disable();
+          }
+          if (this.premiumCalcRes.iscreater == 0) {
+            this.quoteFormService.form.controls['marine_selection'].disable();
+          }
+
+          this.quoteFormService.form.controls['marine_selection'].setValue(
+            'All Risk',
+          );
+          this.dynamicValidationService.updateRequiredStatus(
+            'marine_selection',
+            this.premiumCalcRes?.marine_required?.toLowerCase() == 'yes',
+          );
+          const propositionControl =
+            this.quoteFormService.form.controls['proposition'];
+          if (
+            propositionControl &&
+            this.premiumCalcRes.iscreater &&
+            this.premiumCalcRes.settings_user_type
+          ) {
+            this.dynamicValidationService.updateRequiredStatus(
+              'proposition',
+              this.premiumCalcRes.iscreater == 1 &&
+                this.premiumCalcRes.settings_user_type == 'Internal',
+            );
+
+            const newValidators = [];
+            if (
+              this.premiumCalcRes.iscreater == 1 &&
+              this.premiumCalcRes.settings_user_type == 'Internal'
+            ) {
+              newValidators.push(Validators.required);
+            }
+            propositionControl.setValidators(newValidators);
+            propositionControl.updateValueAndValidity();
+          }
+          const terrorismCoverControl =
+            this.quoteFormService.form.controls['terrorism_req'];
+          if (
+            terrorismCoverControl &&
+            this.premiumCalcRes.settings_terr_mandatory
+          ) {
+            this.dynamicValidationService.updateRequiredStatus(
+              'terrorism_req',
+              this.premiumCalcRes.settings_terr_mandatory.toLowerCase() ==
+                'yes',
+            );
+
+            const newValidators = [];
+            if (
+              this.premiumCalcRes.settings_terr_mandatory.toLowerCase() == 'yes'
+            ) {
+              newValidators.push(Validators.required);
+            }
+            terrorismCoverControl.setValidators(newValidators);
+            terrorismCoverControl.updateValueAndValidity();
+          }
+
+          this.quoteFormService.form.controls['eq_zone'].setValue(
+            this.premiumCalcRes?.eq_zone,
+          );
+          const backDays = this.premiumCalcRes?.settings_backdays;
+          const futureDays = this.premiumCalcRes?.settings_futuredays;
+
+          const minDate =
+            backDays !== undefined && backDays !== null
+              ? moment().subtract(Number(backDays), 'days').toDate()
+              : undefined;
+
+          const maxDate =
+            futureDays !== undefined && futureDays !== null
+              ? moment().add(Number(futureDays), 'days').toDate()
+              : undefined;
+
+          this.dynamicValidationService.updateDateLimits(
+            'policy_start_date',
+            minDate,
+            maxDate,
+          );
+
+          const machineryFormArray = this.quoteFormService.form.get(
+            'machinery',
+          ) as FormArray;
+          if (this.premiumCalcRes.machinery && machineryFormArray) {
+            this.premiumCalcRes.machinery.forEach(
+              (machineryData: any, index: number) => {
+                const machineryGroup = machineryFormArray.at(
+                  index,
+                ) as FormGroup;
+                if (machineryGroup) {
+                  const costControl = machineryGroup.get(
+                    'cost_of_machinery_si',
+                  );
+                  if (costControl) {
+                    const newValidators = [Validators.required];
+                    const minSiCap = machineryData.min_si_cap;
+                    const maxSiCap = machineryData.max_si_cap;
+
+                    const fieldKey = `machinery.${index}.cost_of_machinery_si`;
+
+                    const min: number | undefined =
+                      minSiCap !== null && minSiCap !== ''
+                        ? Number(minSiCap)
+                        : undefined;
+                    const max: number | undefined =
+                      maxSiCap !== null && maxSiCap !== ''
+                        ? Number(maxSiCap)
+                        : undefined;
+
+                    this.dynamicValidationService.updateNumericLimits(
+                      fieldKey,
+                      min,
+                      max,
+                    );
+
+                    if (min !== undefined) {
+                      newValidators.push(UtilsService.minDynamic(min));
+                    }
+                    if (max !== undefined) {
+                      newValidators.push(UtilsService.maxDynamic(max));
+                    }
+
+                    costControl.setValidators(newValidators);
+                    costControl.updateValueAndValidity();
+                    costControl.markAsTouched();
+                  }
+                }
+              },
+            );
+          }
+
+          const policyStartDateControl =
+            this.quoteFormService.form.get('policy_start_date');
+          if (policyStartDateControl) {
+            const newValidators = [Validators.required];
+
+            if (minDate) {
+              newValidators.push(UtilsService.minDateDynamic(minDate));
+              policyStartDateControl.markAsTouched();
+            }
+            if (maxDate) {
+              newValidators.push(UtilsService.maxDateDynamic(maxDate));
+              policyStartDateControl.markAsTouched();
+            }
+
+            policyStartDateControl.setValidators(newValidators);
+            policyStartDateControl.updateValueAndValidity();
+          }
+        } else {
+          body = this.premiumCalcReqService.adapt({
+            formData: this.quoteFormService.form.getRawValue(),
+            productId: this.api.productId,
+            page_no: tag === 'imd_code' ? 0 : 1,
+            settings_user_type: this.settingsUserType,
+          });
+          res = await this.api.httpPostMethod(url, body);
+          const form = this.quoteFormService.form;
+          if ((res?.status == -102 || res?.status == -1) && tag) {
+            this.formService.setFieldError(form, tag, 'apiError', res?.txt);
+            throw new Error(`Error in premium calc: ${res?.txt}`);
+          }
+          if (res?.data && res?.status == 0) {
+            this.premiumCalcRes = this.premiumCalcResService.adapt(res);
+            if (isValidationCheck && this.premiumCalcRes?.errors?.length > 0) {
+              const errors = this.premiumCalcRes?.errors ?? [];
+              const errMsg = errors
+                ?.map((curr: { msg: string }) => `• ${curr?.msg ?? ''}`)
+                .join('<br>');
+              const htmlContent =
+                errors.length > 1
+                  ? `<div style="max-height: 7.8rem">${errMsg}</div>`
+                  : errMsg;
+              Swal.fire({
+                title: 'Failed!',
+                html: htmlContent,
+                imageUrl: `${this.api.commonPath}/assets/images/error_popup.svg`,
+                confirmButtonColor: '#DC3545',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false,
+              });
+              throw new Error('Validations in Premium Calc API: ', errMsg);
+            }
+
+            this.formService.setFieldVisibility(
+              'GPA',
+              this.premiumCalcRes?.settings_gpa_required?.toLowerCase() ==
+                'yes',
+            );
+            if (this.premiumCalcRes?.policy_addon?.[0]?.addon_marine_premium) {
+              this.quoteFormService.form.controls[
+                'addon_marine_premium'
+              ].setValue(
+                this.premiumCalcRes?.policy_addon?.[0]?.addon_marine_premium,
+              );
+              this.formService.setFieldVisibility('addon_marine_premium', true);
+            }
+            this.formService.setFieldVisibility(
+              'addon_marine',
+              this.premiumCalcRes?.marine_required?.toLowerCase() == 'yes',
+            );
+            if (this.premiumCalcRes?.marine_required?.toLowerCase() == 'yes') {
+              this.quoteFormService.form.controls['addon_marine'].setValue(
+                true,
+              );
+              this.quoteFormService.form.controls['addon_marine'].disable();
+            }
+            if (this.premiumCalcRes.iscreater == 0) {
+              this.quoteFormService.form.controls['marine_selection'].disable();
+            }
+
+            this.quoteFormService.form.controls['marine_selection'].setValue(
+              'All Risk',
+            );
+            this.dynamicValidationService.updateRequiredStatus(
+              'marine_selection',
+              this.premiumCalcRes?.marine_required?.toLowerCase() == 'yes',
+            );
+            const propositionControl =
+              this.quoteFormService.form.controls['proposition'];
+            if (
+              propositionControl &&
+              this.premiumCalcRes.iscreater &&
+              this.premiumCalcRes.settings_user_type
+            ) {
+              this.dynamicValidationService.updateRequiredStatus(
+                'proposition',
+                this.premiumCalcRes.iscreater == 1 &&
+                  this.premiumCalcRes.settings_user_type == 'Internal',
+              );
+
+              const newValidators = [];
+              if (
+                this.premiumCalcRes.iscreater == 1 &&
+                this.premiumCalcRes.settings_user_type == 'Internal'
+              ) {
+                newValidators.push(Validators.required);
+              }
+              propositionControl.setValidators(newValidators);
+              propositionControl.updateValueAndValidity();
+            }
+            const terrorismCoverControl =
+              this.quoteFormService.form.controls['terrorism_req'];
+            if (
+              terrorismCoverControl &&
+              this.premiumCalcRes.settings_terr_mandatory
+            ) {
+              this.dynamicValidationService.updateRequiredStatus(
+                'terrorism_req',
+                this.premiumCalcRes.settings_terr_mandatory.toLowerCase() ==
+                  'yes',
+              );
+
+              const newValidators = [];
+              if (
+                this.premiumCalcRes.settings_terr_mandatory.toLowerCase() ==
+                'yes'
+              ) {
+                newValidators.push(Validators.required);
+              }
+              terrorismCoverControl.setValidators(newValidators);
+              terrorismCoverControl.updateValueAndValidity();
+            }
+
+            this.quoteFormService.form.controls['eq_zone'].setValue(
+              this.premiumCalcRes?.eq_zone,
+            );
+            const backDays = this.premiumCalcRes?.settings_backdays;
+            const futureDays = this.premiumCalcRes?.settings_futuredays;
+
+            const minDate =
+              backDays !== undefined && backDays !== null
+                ? moment().subtract(Number(backDays), 'days').toDate()
+                : undefined;
+
+            const maxDate =
+              futureDays !== undefined && futureDays !== null
+                ? moment().add(Number(futureDays), 'days').toDate()
+                : undefined;
+
+            this.dynamicValidationService.updateDateLimits(
+              'policy_start_date',
+              minDate,
+              maxDate,
+            );
+
+            const machineryFormArray = this.quoteFormService.form.get(
+              'machinery',
+            ) as FormArray;
+            if (this.premiumCalcRes.machinery && machineryFormArray) {
+              this.premiumCalcRes.machinery.forEach(
+                (machineryData: any, index: number) => {
+                  const machineryGroup = machineryFormArray.at(
+                    index,
+                  ) as FormGroup;
+                  if (machineryGroup) {
+                    const costControl = machineryGroup.get(
+                      'cost_of_machinery_si',
+                    );
+                    if (costControl) {
+                      const newValidators = [Validators.required];
+                      const minSiCap = machineryData.min_si_cap;
+                      const maxSiCap = machineryData.max_si_cap;
+
+                      const fieldKey = `machinery.${index}.cost_of_machinery_si`;
+
+                      const min: number | undefined =
+                        minSiCap !== null && minSiCap !== ''
+                          ? Number(minSiCap)
+                          : undefined;
+                      const max: number | undefined =
+                        maxSiCap !== null && maxSiCap !== ''
+                          ? Number(maxSiCap)
+                          : undefined;
+
+                      this.dynamicValidationService.updateNumericLimits(
+                        fieldKey,
+                        min,
+                        max,
+                      );
+
+                      if (min !== undefined) {
+                        newValidators.push(UtilsService.minDynamic(min));
+                      }
+                      if (max !== undefined) {
+                        newValidators.push(UtilsService.maxDynamic(max));
+                      }
+
+                      costControl.setValidators(newValidators);
+                      costControl.updateValueAndValidity();
+                      costControl.markAsTouched();
+                    }
+                  }
+                },
+              );
+            }
+
+            const policyStartDateControl =
+              this.quoteFormService.form.get('policy_start_date');
+            if (policyStartDateControl) {
+              const newValidators = [Validators.required];
+
+              if (minDate) {
+                newValidators.push(UtilsService.minDateDynamic(minDate));
+                policyStartDateControl.markAsTouched();
+              }
+              if (maxDate) {
+                newValidators.push(UtilsService.maxDateDynamic(maxDate));
+                policyStartDateControl.markAsTouched();
+              }
+
+              policyStartDateControl.setValidators(newValidators);
+              policyStartDateControl.updateValueAndValidity();
+            }
+          } else {
+            throw new Error('Error in Premium Calc API!!!');
+          }
+        }
       }
       return res;
     } catch (error) {
+
       throw error;
     }
   }
@@ -504,16 +735,15 @@ export class QuoteService {
     if (this.premiumCalcRes) {
       const formData = { ...this.premiumCalcRes };
 
-      const dateFields = [
-        'policy_start_date',
-        'policy_end_date'
-      ];
+      const dateFields = ['policy_start_date', 'policy_end_date'];
       (dateFields as (keyof typeof formData)[]).forEach((fieldName) => {
-      const key = fieldName as keyof typeof formData;
-      const dateValue = formData[key];
-      if (dateValue && typeof dateValue === 'string') {
-        (formData as any)[key] = moment(dateValue, 'YYYY-MM-DD').format('DD/MM/YYYY') as any;
-      }
+        const key = fieldName as keyof typeof formData;
+        const dateValue = formData[key];
+        if (dateValue && typeof dateValue === 'string') {
+          (formData as any)[key] = moment(dateValue, 'YYYY-MM-DD').format(
+            'DD/MM/YYYY',
+          ) as any;
+        }
       });
       this.quoteFormService.form.patchValue(formData);
       this.quoteFormService.form.updateValueAndValidity();
@@ -553,6 +783,20 @@ export class QuoteService {
     }
   }
 
+  async policyNote() {
+    try {
+      const url = this.api.url + `policy/note/${this.getPolicyId}`;
+      const res = await this.api.httpGetMethod(url);
+      if (res) {
+        return res?.data;
+      } else {
+        throw new Error('Error in Policy Note API!!!');
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async fetchExistingInsurers() {
     try {
       const currentOptions = this.dynamicOptionsService.getCurrentOptions(
@@ -566,6 +810,65 @@ export class QuoteService {
       const options = res.data.map((item: any) => item?.insurer_name);
       this.dynamicOptionsService.setOptions('existingInsurerOptions', options);
     } catch (error: unknown) {
+      throw error;
+    }
+  }
+
+  async claim() {
+    try {
+      const url = this.api.url + 'quote/claim';
+      const payload = {
+        quote_id: this.quoteRes?.quoteId || '',
+      };
+      const res = await this.api.httpPostMethod(url, payload);
+      if (res) {
+        return res;
+      } else {
+        throw new Error('Error in Claim API!!!');
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async postPolicyNote(assignTo: string = 'group') {
+    try {
+      const url = this.api.url + 'policy/note';
+      const payload = {
+        policy_id: this.getPolicyId,
+        subject: '',
+        message: this.quoteFormService?.uwForm?.controls['reason']?.value || '',
+        assign_to: assignTo,
+        notify_template: '',
+      };
+      const res = await this.api.httpPostMethod(url, payload);
+      if (res) {
+        return res;
+      } else {
+        throw new Error('Error in Post Policy Note API!!!');
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async nstpMessage(nstpStatus: string) {
+    try {
+      const url = this.api.url + 'qnstp/message';
+      const payload = {
+        nstp_id: this.quoteRes?.nstp_id || '',
+        reason: this.quoteFormService?.uwForm?.controls['reason']?.value || '',
+        ext_id: '',
+        nstp_status: nstpStatus,
+        status_code: '',
+      };
+      const res = await this.api.httpPostMethod(url, payload);
+      if (res) {
+        return res;
+      } else {
+        throw new Error('Error in Post NSTP Message API!!!');
+      }
+    } catch (error) {
       throw error;
     }
   }

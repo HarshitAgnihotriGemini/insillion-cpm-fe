@@ -2,6 +2,7 @@ import { Injectable, Injector } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { FormService } from '@app/shared/services/form.service';
 import * as cpmQuote from '@app/shared/schemas/cpm-quote.json';
+import * as cpmReview from '@app/shared/schemas/cpm-policy-summary.json';
 import { QuoteService } from './quote.service';
 
 @Injectable({
@@ -9,6 +10,7 @@ import { QuoteService } from './quote.service';
 })
 export class QuoteFormService {
   public form!: FormGroup;
+  public uwForm!: FormGroup;
   private coversConfig: any;
   private _quoteService!: QuoteService;
 
@@ -50,6 +52,12 @@ export class QuoteFormService {
       });
 
     return this.form;
+  }
+
+  initializeUWForm(): FormGroup {
+    this.uwForm = this.formService.createFormGroup(cpmReview.uw.sections);
+    this.formService.setupConditionalLogic(this.uwForm, cpmReview.uw.sections);
+    return this.uwForm;
   }
 
   private initializeCoverControls(config: any): void {

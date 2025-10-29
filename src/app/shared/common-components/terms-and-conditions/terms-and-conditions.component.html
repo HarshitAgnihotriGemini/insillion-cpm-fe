@@ -12,7 +12,7 @@
 <div class="px-3 terms-container">
   <accordion [isAnimated]="true">
     <accordion-panel
-      *ngFor="let item of items; let i = index"
+      *ngFor="let item of clause_wordings; let i = index"
       class="my-3"
       (isOpenChange)="itemStates[i] = $event"
     >
@@ -28,4 +28,62 @@
       </div>
     </accordion-panel>
   </accordion>
+  <section class="section-card mb-4">
+    <div class="card-header accordian">
+      <div class="text-md font-semibold">Add Clause</div>
+    </div>
+    <div class="accordion-content expanded overflow-visible">
+      <div class="accordion-content-inner p-4">
+        <form [formGroup]="clauseForm" (ngSubmit)="addClause()">
+          <div class="mb-3">
+            <div class="d-flex justify-content-between">
+              <label for="subject" class="form-label required"
+                >Clause Name</label
+              >
+              <p
+                class="text-sm text-primary cursor-pointer text-decoration-underline"
+                (click)="clearClauseForm()"
+              >
+                Clear
+              </p>
+            </div>
+            <input
+              type="text"
+              id="subject"
+              class="form-control"
+              placeholder="Enter clause name"
+              formControlName="name"
+              [class.error]="
+                clauseForm.controls['name'].invalid &&
+                clauseForm.controls['name'].touched
+              "
+            />
+          </div>
+          <div class="mb-3">
+            <label for="description" class="form-label required"
+              >Clause Description</label
+            >
+            <textarea
+              id="description"
+              class="form-control"
+              placeholder="Enter clause description"
+              formControlName="description"
+              [class.error]="
+                clauseForm.controls['description'].invalid &&
+                clauseForm.controls['description'].touched
+              "
+            ></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-md w-100">
+            <img
+              [src]="imgPath + 'images/icon-add.svg'"
+              alt="add button"
+              class="btn-icon"
+            />
+            <span>Add</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
 </div>

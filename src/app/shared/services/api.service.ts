@@ -17,7 +17,6 @@ export class ApiService {
   environment = '';
   loginUrl = '/ipdsv2/login/#/';
   product_name = 'rs-prjkt';
-
   url = '';
   domain = '';
   domainUrl = '';
@@ -26,6 +25,10 @@ export class ApiService {
   commonCssPath = '';
   commonJsPath = '';
   commonUtilityPath = '';
+  role = '';
+  uwLevel = '';
+  groups: any[] = [];
+  email = '';
 
   private readonly configMap = {
     [ENVIRONMENTS.DEV]: DEV_CONFIG,
@@ -47,7 +50,7 @@ export class ApiService {
       this.environment = ENVIRONMENTS.PREPROD;
     } else if (host == 'd2kdl49456fdj6.cloudfront.net') {
       this.environment = ENVIRONMENTS.PROD;
-    }else{
+    } else {
       this.environment = environment.environment;
     }
 

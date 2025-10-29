@@ -3,7 +3,11 @@
     <app-breadcrumb [items]="config.breadCrumbs"></app-breadcrumb>
     <div class="page-title">
       <button class="icon-btn" (click)="goBack()">
-           <img class="icon" [src]="this.imgPath + 'icons/back-icon.svg'" alt="Back" />
+        <img
+          class="icon"
+          [src]="this.imgPath + 'icons/back-icon.svg'"
+          alt="Back"
+        />
       </button>
       <span>{{ config.title }}</span>
     </div>
@@ -20,10 +24,29 @@
       </form>
     </div>
     <app-view-breakup
-      *ngIf="isBreakupVisible"
+      *ngIf="isBreakupVisible && !quoteService?.quoteRes?.nstp_flag"
       [config]="config.viewBreakup"
       [quoteRes]="quoteService.quoteRes"
     ></app-view-breakup>
+    <section
+      class="section-card bg-light mt-4"
+      *ngIf="quoteService?.quoteRes?.nstp_flag"
+    >
+      <div class="card-header-grey">
+        <div class="text-md font-semibold">Refer to UW</div>
+      </div>
+      <div class="review-section-wrapper">
+        <div class="p-4">
+          <div class="review-field-value text-primary">
+            {{ quoteService?.quoteRes?.referred_to }}
+          </div>
+          <div class="review-field-value mt-2">
+            <span class="font-bold">Reason: </span>
+            {{ quoteService?.quoteRes?.nstp_reason }}
+          </div>
+        </div>
+      </div>
+    </section>
     <div class="d-flex align-items-center justify-content-end gap-3 mt-4">
       <div
         class="text-primary d-flex align-items-center cursor-pointer"
@@ -46,11 +69,12 @@
         *ngIf="!isBreakupVisible"
         [disabled]="isGettingPremium"
       >
-        <span
-          *ngIf="isGettingPremium"
-          aria-hidden="true"
-        >
-        <img [src]="this.imgPath + 'images/Loader.svg'" alt="Loading..." class="spinner-icon">
+        <span *ngIf="isGettingPremium" aria-hidden="true">
+          <img
+            [src]="this.imgPath + 'images/Loader.svg'"
+            alt="Loading..."
+            class="spinner-icon"
+          />
         </span>
         <span>Get Premium</span>
       </button>

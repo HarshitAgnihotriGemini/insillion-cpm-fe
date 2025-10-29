@@ -11,7 +11,10 @@ import { QuoteService } from '@app/features/quote/quote.service';
 export class PremiumCalcReqService implements Adapter<PremiumCalcReq> {
   private _quoteService!: QuoteService;
 
-  constructor(private readonly utilService: UtilsService, private readonly injector: Injector) {}
+  constructor(
+    private readonly utilService: UtilsService,
+    private readonly injector: Injector,
+  ) {}
 
   private get quoteService(): QuoteService {
     if (!this._quoteService) {
@@ -42,11 +45,19 @@ export class PremiumCalcReqService implements Adapter<PremiumCalcReq> {
               branch_id: 'T3',
               ...(formData?.policy_transaction_type?.toLowerCase()?.includes('renewal') && { renew_YN: 'No' }),
               transaction_type: formData?.policy_transaction_type || '',
-              proposition_internal_user: sessionStorage.getItem('add_user_type')?.toLowerCase() === 'internal' ? formData?.proposition_name || '' : '',
-              imd_oa_broker_code: this.quoteService?.premiumCalcRes?.imd_oa_broker_code || "",
-              imd_oa_agent: this.quoteService?.premiumCalcRes?.imd_oa_agent || "",
-              imd_channel: this.quoteService?.premiumCalcRes?.imd_channel || "",
-              imd_subchannel: this.quoteService?.premiumCalcRes?.imd_subchannel || "",
+              proposition_internal_user:
+                sessionStorage.getItem('add_user_type')?.toLowerCase() ===
+                'internal'
+                  ? formData?.proposition_name || ''
+                  : '',
+              imd_oa_broker_code:
+                this.quoteService?.premiumCalcRes?.imd_oa_broker_code || '',
+              imd_oa_agent:
+                this.quoteService?.premiumCalcRes?.imd_oa_agent || '',
+              imd_channel: this.quoteService?.premiumCalcRes?.imd_channel || '',
+              imd_subchannel:
+                this.quoteService?.premiumCalcRes?.imd_subchannel || '',
+              clause_wordings: formData?.clause_wordings,
             }
           : {}),
       },

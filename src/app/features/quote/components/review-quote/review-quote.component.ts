@@ -18,6 +18,8 @@ import { Location } from '@angular/common';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { FormService } from '@app/shared/services/form.service';
 import { SectionComponent } from '@app/shared/common-components/section/section.component';
+import { DynamicOptionsService } from '@app/shared/services/dynamic-options.service';
+import { TermsAndConditionsModalComponent } from '@app/shared/common-components/terms-and-conditions/terms-and-conditions.component';
 
 @Component({
   selector: 'app-review-quote',
@@ -29,7 +31,7 @@ import { SectionComponent } from '@app/shared/common-components/section/section.
     AttachmentsReviewComponent,
     ViewBreakupComponent,
     ReactiveFormsModule,
-    SectionComponent
+    SectionComponent,
   ],
   templateUrl: './review-quote.component.html',
   styleUrl: './review-quote.component.scss',
@@ -43,17 +45,19 @@ export class ReviewQuoteComponent implements OnInit {
   isFinalized = false;
   isFinalizing = false;
   imgPath: string;
+  policyNoteRes: any;
   constructor(
     private readonly router: Router,
     private readonly modalService: BsModalService,
     private readonly toastr: ToastrService,
-    private readonly apiService: ApiService,
+    public readonly apiService: ApiService,
     private readonly _route: ActivatedRoute,
     public readonly quoteService: QuoteService,
     private readonly quoteFormService: QuoteFormService,
     private readonly location: Location,
     private readonly spinner: NgxSpinnerService,
     private readonly formService: FormService,
+    private readonly dynamicOptionsService: DynamicOptionsService,
   ) {
     this.imgPath = this.imgPath = `${this.apiService.commonPath}/assets/`;
   }
@@ -63,15 +67,22 @@ export class ReviewQuoteComponent implements OnInit {
       this.isProposal = true;
     }
     this.config = cpmReview;
-    // this.form = this.quoteFormService.initializeForm();
-    this.form = this.formService.createFormGroup(this.config.uw.sections);
-    this.formService.setupConditionalLogic(this.form, this.config.uw.sections);
     this._route.params?.subscribe(async (params) => {
       try {
         this.spinner.show();
         this.quoteService.setPolicyId = params?.['id'];
         if (this.quoteService.getPolicyId !== 'new') {
           await this.quoteService.getDetailByPolicyId();
+          if (this.quoteService.quoteRes?.nstp_flag) {
+            this.policyNoteRes = await this.quoteService.policyNote();
+          }
+        }
+        if (
+          this.apiService?.role == 'underwriter' &&
+          this.apiService?.email == this.quoteService?.quoteRes?.assigned_to
+        ) {
+          this.form = this.quoteFormService.initializeUWForm();
+          this.setUwActions();
         }
       } catch (error) {
         console.log('Error in Create quote: ' + error);
@@ -109,8 +120,8 @@ export class ReviewQuoteComponent implements OnInit {
     });
   }
   handleButtonClick(field: any): void {
-    if (field.action === 'ckycOffCanvas') {
-      this.openCKycOffcanvas();
+    if (field.action === 'uwSubmit') {
+      this.uwSubmit();
     }
   }
   goBack() {
@@ -141,8 +152,131 @@ export class ReviewQuoteComponent implements OnInit {
     }
   }
 
+  async takeover() {
+    try {
+      this.spinner.show();
+      await this.quoteService.claim();
+      await this.quoteService.getDetailByPolicyId();
+      this.policyNoteRes = await this.quoteService.policyNote();
+      this.form = this.quoteFormService.initializeUWForm();
+      this.setUwActions();
+    } catch (error: any) {
+      this.toastr.error(error, 'Failure!');
+    } finally {
+      this.spinner.hide();
+    }
+  }
+
   handleFieldEvent(event: { action: string; payload: any }) {
-    const { target, fieldKey } = event.payload;
-    const value = target.value;
+    const value = event.payload.target.value;
+  }
+
+  setUwActions() {
+    const options = ['Reject', 'Send Back to Sales', 'Send Back to Group'];
+    const policy = this.quoteService.quoteRes;
+    if (!policy || !policy.data) {
+      this.dynamicOptionsService.setOptions('uwActionOptions', options);
+      return;
+    }
+
+    const isEngineeringOrLiability =
+      policy.data.product_group_name === 'Engineering' ||
+      policy.data.product_group_name === 'Liability';
+
+    const canReview =
+      isEngineeringOrLiability &&
+      !policy.nstp_status &&
+      policy.data.uw_review_branch_level !== '' &&
+      policy.data.uw_review_branch_level !==
+        policy.data.uw_approve_branch_level &&
+      policy.data.uw_review_branch_level === policy.data.login_user_group;
+
+    if (canReview) {
+      options.unshift('Review');
+    }
+
+    const canApprove =
+      isEngineeringOrLiability &&
+      ((policy.nstp_status === 'reviewed' &&
+        policy.data.uw_approve_branch_level === policy.data.login_user_group) ||
+        (policy.data.uw_review_branch_level ===
+          policy.data.uw_approve_branch_level &&
+          policy.data.uw_approve_branch_level ===
+            policy.data.login_user_group &&
+          policy.data.uw_review_branch_level === policy.data.login_user_group));
+
+    if (canApprove) {
+      options.unshift('Approve');
+    }
+
+    this.dynamicOptionsService.setOptions('uwActionOptions', options);
+  }
+
+  async openTermsModal() {
+      try {
+        await this.quoteService.premiumCalc(undefined, false, this.quoteService.quoteRes.data);
+        const initialState = {
+          items: this.quoteService.quoteRes?.clause_wordings,
+          title: 'Special Conditions, Warranties & Exclusions',
+        };
+        this.bsModalRef = this.modalService.show(
+          TermsAndConditionsModalComponent,
+          {
+            initialState,
+            class: 'modal-lg',
+          },
+        );
+      } catch (error) {
+        this.toastr.error(
+          'Could not calculate premium. Please try again.',
+          'Failure!',
+        );
+      }
+  }
+
+  async uwSubmit() {
+    if (this.form.valid) {
+      try {
+        this.spinner.show();
+        if (this.form.controls['uw_action'].value.toLowerCase() === 'approve') {
+          await this.quoteService.nstpMessage('approved');
+          this.toastr.success('Quote is approved successfully.', 'Success!');
+        } else if (
+          this.form.controls['uw_action'].value.toLowerCase() === 'review'
+        ) {
+          await this.quoteService.nstpMessage('reviewed');
+          this.toastr.success('Quote is reviewed successfully.', 'Success!');
+        } else if (
+          this.form.controls['uw_action'].value.toLowerCase() === 'reject'
+        ) {
+          await this.quoteService.nstpMessage('rejected');
+          this.toastr.success('Quote is rejected successfully.', 'Success!');
+        } else if (
+          this.form.controls['uw_action'].value.toLowerCase() ===
+          'send back to sales'
+        ) {
+          await this.quoteService.postPolicyNote(
+            this.quoteService?.quoteRes?.created_by,
+          );
+          await this.quoteService.nstpMessage('Query by UW');
+          this.toastr.success('Sent back to sales successfully.', 'Success!');
+        } else if (
+          this.form.controls['uw_action'].value.toLowerCase() ===
+          'send back to group'
+        ) {
+          await this.quoteService.postPolicyNote();
+          this.toastr.success('Sent back to group successfully.', 'Success!');
+        }
+        await this.quoteService.getDetailByPolicyId();
+        this.policyNoteRes = await this.quoteService.policyNote();
+        this.form.reset();
+      } catch (error: any) {
+        this.toastr.error(error, 'Failure!');
+      } finally {
+        this.spinner.hide();
+      }
+    } else {
+      this.toastr.error('Form is not valid', 'Failure!');
+    }
   }
 }

@@ -4,7 +4,11 @@
       <app-breadcrumb [items]="config.breadCrumbs"></app-breadcrumb>
       <div class="page-title mb-4">
         <button class="icon-btn" (click)="goBack()">
-           <img class="icon" [src]="this.imgPath + 'icons/back-icon.svg'" alt="Back" />
+          <img
+            class="icon"
+            [src]="this.imgPath + 'icons/back-icon.svg'"
+            alt="Back"
+          />
         </button>
         <span>{{ config.title }}</span>
       </div>
@@ -13,7 +17,7 @@
           class="card-header-grey d-flex justify-content-between align-items-center"
         >
           <div class="text-md font-semibold">
-            Policy Summary | Quotation ID: AEP68203763
+            Policy Summary | Quotation ID: {{ quoteService?.quoteRes?.quoteId }}
           </div>
           <div class="d-flex gap-3 align-items-center">
             <span (click)="quoteClone()">
@@ -60,48 +64,118 @@
     </div>
     <div class="mt-4">
       <app-view-breakup
+        *ngIf="!quoteService?.quoteRes?.nstp_flag"
         [config]="config.viewBreakup"
         [quoteRes]="quoteService.quoteRes"
       ></app-view-breakup>
     </div>
-    <div class="mt-4" *ngIf="config && form">
+    <section
+      class="section-card bg-light mt-4"
+      *ngIf="quoteService?.quoteRes?.nstp_flag"
+    >
+      <div class="card-header-grey">
+        <div class="text-md font-semibold">Refer to UW</div>
+      </div>
+      <div class="review-section-wrapper">
+        <div class="p-4">
+          <div class="review-field-value text-primary">
+            {{ quoteService?.quoteRes?.referred_to }}
+          </div>
+          <div class="review-field-value mt-2">
+            <span class="font-bold">Reason: </span>
+            {{ quoteService?.quoteRes?.nstp_reason }}
+          </div>
+        </div>
+      </div>
+    </section>
+    <section
+      class="section-card bg-light mt-4"
+      *ngIf="quoteService?.quoteRes?.nstp_flag && policyNoteRes?.length"
+    >
+      <div class="card-header-grey">
+        <div class="text-md font-semibold">Underwriter History</div>
+      </div>
+      <div class="review-section-wrapper">
+        <div class="p-4">
+          <div
+            class="review-field-value mt-1"
+            *ngFor="let item of policyNoteRes"
+          >
+            {{ item?.message || item?.subject }}
+          </div>
+        </div>
+      </div>
+    </section>
+    <div
+      class="mt-4"
+      *ngIf="
+        config &&
+        form &&
+        apiService?.role == 'underwriter' &&
+        apiService?.email == quoteService?.quoteRes?.assigned_to
+      "
+    >
       <form [formGroup]="form">
         <app-section
           *ngFor="let section of config.uw.sections"
           [section]="section"
           [form]="form"
           (fieldEvent)="handleFieldEvent($event)"
+          (buttonClick)="handleButtonClick($event)"
         >
         </app-section>
       </form>
     </div>
 
     <div class="d-flex align-items-center justify-content-end gap-3 mt-4">
+      <div
+        class="text-primary d-flex align-items-center cursor-pointer"
+        (click)="openTermsModal()"
+      >
+        <img [src]="imgPath + 'images/icon-info.svg'" alt="info-icon" />
+        <span class="ms-1">Terms & Conditions</span>
+      </div>
       <button
         type="button"
         class="btn btn-outline btn-md"
+        *ngIf="apiService?.role == 'underwriter'"
       >
-        <span>Back to Listing</span>
+        Back to Listing
       </button>
       <button
         class="btn btn-primary btn-md px-5 d-flex align-items-center gap-2"
-        (click)="redirect()"
+        (click)="takeover()"
+        *ngIf="
+          apiService?.role == 'underwriter' &&
+          apiService?.groups?.includes(quoteService?.quoteRes?.assigned_to)
+        "
       >
-        <span>Take Over</span>
+        Take Over
       </button>
       <button
         type="button"
         class="btn btn-outline btn-md"
         (click)="quoteVersioning()"
+        *ngIf="
+          isProposalAllow &&
+          apiService?.role !== 'underwriter' &&
+          (!quoteService?.quoteRes?.nstp_flag ||
+            quoteService?.quoteRes?.nstp_status?.toLowerCase() == 'approved')
+        "
       >
-        <span>Quote Versioning</span>
+        Quote Versioning
       </button>
       <button
         class="btn btn-primary btn-md px-5 d-flex align-items-center gap-2"
         (click)="redirect()"
-        *ngIf="isProposalAllow"
+        *ngIf="
+          isProposalAllow &&
+          apiService?.role !== 'underwriter' &&
+          (!quoteService?.quoteRes?.nstp_flag ||
+            quoteService?.quoteRes?.nstp_status?.toLowerCase() == 'approved')
+        "
       >
-        <span>Proceed To Proposal</span>
+        Proceed To Proposal
       </button>
     </div>
   </div>

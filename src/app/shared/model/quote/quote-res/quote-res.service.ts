@@ -22,8 +22,13 @@ export class QuoteResService implements Adapter<QuoteRes> {
       total_premium: data?.total_premium || 0,
       nstp_flag: data?.nstp_flag === 'Yes',
       nstp_reason: data?.nstp_reason || '',
+      quote_status: item?.data?.quote_status || '',
       clause_wordings: data?.clause_wordings || [],
       nstp_status: qnstp?.nstp_status || '',
+      referred_to: data?.referred_to || '',
+      assigned_to: item?.quote?.assigned_to || '',
+      nstp_id: qnstp?.nstp_id || '',
+      created_by: item?.created_by || '',
     };
     return quoteRes;
   }

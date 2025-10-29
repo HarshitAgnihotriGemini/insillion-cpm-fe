@@ -20,7 +20,7 @@ export class DynamicOptionsService {
     return this.optionsSources[key].asObservable();
   }
 
-  setOptions(key: string, options: []): void {
+  setOptions(key: string, options: any[]): void {
     if (!this.optionsSources[key]) {
       this.optionsSources[key] = new BehaviorSubject<any[]>([]);
     }

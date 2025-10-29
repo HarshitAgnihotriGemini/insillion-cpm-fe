@@ -4,7 +4,6 @@ import { ScriptLoaderService } from './shared/script-loader/script-loader.servic
 import { ApiService } from './shared/services/api.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 
-
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, NgxSpinnerModule],
@@ -21,9 +20,10 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.scriptLoader.loadCommonElements(
-      this.apiService.commonCssPath,
-      '',
-    );
+    this.scriptLoader.loadCommonElements(this.apiService.commonCssPath, '');
+    this.apiService.role = sessionStorage.getItem('role') || '';
+    this.apiService.uwLevel = sessionStorage.getItem('uw_level') || '';
+    this.apiService.groups = JSON.parse(sessionStorage.getItem('groups') || '[]');
+    this.apiService.email = sessionStorage.getItem('email') || '';
   }
 }

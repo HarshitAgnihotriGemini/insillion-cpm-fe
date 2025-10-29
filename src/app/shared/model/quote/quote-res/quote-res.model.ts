@@ -11,4 +11,9 @@ export interface QuoteRes {
   nstp_reason: string;
   clause_wordings: any;
   nstp_status: string;
+  quote_status: string;
+  referred_to: string;
+  assigned_to: string;
+  nstp_id: string;
+  created_by: string;
 }
